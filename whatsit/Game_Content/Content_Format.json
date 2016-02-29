@@ -1,0 +1,69 @@
+{"App":
+[{"Metadata":[
+{"Level":"1","Question":"How many books are in there?","ImgPath":"https://www.bisg.org/sites/default/files/bisg3.jpg","Answer":"11","DisorderedAnswer":"11","Creator":"","Code":"221535"},
+{"Level":"2","Question":"It is a large artiodactyl mammal herbivore that lives mainly in sub-Saharan Africa","ImgPath":"https://upload.wikimedia.org/wikipedia/commons/a/aa/Nijlpaard.jpg","Answer":"HIPPO","DisorderedAnswer":"HIOPP","Creator":"","Code":"221851"},
+{"Level":"3","Question":"Phobia","ImgPath":"https://campowaissabauer.files.wordpress.com/2013/09/open-spaces.jpg","Answer":"AGORAPHOBIA","DisorderedAnswer":"AAABGHIOOPR","Creator":"","Code":"222245"},
+{"Level":"4","Question":"How much are in the earth?","ImgPath":"http://www.marketingdirecto.com/wp-content/uploads/2012/02/cebolla1.jpg","Answer":"THREE","DisorderedAnswer":"EEHRT","Creator":"","Code":"222857"},
+{"Level":"5","Question":"Air","ImgPath":"http://toeflspeakingteacher.com/wp-content/uploads/2014/10/3.jpg","Answer":"TREE","DisorderedAnswer":"EERT","Creator":"","Code":"22318"},
+{"Level":"6","Question":"Orange, Blue, Red","ImgPath":"http://www.wallpaperup.com/uploads/wallpapers/2013/04/30/80593/0336e016104134c77afdad6ec27dc0f4.jpg","Answer":"GREEN","DisorderedAnswer":"EEGNR","Creator":"","Code":"223319"},
+{"Level":"7","Question":"The door, the car, Wifi protection","ImgPath":"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQwEZcExC95sXo-Cq44HSlY-U0h71MYWbTlDDuuCv1El27QbIKcgg","Answer":"OPEN","DisorderedAnswer":"ENOP","Creator":"","Code":"223557"}]]}]} 
+
+
+
+
+/* 12-12-2015
+
+{"App":
+[{"Metadata":[
+{"Level":"1","Question":"Orange, Blue, Red","ImgPath":"http://www.wallpaperup.com/uploads/wallpapers/2013/04/30/80593/0336e016104134c77afdad6ec27dc0f4.jpg","Answer":"GREEN","DisorderedAnswer":"EEGNR","Creator":"","Code":"223319"},
+{"Level":"2","Question":"It is a large artiodactyl mammal herbivore that lives mainly in sub-Saharan Africa","ImgPath":"https://upload.wikimedia.org/wikipedia/commons/a/aa/Nijlpaard.jpg","Answer":"HIPPO","DisorderedAnswer":"HIOPP","Creator":"","Code":"221851"},
+{"Level":"3","Question":"Phobia","ImgPath":"https://campowaissabauer.files.wordpress.com/2013/09/open-spaces.jpg","Answer":"AGORAPHOBIA","DisorderedAnswer":"AAABGHIOOPR","Creator":"","Code":"222245"},
+{"Level":"4","Question":"How much are in the earth?","ImgPath":"http://www.marketingdirecto.com/wp-content/uploads/2012/02/cebolla1.jpg","Answer":"THREE","DisorderedAnswer":"EEHRT","Creator":"","Code":"222857"},
+{"Level":"5","Question":"Air","ImgPath":"http://toeflspeakingteacher.com/wp-content/uploads/2014/10/3.jpg","Answer":"TREE","DisorderedAnswer":"EERT","Creator":"","Code":"22318"},
+{"Level":"6","Question":"Those little things go a long ___","ImgPath":"http://static.panoramio.com/photos/original/13641675.jpg","Answer":"WAY","DisorderedAnswer":"AWY","Creator":"","Code":"144313"},
+{"Level":"7","Question":"The door, the car, Wifi protection","ImgPath":"https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQwEZcExC95sXo-Cq44HSlY-U0h71MYWbTlDDuuCv1El27QbIKcgg","Answer":"OPEN","DisorderedAnswer":"ENOP","Creator":"","Code":"223557"},
+{"Level":"8","Question":"iphone","ImgPath":"ulasndlkjklsjfasldfjksalflaksjldkfsjkfk","Answer":"HOLA","DisorderedAnswer":"AHLO","Creator":"X060413ANoNiMouS02581711091524","Code":"X060413ANoNiMouS02581711091524111238"},
+{"Level":"9","Question":"54","ImgPath":"3","Answer":"5","DisorderedAnswer":"5","Creator":"","Code":"122859"},
+{"Level":"10","Question":"rapidity of motion or operation; swiftness; speed:","ImgPath":"https://image.freepik.com/foto-gratis/velocidad-en-la-carretera_2326255.jpg","Answer":"VELOCITY","DisorderedAnswer":"CEILOTVY","Creator":"","Code":"142938"},
+{"Level":"11","Question":"there are several on earth","ImgPath":"http://www.piazzadimirque.com/wp-content/uploads/2015/07/cebolla-roja.jpg","Answer":"LAYER","DisorderedAnswer":"AEYLR","Creator":"","Code":"221535"},
+{"Level":"12","Question":"Nueva Version","ImgPath":"imagen nv","Answer":"NV","DisorderedAnswer":"NV","Creator":"nuevaV","Code":"nuevaV125639"},
+{"Level":"13","Question":"iphone","ImgPath":"https://campowaissabauer.files.wordpress.com/2013/09/open-spaces.jpg","Answer":"IPHONE","DisorderedAnswer":"EHINOP","Creator":"ac","Code":"ac010719"},
+{"Level":"14","Question":"new","ImgPath":"https://campowaissabauer.files.wordpress.com/2013/09/open-spaces.jpg","Answer":"NEWS","DisorderedAnswer":"ENSW","Creator":"ac","Code":"ac014834"},
+{"Level":"15","Question":"asdlaskjdkasdajsdsajd","ImgPath":"werwr","Answer":"ERTERT","DisorderedAnswer":"EERRTT","Creator":"ac","Code":"ac135237"},
+{"Level":"16","Question":"asdlaskjdkasdajsdsajd","ImgPath":"werwr","Answer":"ERTERT","DisorderedAnswer":"EERRTT","Creator":"ac","Code":"ac135239"},
+{"Level":"17","Question":"1","ImgPath":"2","Answer":"3","DisorderedAnswer":"3","Creator":"","Code":"135427"},
+{"Level":"18","Question":"2222","ImgPath":"https://campowaissabauer.files.wordpress.com/2013/09/open-spaces.jpg","Answer":"3333","DisorderedAnswer":"3333","Creator":"ac","Code":"ac015612"}]}]}
+
+
+
+/*12-01-2016*/
+{"App":
+[{"Metadata":[
+{"Level":"1","Question":"Orange, Blue, Red","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG1.jpg","Answer":"GREEN","DisorderedAnswer":"EEGNR","Creator":"","Code":"223319"},
+{"Level":"2","Question":"123__567","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG2.jpg","Answer":"FOUR","DisorderedAnswer":"FORU","Creator":"","Code":"194838"},
+{"Level":"3","Question":"Paper, Tree, kindling","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG3.jpg","Answer":"WOOD","DisorderedAnswer":"DOOW","Creator":"","Code":"212614"},
+{"Level":"4","Question":"Utilities: drinking, washing, cooling","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG4.jpg","Answer":"WATER","DisorderedAnswer":"AERTW","Creator":"","Code":"21328"},
+{"Level":"5","Question":"Down, Town, Now, Blow ","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG5.jpg","Answer":"KNOW","DisorderedAnswer":"KNOW","Creator":"","Code":"213952"},
+{"Level":"6","Question":"Three, Wind, Nature","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG6.jpg","Answer":"TREE","DisorderedAnswer":"EERT","Creator":"","Code":"13124"},
+{"Level":"7","Question":"Orange, hot, Summer","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG7.jpg","Answer":"SUN","DisorderedAnswer":"NSU","Creator":"","Code":"131724"},
+{"Level":"8","Question":"Receives the consideration of the visible head of the Roman Catholic Church","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG8.jpg","Answer":"PAPA","DisorderedAnswer":"AAPP","Creator":"","Code":"132320"},
+{"Level":"9","Question":"Undercoat","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG9.jpg","Answer":"LAYER","DisorderedAnswer":"AELRY","Creator":"","Code":"133024"},
+{"Level":"10","Question":" So, give ____ to my music ...","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG10.jpg","Answer":"RHYTHM","DisorderedAnswer":"HHMRTY","Creator":"","Code":"133428"},
+{"Level":"11","Question":"16 - 06 - 68 - 88 - ? - 98","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG11.jpg","Answer":"87","DisorderedAnswer":"78","Creator":"","Code":"135354"},
+{"Level":"12","Question":"What is the answer?","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG14.jpg","Answer":"SOLVE","DisorderedAnswer":"ELOSV","Creator":"","Code":"175036"},
+{"Level":"13","Question":"Cause or allow (liquid) to flow over the edge of its container, especially unintentionally","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG15.jpg","Answer":"SPILL","DisorderedAnswer":"ILLPS","Creator":"","Code":"181149"},
+{"Level":"14","Question":"Quickness of motion or action","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG16.jpg","Answer":"VELOCITY","DisorderedAnswer":"CEILOTVY","Creator":"","Code":"19546"},
+{"Level":"15","Question":"Reheat, cook, melt, microwave","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG17.jpg","Answer":"WARM","DisorderedAnswer":"AMRW","Creator":"","Code":"19202"},
+{"Level":"16","Question":"\"I enjoy traveling, especially to very ____ places\"","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG18.jpg","Answer":"DIFFERENT","DisorderedAnswer":"DEEFFINRT","Creator":"","Code":"111319"},
+{"Level":"17","Question":"What is the answer?","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG19.jpg","Answer":"25","DisorderedAnswer":"1205897","Creator":"","Code":"12712"},
+{"Level":"18","Question":"What is the answer?","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG20.jpg","Answer":"5","DisorderedAnswer":"0189572","Creator":"","Code":"121220"},
+{"Level":"19","Question":"_______","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG21.jpg","Answer":"TRAIN","DisorderedAnswer":"AINRT","Creator":"","Code":"14622"},
+{"Level":"20","Question":"What is the answer?","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG22.jpg","Answer":"REFLECTION","DisorderedAnswer":"CEEFILNORT","Creator":"","Code":"141341"},
+{"Level":"21","Question":"\"Every ___ you eat, every step you take\"","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG23.jpg","Answer":"BITE","DisorderedAnswer":"BEIT","Creator":"","Code":"145651"},
+{"Level":"22","Question":"Attractive, Pretty, Lovely, Stunning","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG24.jpg","Answer":"SYNONYMS","DisorderedAnswer":"MNNOSSYY","Creator":"","Code":"15359"},
+{"Level":"23","Question":"Brightstar, flashy, gaudy","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG25.jpg","Answer":"COLORFUL","DisorderedAnswer":"CFLLOORU","Creator":"","Code":"151212"},
+{"Level":"24","Question":"How is the ___ in your country?","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG26.jpg","Answer":"WEATHER","DisorderedAnswer":"AEEHRTW","Creator":"","Code":"153636"},
+{"Level":"25","Question":"You need to put on a coat ...","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG27.jpg","Answer":"COLD","DisorderedAnswer":"CDLO","Creator":"","Code":"154621"},
+{"Level":"26","Question":"If you're hungry, I'm _____ to fix you a snack.","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG28.jpg","Answer":"HAPPY","DisorderedAnswer":"AHPPY","Creator":"","Code":"154846"},
+{"Level":"27","Question":"The camera captured her father's proud smile as she collected her trophy.","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG29.jpg","Answer":"PROUD","DisorderedAnswer":"DOPRU","Creator":"","Code":"155254"},
+{"Level":"28","Question":"1 + 1 ÷ 1 x 2 - 1 + 6","ImgPath":"http://www.gildevelopers.com/whatsit/Images/Level/IMG30.jpg","Answer":"9","DisorderedAnswer":"9","Creator":"","Code":"16236"}]}]}

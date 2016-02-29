@@ -1,0 +1,120 @@
+body{ font-family:arial; margin:auto; background-color:rgb(240,240,240);}
+
+.main_container{min-width:600px; min-height:700px; margin:auto; background-color:rgb(240,240,240); opacity:0.0;}
+.table_container{width:100%; padding-top:0px; }
+/*.table_container .tbHeaderL{width:25%;}
+.table_container .tbHeaderC{width:50%;}
+.table_container .tbHeaderR{width:25%; }*/
+
+.table_container .trTitle .pTitle{font-size:35px; font-weight:bolder; text-align:center; color:rgb(110,100,100);}
+.table_container .trTitle span{font-size:18px; font-weight:thin; text-align:center; color:rgb(110,100,100);}
+
+.signIn_Tb{margin:auto;}
+.signIn_Tb p{font-size:16px; font-weight:thin; text-align:center; color:rgb(110,100,100);}
+.signIn_Tb a{text-decoration:none; font-weight:bolder; color:rgb(150,150,240);}
+.logInDiv{width:100%; height:50px; display:none;}
+.logInDiv table{width:100%; height:100%;}
+.logInDiv input{float:right; background-color:white; solid 1px rgb(230,230,230) font-weight:12px; color:gray; }
+
+.table_container .trBody{ background-color:rgb(240,240,240);}
+
+/*Div principal - juego*/
+
+.statusBar{width:100%; height:30px; border-radius:15px;}
+.statusBar .tdleft{width:20%;}
+.statusBar .tdcenter{width:60%;}
+.statusBar .tdright{width:20%;}
+.level{font-size:18px; height:5px; font-weight:bold; text-align:center; color:rgb(110,100,100);}
+.sbLine{width:100%; height:1px; margin:auto; background-color:rgb(230,230,230);}
+
+.game_container{margin:auto; width:100%; }
+
+.game_container .table_game{ margin:auto; width:50%; background-color:white; border:solid 2px rgb(230,230,230); border-radius:15px;}
+.game_container .table_game .trQuestion p{text-align:center; font-size:18px;}
+.game_container .table_game .trImage{border:solid rgb(100,100,100); }
+
+.game_container .table_game .trImage .imageDiv{width:100%; min-width:600px; padding-top:20px; padding-bottom:20px;}
+
+.game_container .table_game .trAnswer .answerDiv table{margin:auto;}
+.game_container .table_game .trAnswer .answerDiv table input{width:35px; height:35px; border:none; background-color:white; font-weight:bold; font-size:30px; color:rgb(110,100,100);}
+.game_container .table_game .trAnswer .answerDiv table tr .tdAnswerOutput .pAnswerOutput{font-weight:bold; font-size:30px; color:rgb(110,100,100); text-align:center; height:15px;}
+ 
+.game_container .table_game .trAnswer .answerDiv table tr .tdAnswerOutput .imgSuggest{opacity:0.8}
+
+.game_container .table_game .trAnswer .answerDiv table tr .tdAnswerInput{padding-bottom:10px;}
+.answerLine{width:100%; height:1px; margin:auto; background-color:rgb(230,230,230);}
+
+.footer{width:100%; padding-top:20px;}
+.footer .footer_tb{margin:auto; width:50%; min-width:600px;}
+.footer .footer_tb p{font-size:15px; font-weight:thin; text-align:center; color:rgb(110,100,100);}
+.footer .footer_tb a{color:rgb(110,100,100);}
+.footer .footer_tb .footerLink{text-decoration:underline; color:rgb(110,100,100);}
+.communityLevel{text-decoration:underline; font-weight:bold;}
+
+.correctAnswer{display:none;}
+.levelCount{display:none;}
+.Au_UserName{display:none;}
+.Au_Password{display:none;}
+.Au_Page{display:none;}
+
+
+/*Create level - file*/
+
+.controlBar{width:100%; height:30px; border-radius:15px; }
+.controlBar .tdleft{width:20%;}
+.controlBar .tdcenter{width:60%;}
+.controlBar .tdright{width:20%;}
+
+.trInputQuestion {text-align:center; }
+
+.trInputQuestion table{width:100%;}
+
+.trInputQuestion div{padding-top:10px; }
+
+.trInputQuestion input{width:400px; height:20px; border-radius:5px; border-color:rgba(110,100,100,0.1); border-width:1px; text-align:center; font-size:14px;}
+
+.trInputImage{border:solid rgb(100,100,100); text-align:center;}
+
+.trInputImage div{padding-top:10px; }
+
+.trInputImage table{width:100%;}
+
+.trInputImage p{text-align:center; }
+
+.trInputImage input{width:400px; height:20px; border-radius:5px; border-color:rgba(110,100,100,0.1); border-width:1px; text-align:center; font-size:14px;}
+
+.trInputImage .imageDiv{width:100%; min-width:600px; padding-top:20px; padding-bottom:20px;}
+
+.trInputAnswer {text-align:center; }
+
+.trInputAnswer table{width:100%;}
+
+.trInputAnswer input{width:400px; height:20px; border-radius:5px; border-color:rgba(110,100,100,0.1); border-width:1px; text-align:center; font-size:14px;}
+
+/*Comments - file*/
+
+.game_container .table_comments{ margin:auto; width:95%; background-color:white; border:solid 2px rgb(230,230,230); border-radius:15px;}
+
+.statusBar .tdleft_comments{width:90%;}
+
+.statusBar .tdright_comments{width:10%;}
+
+.tname{width:250; height:25px; border-color:rgb(240,240,240);}
+
+.tcomment{width:500px; height:25px; border-color:rgb(240,240,240);}
+
+.mainTbComments{width:100%;}
+
+.tbUserComments{width:100%; padding-bottom:2px;}
+
+.tbUserComments p{font-family:arial; padding-left:10px;}
+
+.tdleft_comments p{font-size:14px; padding-right:10px; text-transform:uppercase;}
+
+.username_c{font-size:16px; font-weight:bold; text-transform:uppercase;}
+
+.date_c{font-size:12px; font-weight:lighter; text-transform:uppercase; color:rgb(220,220,220);}
+
+
+.sbLine_c{width:90%; height:1px; margin:auto; background-color:rgb(240,240,240);}
+
