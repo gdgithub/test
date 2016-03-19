@@ -1,1 +1,1 @@
-estado del archivo: 1
+estado del archivo: 2
