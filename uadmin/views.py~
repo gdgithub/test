@@ -1,0 +1,43 @@
+from django.shortcuts import render
+from django.http import HttpResponse
+from uadmin.models import *
+from django.template import loader, RequestContext
+
+# Create your views here.
+
+
+def uadmin(request):
+    data = contacts.objects.all();
+    rows = [x for x in data][:10];
+
+    dic = {
+        "columns": [
+            "Nombre",
+            "Telefono",
+            "Direccion"],
+        "data":rows
+    }
+
+    return render(request, 'uadmin/admin.html',{'columns': ["Nombre","Telefono","Direccion"],"data":rows})
+
+def create(request):
+	#data = contacts.objects.all();
+	#out = [x.name for x in data];
+
+	if request.method == "POST":
+		name = request.POST['name']
+		address = request.POST['address']
+		
+		contacts.objects.create(
+			name = name,
+			phone = "00",
+			address = address,
+			category_id = 0
+		)
+
+		return HttpResponse('Informacion almacenada exitosamente.')
+
+
+
+
+    

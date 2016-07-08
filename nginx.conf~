@@ -1,0 +1,15 @@
+server {
+    listen 80;
+    server_name MyOrder;
+
+    access_log ../../logs/nginx_access.log;
+    error_log ../../logs/nginx_error.log;
+
+    location /static {
+        root /home/webapp/app;
+    }
+
+    location / {
+        proxy_pass http://127.0.0.1:8888;
+    }
+}
