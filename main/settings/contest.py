@@ -4,7 +4,7 @@ from base import *
 SITE_ID = 1
 
 ALLOWED_HOSTS = ['*']
-DEBUG = True
+DEBUG = False
 
 DATABASES = {
         'default': {
