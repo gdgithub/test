@@ -1,0 +1,81 @@
+{% extends "management.html" %}
+
+{% block content %}
+
+<div class="content">
+
+	<div class="header_suggest_child">
+		<table>
+		<tr>
+			<td>
+				<p>Organizacion de equipos</p>
+			</td>
+			<td>
+				<!--<button style="opacity:0;" class="ui olive button" id="reset_Suggest_Form">Nuevo</button>-->
+				<button class="ui olive button" data-toggle="modal" data-target="#groupModal">Nuevo</button>
+			</td>
+		</tr>
+		</table>
+	</div>
+
+	<div class="body_suggest">
+
+		<form class="ui form segment" id="groupForm">
+		  <p>Informacion del grupo</p>
+		  <div class="data"></div>
+		  <div class="gruop_info"></div>
+		</form>
+		<div class="" id="alert" role="alert"></div>
+	</div>
+
+
+		<!-- Modal -->
+	<div class="modal fade" id="groupModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Nuevo grupo</h4>
+	      </div>
+	      <div class="modal-body">
+
+	      	<form class="ui form segment" id="addGruopForm">
+			  <p>Informacion del grupo</p>
+			  <div class="content">
+			  <div class="two fields">
+			  	<div class="field">
+			      <label>Nombre</label>
+			      <input placeholder="Nombre del grupo" name="gnombre" id="gnombre" type="text">
+			    </div>
+			    <div class="field">
+			      <label>Encargado</label>
+			      <input placeholder="Encargado del grupo" name="gencargado" id="gencargado" type="text">
+			    </div>
+			  </div>
+
+			  <p>Integrantes:</p>
+
+			  <div class="two fields">
+			  	<div class="field">
+			      <label>Nombre / usuario</label>
+			      <input placeholder="Ej. Juan Perez / Jp1592" name="gmiembro" id="gmiembro" type="text">
+			    </div>
+			  </div>
+
+			  </div>
+			  <button class="ui olive button newMenu" id="newMember">Nuevo integrante</button>
+			  <div class="ui submit button" id="saveGroup" data-dismiss="modal">Guardar</div>
+			  <div class="ui error message"></div>
+			</form>
+			
+			<div class="" id="alert_changePass" role="alert"></div>
+	      </div>
+	   
+	    </div>
+	  </div>
+	</div>
+
+
+</div>
+
+{% endblock %}

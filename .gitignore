@@ -1,4 +1,6 @@
-venv
 *.pyc
 *.py~
-static/
+*.js~
+*.html~
+*.css~
+venv/
