@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from home.models import *
-from directories.models import *
+from src.home.models import *
+from src.directories.models import *
 from django.template import loader, RequestContext
 import json
 import smtplib

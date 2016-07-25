@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.http import HttpResponse
-from directories.models import *
+from src.directories.models import *
 from django.core import serializers
 import json
 # Create your views here.

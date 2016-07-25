@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.conf.urls import url
 from . import views
-import directories.views
+import src.directories.views
 
 
 urlpatterns = [
@@ -24,19 +24,19 @@ urlpatterns = [
     url(r'authenticate/signup/$', views.signup, name='signup'),
     url(r'authenticate/userCredentials/$',
         views.userCredentials, name='userCredentials'),
-    url(r'directories/getAll/$', directories.views.getAll, name='getAll'),
+    url(r'directories/getAll/$', src.directories.views.getAll, name='getAll'),
     url(r'directories/getContactBranches/$',
-        directories.views.getContactBranches, name='getContactBranches'),
+        src.directories.views.getContactBranches, name='getContactBranches'),
     url(r'directories/getBranchMenu/$',
-        directories.views.getBranchMenu, name='getBranchMenu'),
+        src.directories.views.getBranchMenu, name='getBranchMenu'),
     url(r'directories/createOrder/$',
-        directories.views.createOrder, name='createOrder'),
+        src.directories.views.createOrder, name='createOrder'),
     url(r'directories/getContactsName/$',
-        directories.views.getContactsName, name='getContactsName'),
+        src.directories.views.getContactsName, name='getContactsName'),
     url(r'directories/getCategories/$',
-        directories.views.getCategories, name='getCategories'),
+        src.directories.views.getCategories, name='getCategories'),
     url(r'directories/findContact/$',
-        directories.views.findContact, name='findContact'),
+        src.directories.views.findContact, name='findContact'),
     url(r'directories/getContactsOrdered/$',
-        directories.views.getContactsOrdered, name='getContactsOrdered')
+        src.directories.views.getContactsOrdered, name='getContactsOrdered')
 ]

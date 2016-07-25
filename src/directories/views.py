@@ -1,6 +1,6 @@
 
 from django.http import HttpResponse
-from directories.models import *
+from src.directories.models import *
 import json
 import copy
 

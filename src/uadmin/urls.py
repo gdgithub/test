@@ -14,20 +14,20 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url
-import uadmin.views
-import directories.views
+import src.uadmin.views
+import src.directories.views
 
 
 urlpatterns = [
-    url(r'^$', uadmin.views.uadmin, name='uadmin'),
-    url(r'^notifications/$', uadmin.views.notifications, name='notifications'),
-    url(r'contact/$', uadmin.views.contact, name='contact'),
-    url(r'user/$', uadmin.views.user, name='user'),
-    url(r'group/$', uadmin.views.group, name='group'),
-    url(r'save/create/$', directories.views.create, name='create'),
-    url(r'saveUser/$', uadmin.views.saveUser, name='saveUser'),
-    url(r'directories/delete/$', directories.views.delete, name='delete'),
+    url(r'^$', src.uadmin.views.uadmin, name='uadmin'),
+    url(r'^notifications/$', src.uadmin.views.notifications, name='notifications'),
+    url(r'contact/$', src.uadmin.views.contact, name='contact'),
+    url(r'user/$', src.uadmin.views.user, name='user'),
+    url(r'group/$', src.uadmin.views.group, name='group'),
+    url(r'save/create/$', src.directories.views.create, name='create'),
+    url(r'saveUser/$', src.uadmin.views.saveUser, name='saveUser'),
+    url(r'directories/delete/$', src.directories.views.delete, name='delete'),
     url(r'directories/getCategories/$',
-        directories.views.getCategories, name='getCategories')
+        src.directories.views.getCategories, name='getCategories')
 
 ]
