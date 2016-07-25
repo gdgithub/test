@@ -48,7 +48,8 @@ def signup(request):
             users.objects.create(
                 email=email,
                 password=pwd,
-                rol="dev",
+                # rol_id = 1 es el usuario dev, rol_id = 2 ff
+                rol=roles.objects.filter(name='1')[0],
                 status="pending")  # save user
 
             uid = users.objects.get(email=email)
