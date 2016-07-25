@@ -3,5 +3,6 @@
 *.js~
 *.html~
 *.css~
+*~
 venv/
 src/static/

@@ -36,7 +36,6 @@ jQuery(window).load(function () {
 	else if(window.location.pathname == "/management/group/")
 	{
 		
-
 		if (getCookie("access-type") == 1) 
 		{
 			// Usuario admin: Guarda sugerencia enable
@@ -198,12 +197,13 @@ jQuery(window).load(function () {
 
 	     postData('createGroup/',dic,function(data){
 
-	     	/*data = $.parseJSON(data);*/
-
 	     	if(data)
 	     	{
 	     		getGroups(getCookie('userId'),getCookie('access-type'));
 	     		show_alert("success","Grupo creado.",3000);
+	     	}
+	     	else{
+	     		show_alert("danger","Error.",3000);
 	     	}
 			
          });
@@ -1124,7 +1124,7 @@ function getGroups(userId, usrRol)
 
 			if(data)
 			{
-				var obj = `<div class="ui styled accordion">`;
+				var obj = `<div class="ui styled accordion" style="width:100%;">`;
 
 				for(var i=0; i<data.length; i++)
 				{
@@ -1145,7 +1145,7 @@ function getGroups(userId, usrRol)
 					users = users.length == 0? "<li>No contiene integrantes.</li>" : users;
 
 					var del_group = usrRol == 1 ? `<div class="delete_group" gid="`+data[i].id+`" style="float:right; color:rgb(200,90,50);">Eliminar</div>` : "";
-					var edit_group = (usrRol == 1 || usrRol == 2) ? `<div class="edit_group" gid="`+data[i].id+`" style="float:right; color:rgb(90,170,50); margin-right:10px;">Editar</div>` : "";
+					var edit_group = (usrRol == 1 || usrRol == 2) ? `<div class="edit_group" gid="`+data[i].id+`" style="float:right; color:rgb(90,170,50); margin-right:10px;" data-toggle="modal" data-target="#groupModal">Editar</div>` : "";
 
 					obj += `<div class="title">
 						    <i class="dropdown icon"></i>
@@ -1192,7 +1192,7 @@ function getGroups(userId, usrRol)
 
 			$(".edit_group").click(function(){
 
-				
+				load_groupInfo($(this).attr('gid'));
 			});
 
 			$(".delete_user").click(function(){
@@ -1270,6 +1270,32 @@ function getGroupMembers(uid)
 		});
 }
 
+function load_groupInfo(gid)
+{
+	var dic = {
+          groupId: gid,
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+    }
+
+
+    postData('getGroupInfo/',dic,function(data){
+
+    	data = $.parseJSON(data);
+
+		if(data)
+		{
+			$('#addGruopForm').form('set values', {
+				gnombre     : "data[0].rnc",
+				gencargado   : "data[0].categoryId_id",
+				gmiembro   : "data[0].name"
+			});
+			//$("#contacts_modal").modal("hide");
+		}
+		else{
+			alert("er");
+		}
+	});
+}
 
 function load_contactForm(contactId)
 {

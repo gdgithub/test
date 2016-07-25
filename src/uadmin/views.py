@@ -197,12 +197,26 @@ def createGroup(request):
     if request.method == "POST":
         gname = request.POST['gname']
         gff = request.POST['gff']
-        # gmembers = request.POST['gmembers']
+        gmembers = request.POST['gmembers']
 
+        gmembers = gmembers.split('|')
+
+        # creating group
         groups.objects.create(name=gname, ffId=gff)
 
+        # getting group id
+        gid = groups.objects.values().filter(name=gname, ffId=gff)
+
+        # setting group members
+        for i in range(len(gmembers)):
+            # taking each uid
+            userInfo.objects.filter(uid_id=gmembers[i]).update(
+                groupId=gid[0]['id']
+                )
+
+
         # setting members
-    return HttpResponse("ok")
+    return HttpResponse("json.dumps(gid)")
 
 
 def notifications(request):

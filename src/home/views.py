@@ -119,3 +119,8 @@ def getUserInfo(request):
                 'fail': """Ocurrio un error al momento de enviar el correo.
                      por valor verifique e intente nuevamente."""
             }), content_type='application/json')
+
+
+def getGroupInfo(request):
+    if request.method == "POST":
+        email = request.POST["email"]
