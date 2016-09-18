@@ -1,0 +1,112 @@
+{% extends "uadmin/admin.html" %}
+
+{% block content %}
+
+<div class="contact_table">
+	<h4>Grupos</h4>
+
+	<table class="ui celled table" id="users_table">
+        <thead>
+          <tr>    
+              <th>Nombre</th>
+              <th>Apellido</th>
+              <th>Email</th>
+              <th>Rol</th>
+              <th>Estado</th>
+
+              <th style="width:30px;">Editar</th>
+              <th style="width:30px;">Eliminar</th>
+          </tr>
+        </thead>
+        <tbody>
+           {% for row in data %}
+            <tr>
+                <td>{{ row.first_name }}</td>
+                <td>{{ row.last_name }}</td>
+                <td>{{ row.uid.email }}</td>
+                <td>{{ row.uid.rol.name }}</td>
+                <td>{{ row.uid.status }}</td>
+                <td><i class="edit icon" id="editContact" data-val={{ row.id }}></i></td>
+                <td id="delContact" ><i class="edit icon" id="delContact" data-val={{ row.id }}></i></td>
+            </tr>
+            {% endfor %}
+          </tbody>      
+    </table>
+</div>
+
+
+<!-- Button trigger modal -->
+<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+        <h4 class="modal-title" id="myModalLabel">Nuevo usuario</h4>
+      </div>
+      <div class="modal-body">
+        
+
+		<form class="ui form segment">
+		  <p>Informacion del usuario</p>
+		  <div class="two fields">
+		    <div class="field">
+		      <label>Nombres</label>
+		      <input placeholder="Nombres" name="unombre" id="unombre" type="text">
+		    </div>
+		    <div class="field">
+		      <label>Apellidos</label>
+		      <input placeholder="Apellioos" name="uapellido" id="uapellido" type="text">
+		    </div>
+		  </div>
+		  <div class="two fields">
+		    <div class="field">
+		      <label>Direccion</label>
+		      <input placeholder="Direccion" name="udireccion" id="udireccion" type="text">
+		    </div>
+		  </div>
+		 
+		  <div>
+		  	<p>Autenticacion</p>
+
+		  	<div class="two fields" id="f">
+			    <div class="field">
+			      <label>Correo</label>
+			      <input placeholder="Direccion de correo electronico" name="ucorreo" id="ucorreo" type="text">
+			    </div>
+			    <div class="field">
+			      <label>Contrasena</label>
+			      <input type="password" placeholder="Contrasena" name="ucontrasena" id="ucontrasena">
+			    </div>
+		  	</div>
+
+		  	<div>
+		  		<label>Rol</label>
+		      <select class="ui dropdown" name="urol" id="urol">
+		        <option value="admin">admin</option>
+		      </select>
+		  	</div>
+
+		  </div>
+		  <div class="inline field">
+		 
+		  </div>
+		  <div class="ui blue button" id="saveUser">Guardar</div>
+		  <div class="ui blue button" id="">Cancelar</div>
+		  <div class="ui error message"></div>
+		</form>
+
+
+      </div>
+     
+    </div>
+  </div>
+</div>
+
+
+
+{% endblock %}

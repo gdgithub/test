@@ -1,0 +1,308 @@
+<html lang="es">
+<head>
+    <meta content = text/html charset=UTF-8>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=yes" />
+
+    <title>Admin</title>
+
+    {% load staticfiles %}
+
+    <!-- css files -->
+	 <link rel="stylesheet" type="text/css" href="{% static 'home/css/style.css' %}"/> 
+
+    <link rel="stylesheet" type="text/css" href="{% static 'uadmin/css/style.css' %}"/>
+
+    <link rel="stylesheet" type="text/css" href="{% static '3rd_party/bootstrap/css/bootstrap.min.css' %}"
+     />
+
+	<link rel="stylesheet" type="text/css" href="{% static '3rd_party/semantic/semantic.css' %}"/>
+
+     <!-- js files -->
+    <script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'uadmin/js/scripts.js' %}"></script>
+
+    <script type="text/javascript" src="{% static '3rd_party/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static '3rd_party/semantic/semantic.js' %}"></script>
+
+    <script type="text/javascript" src="{% static '3rd_party/jquery/jquery.dataTables.min.js'%}"></script>
+
+    <script type="text/javascript" src="{% static '3rd_party/semantic/components/dataTables.semanticui.min.js' %}"></script>
+
+</head>
+<body>
+    <div class="top control-bar">
+        <table>
+            <tr>
+                <td id="logo-side">
+                    <h4>MyOrders - management</h4>
+                </td>
+                <td id="center-side">
+                </td>
+                <td id="auth-side">
+                    <ul>
+                        <a data-toggle="modal" data-target="#login-modal" id="login"><li>Iniciar Sesion</li></a>
+                        <a data-toggle="modal" data-target="#login-modal" id="register"><li>Registrarse</li></a>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="menu-bar">
+		<ul id="menu">
+			<li id="Pedidos"><a href="notifications">Notificaciones</a></li>
+			<li id="Contactos"><a href="/uadmin/contact">Contactos</a></li>
+			<li id="Grupos"><a href="/uadmin/group">Grupos</a></li>			
+			<li id="Usuarios"><a href="/uadmin/user">Usuarios</a></li>
+			<li id="Sugerencias"><a href="sugest">Sugerencias</a></li>
+		</ul>
+    </div>
+
+	<div class="divisor-h"></div>
+
+
+
+    <div class="content_child">
+
+        {% csrf_token %}
+
+    {% block content %}{% endblock %}
+
+    <!--
+
+    <div class="ajax-content loader">
+
+    <div class="datatable">
+   
+    <span class="title">Directorio de contactos.</span>
+  
+    <div class="line"></div>
+
+    <div class="divisor-h"></div>
+
+    <table class="ui celled table" id="contacts_table">
+        <thead>
+          <tr>    
+              <th>Nombre</th>
+              <th>Telefono</th>
+              <th>Direccion</th>
+          </tr>
+        </thead>
+        <tbody>
+           {% for row in data %}
+            <tr>
+                <td>{{ row.name }}</td>
+                <td>{{ row.phone }}</td>
+                <td>{{ row.address }}</td>
+            </tr>
+            {% endfor %}
+          </tbody>      
+    </table>
+    </div>
+        
+        <div class="contacts0">
+-->
+
+
+        <!--    <div id="contancts-div">
+                <table>
+                    <tr id="tr1">
+                       <td>
+                            <div class="ui category search">
+                              <div class="ui icon input">
+                                <input class="prompt" type="text" placeholder="Search animals...">
+                                <i class="search icon"></i>
+                              </div>
+                              <div class="results"></div>
+                            </div>
+                        </td>
+                    </tr id="tr2">
+                    <tr>
+                        <td>
+                            <div class="table-content">
+
+                                <div class="table-responsive">
+                                  <table class="ui celled table" id="contacts_table">
+                                    <thead>
+                                    <tr>    
+                                        <th>Nombre</th>
+                                        <th>Telefono</th>
+                                        <th>Direccion</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody>
+                                    {% for row in data %}
+                                        <tr>
+                                            <td>{{ row.name }}</td>
+                                            <td>{{ row.phone }}</td>
+                                            <td>{{ row.address }}</td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>      
+                                  </table>
+                                </div>
+
+                            </div>
+                        </td>
+                    </tr>
+                  </table>
+            </div>
+            
+            <div id="contacts-add">
+				<div class="content">
+		            <h3>Nuevo contacto</h3>
+		            <h3>Informacion del establecimiento</h3>
+	
+					<form id="post-form">{% csrf_token %}
+				        <table>
+				            <tr>
+				                <td>Categoria:</td>
+				                <td>
+				                    <div class="ui selection dropdown">
+				                      <input type="hidden" name="gender">
+				                      <i class="dropdown icon"></i>
+				                      <div class="default text">Gender</div>
+				                      <div class="menu">
+				                        <div class="item" data-value="1">Male</div>
+				                        <div class="item" data-value="0">Female</div>
+				                      </div>
+				                    </div>
+				                </td>
+				            </tr>
+				            <tr>
+				                <td>Nombre:</td>
+				                <td>
+				                    <div class="ui input">
+				                      <input type="text" id="contact_name" name="contact_name" placeholder="Ej: MCFoods" required />
+				                    </div>
+				                </td>
+				            </tr>
+                            <tr>
+				                <td>Telefono:</td>
+				                <td>
+				                    <div class="ui input">
+				                      <input type="phone" id="contact_address" name="contact_phone" placeholder="Ej: 809-222-1163" required />
+				                    </div>
+				                </td>
+				            </tr>
+				            <tr>
+				                <td>Ubicacion:</td>
+				                <td>
+				                    <div class="ui input">
+				                      <input type="text" id="contact_address" name="contact_address" placeholder="Ej: Av. abraham lincoln" required />
+				                    </div>
+				                </td>
+				            </tr>
+				        </table>
+					</form>
+     
+                    <div class="alert alert-success" role="alert"></div>
+
+		        </div>
+			</div>-->
+        <!--
+            <div id="cont-actions"> 
+                <ul>
+                    <li id="cont-category">Categorias</li>
+                    <li id="cont-freeze"></li>
+                    <li id="cont-new" value="Nuevo" class="btn btn-info">Nuevo</li>
+                    <li id="cont-edit" class="btn btn-warning">Editar</li>
+                    <li id="cont-delete" class="btn btn-danger">Eliminar</li>
+                </ul>
+            </div>
+        </div>
+        -->
+    </div>
+
+
+
+
+    <!-------------------- Modals -------------------->
+
+    <!-- New contact modal -->  
+
+    <!--
+    <div class="modal fade" id="new-contact-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+          </div>
+          <div class="modal-body">
+
+
+            <div class="content">
+                <h3>Nuevo contacto</h3>
+                <h3>Informacion del establecimiento</h3>
+  
+          <form id="post-form">{% csrf_token %}
+                <table>
+                    <tr>
+                        <td>Categoria:</td>
+                        <td>
+                            <div class="ui selection dropdown">
+                              <input type="hidden" name="gender">
+                              <i class="dropdown icon"></i>
+                              <div class="default text">Gender</div>
+                              <div class="menu">
+                                <div class="item" data-value="1">Male</div>
+                                <div class="item" data-value="0">Female</div>
+                              </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Nombre:</td>
+                        <td>
+                            <div class="ui input">
+                              <input type="text" id="contact_name" name="contact_name" placeholder="Ej: MCFoods" required />
+                            </div>
+                        </td>
+                    </tr>
+                            <tr>
+                        <td>Telefono:</td>
+                        <td>
+                            <div class="ui input">
+                              <input type="phone" id="contact_address" name="contact_phone" placeholder="Ej: 809-222-1163" required />
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Ubicacion:</td>
+                        <td>
+                            <div class="ui input">
+                              <input type="text" id="contact_address" name="contact_address" placeholder="Ej: Av. abraham lincoln" required />
+                            </div>
+                        </td>
+                    </tr>
+                </table>
+          </form>
+     
+                    <div class="alert alert-success" role="alert"></div>
+
+            </div>
+
+
+          
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    -->
+
+</body>
+    
+</html>
+
+  
+
