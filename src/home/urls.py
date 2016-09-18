@@ -20,7 +20,7 @@ import src.directories.views
 
 urlpatterns = [
     url(r'^$', views.home, name='home'),
-    url(r'authenticate/login/$', views.login, name='login'),
+    url(r'authenticate/login/$', views.login, name='loginold'),
     url(r'authenticate/signup/$', views.signup, name='signup'),
     url(r'authenticate/userCredentials/$',
         views.userCredentials, name='userCredentials'),

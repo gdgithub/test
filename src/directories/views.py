@@ -27,6 +27,119 @@ def getAll(request):
     return HttpResponse(json.dumps(data))
 
 
+def contactList(request):
+
+    data = list(contacts.objects.values().all().order_by('name'))
+
+    return HttpResponse(json.dumps(data))
+
+
+def getcontactlistmenu(request):
+    if request.method == "POST":
+        cid = request.POST['cid']
+
+        data = list(menu.objects.values().filter(
+            cid=cid))
+
+    return HttpResponse(json.dumps(data))
+
+
+def getmenudetails(request):
+    if request.method == "POST":
+        mid = request.POST['mid']
+
+        data = list(menu_desc.objects.values().filter(
+            mid=mid))
+
+    return HttpResponse(json.dumps(data))
+
+
+def getmenucategories(request):
+
+    data = list(menu_category.objects.values().all())
+
+    return HttpResponse(json.dumps(data))
+
+
+def getcategorywithid(request):
+    if request.method == "POST":
+        id = request.POST['id']
+
+        data = list(menu_category.objects.values().filter(
+            id=id))
+
+    return HttpResponse(json.dumps(data))
+
+
+def managemenu(request):
+    if request.method == "POST":
+        cid = request.POST['cid']
+        mid = request.POST['mid']
+        mdid = request.POST['mdid'].split("|")
+        mcid = request.POST['mcid'].split("|")
+        mdesc = request.POST['mdesc'].split("|")
+        mprice = request.POST['mprice'].split("|")
+        task = request.POST['task'].split("|")
+        newmenu = request.POST['newmenu']
+
+        if newmenu == "true":
+            ccid = contacts.objects.get(id=cid)
+            menu.objects.create(
+                cid=ccid,
+                name=mid
+            )
+
+            mid = menu.objects.filter(name=mid, cid=cid)
+            mid = mid[0].id
+
+        for x in range(len(mdid)):
+            if(task[x] == "edit"):
+                menu_desc.objects.filter(id=mdid[x]).update(
+                    categoryId=mcid[x],
+                    description=mdesc[x],
+                    price=mprice[x],
+                    mid=mid
+                )
+            elif(task[x] == "create"):
+                menuId = menu.objects.get(id=mid)
+                menuCat = menu_category.objects.get(id=mcid[x])
+                menu_desc.objects.create(
+                    categoryId=menuCat,
+                    description=mdesc[x],
+                    price=mprice[x],
+                    mid=menuId
+                )
+
+        return HttpResponse(json.dumps("success"))
+
+
+def deletemenu(request):
+    if request.method == "POST":
+        mid = request.POST['mid']
+        menu.objects.filter(id=mid).delete()
+
+    return HttpResponse(json.dumps("success"))
+
+
+def deletemenuitem(request):
+    if request.method == "POST":
+        eid = request.POST['eid']
+
+        menu_desc.objects.filter(id=eid).delete()
+
+    return HttpResponse(json.dumps("success"))
+
+
+def deletemenuelements(request):
+    if request.method == "POST":
+        mdid = request.POST['mdid'].split("|")
+
+        for x in range(len(mdid)):
+            menu_desc.objects.filter(id=mdid[x]).delete()
+
+        return HttpResponse(json.dumps("success"))
+
+
 def getContactsOrdered(request):
 
     if request.method == "POST":
@@ -64,9 +177,14 @@ def getContactsOrdered(request):
 
 
 def getContactsName(request):
+    if request.method == "POST":
+        userRol = request.POST['userRol']
 
-    data = list(contacts.objects.values('name').filter(
-        status="enable").order_by('name'))
+        if int(userRol) == 1:
+            data = list(contacts.objects.values('name').all().order_by('name'))
+        else:
+            data = list(contacts.objects.values('name').filter(
+                status="enable").order_by('name'))
 
     return HttpResponse(json.dumps(data))
 

@@ -24,6 +24,8 @@ urlpatterns = [
     url(r'^orders/$', src.management.views.orders_subpage, name='orders_subpage'),
     url(r'^group/$',
         src.management.views.group_subpage, name='group_subpage'),
+    url(r'^contacts/$',
+        src.management.views.contacts_subpage, name='contacts_subpage'),
     url(r'^suggest/$',
         src.management.views.suggest_subpage, name='suggest_subpage'),
     url(r'^myinfo/$',
@@ -34,6 +36,37 @@ urlpatterns = [
         src.management.views.cancelOrder, name='cancelOrder'),
     url(r'getUserOrders/$',
         src.management.views.getUserOrders, name='getUserOrders'),
+
+    url(r'contactList/$',
+        src.directories.views.contactList, name='contactList'),
+
+    url(r'findContact/$',
+        src.management.views.findContact, name='findContact'),
+
+    url(r'getcontactlistmenu/$',
+        src.directories.views.getcontactlistmenu, name='getcontactlistmenu'),
+
+    url(r'getmenudetails/$',
+        src.directories.views.getmenudetails, name='getmenudetails'),
+
+    url(r'getmenucategories/$',
+        src.directories.views.getmenucategories, name='getmenucategories'),
+
+    url(r'getcategorywithid/$',
+        src.directories.views.getcategorywithid, name='getcategorywithid'),
+
+    url(r'managemenu/$',
+        src.directories.views.managemenu, name='managemenu'),
+
+    url(r'deletemenu/$',
+        src.directories.views.deletemenu, name='deletemenu'),
+
+    url(r'deletemenuitem/$',
+        src.directories.views.deletemenuitem, name='deletemenuitem'),
+
+    url(r'deletemenuelements/$',
+        src.directories.views.deletemenuelements, name='deletemenuelements'),
+
     url(r'directories/getContactsName/$',
         src.directories.views.getContactsName, name='getContactsName'),
     url(r'directories/findContact/$',
@@ -63,12 +96,19 @@ urlpatterns = [
     url(r'deleteContact/$', src.directories.views.delete,
         name='delete'),
     url(r'getGroups/$',
-        src.uadmin.views.getGroups, name='getGroups'),
+        src.management.views.getGroups, name='getGroups'),
+    url(r'getGroupMemOrders/$',
+        src.management.views.getGroupMemOrders, name='getGroupMemOrders'),
+    url(r'getGroupInfo/$',
+        src.management.views.getGroupInfo, name='getGroupInfo'),
     url(r'delGroup/$',
         src.uadmin.views.delGroup, name='delGroup'),
     url(r'delUserGroup/$',
         src.uadmin.views.delUserGroup, name='delUserGroup'),
     url(r'createGroup/$',
-        src.uadmin.views.createGroup, name='createGroup'),
+        src.management.views.createGroup, name='createGroup'),
+    url(r'updateGroup/$',
+        src.management.views.updateGroup, name='updateGroup')
+
 
 ]

@@ -47,7 +47,8 @@ PROJECT_APPS = (
     'src.uadmin',
     'src.home',
     'src.directories',
-    'src.management'
+    'src.management',
+    'src.login'
 )
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS
