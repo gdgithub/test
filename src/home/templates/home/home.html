@@ -1,0 +1,256 @@
+<html lang="es">
+<head>
+    <meta content = text/html charset=UTF-8>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="format-detection" content="telephone=yes" />
+
+    <title>MyOrders</title>
+
+    {% load staticfiles %}
+
+    <!-- css files -->
+    
+    <link rel="stylesheet" type="text/css" href="{% static '3rd_party/bootstrap/css/bootstrap.min.css' %}"/>
+
+    <link rel="stylesheet" type="text/css" href="{% static '3rd_party/semantic/semantic.css' %}"/>
+
+    <link rel="stylesheet" type="text/css" href="{% static 'home/css/style.css' %}"/> 
+
+</head>
+<body>
+
+    {% csrf_token %}
+
+    <div class="top control-bar">
+        <table>
+            <tr>
+                <td id="logo-side">
+                    <h4>MyOrders</h4>
+                </td>
+                
+                <td id="auth-side">
+                
+                    <ul>
+                        <li><i class="grid Layout icon"></i></li>
+                        <a data-toggle="modal" data-target="#login-modal" id="login"><li><i class="user icon"></i> Iniciar Sesión</li></a>
+                    </ul>
+                </td>
+            </tr>
+        </table>
+    </div>
+    
+    <div class="slider-content">
+
+		<p class="search-content-title">Buscar establecimientos de comida</p>
+        
+        <div class="searchFilterDiv">
+          <ul class="ul_searchFilter">
+            <li>
+              <select class="ui dropdown" id="mcategory">
+                  <option value="">Categoría</option>
+              </select>
+            </li>
+            <li>
+              <div class="ui search">
+                 <div class="ui search">
+                    <div class="ui icon input">
+                      <input class="prompt" id="tsearch" type="text" onkeypress="findContact(event)" placeholder="Buscar establecimientos">
+                      <i class="search icon"></i>
+                    </div>
+                    <div class="results"></div>
+                  </div>
+              </div>
+            </li>
+            <li>
+            <button class="positive ui button" id="findButton">Buscar</button>
+            </li>
+          </ul>
+        </div>
+
+    </div>
+
+    <div class="contact-establishments content">
+
+    <div class="filterDiv">
+      <h4 class="ui header">
+        <i class="circle icon"></i>
+        <div class="content">
+          Ordenar por
+          <div class="ui inline dropdown" id="orden">
+            <div class="text">categoría</div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+             <!-- <div class="header">Adjust time span</div> -->
+              <div class="active item" data-value="c"data-text="categoria">categoria</div>
+              <div class="item" data-value="r>" data-text="mayor popularidad">mayor popularidad</div>
+              <div class="item" data-value="r<" data-text="menor popularidad">menor popularidad</div>
+              <div class="item" data-value="1" data-text="rating (1 estrella)">rating (1 estrella)</div>
+              <div class="item" data-value="2" data-text="rating (2 estrella)">rating (2 estrella)</div>
+              <div class="item" data-value="3" data-text="rating (3 estrella)">rating (3 estrella)</div>
+              <div class="item" data-value="4" data-text="rating (4 estrella)">rating (4 estrella)</div>
+              <div class="item" data-value="5" data-text="rating (5 estrella)">rating (5 estrella)</div>
+
+            </div>
+          </div>
+        </div>
+      </h4>
+    </div>
+
+    <div class="ui large active centered inline loader" id="directory_loader"></div>
+
+      <div class="directories_tb"></div>
+        
+    </div>
+
+
+    <!-- modals -->
+    <div class="modal fade bs-example-modal-sm" id="login-modal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+        <div class="modal-dialog modal-sm">
+  
+           <div class="login-page">
+              <div class="form">
+                <form class="register-form">
+                  {% csrf_token %}
+                  <div id="authAlert" role="alert"></div>
+
+                  <input type="email" id="temail" placeholder="Correo"/>
+                  <input type="password" id="tpass" placeholder="Contraseña"/>
+                  
+                  <button id="signUp-btn">Registrar</button>
+                  <p class="message">¿Ya se ha registrado? <a href="#">Iniciar Sesión</a></p>
+                </form>
+                <form class="login-form">
+                  {% csrf_token %}
+                  <div id="authAlert" role="alert"></div>
+
+                  <input type="text" id="temail" placeholder="Email"/>
+                  <input type="password" id="tpass" placeholder="Contraseña"/>
+                  <button id="logIn-btn">Iniciar Sesión</button>
+                  <p class="message">¿No se ha registrado? <a href="#">Registrarse</a></p>
+                  <p class="message"><a href="#">Olvidé mi contraseña</a></p>
+                </form>
+              </div>
+            </div>
+         </div>
+     </div>
+
+
+     <div class="ui modal contactModal">
+        <i class="close icon"></i>
+        <div class="header"></div>
+
+        <div class="ui top attached tabular menu">
+          <a class="item active" data-tab="info">Información</a>
+          <a class="item" data-tab="pedidos">Pedidos</a>
+          <a class="item" data-tab="sucursales">Sucursales</a>
+          <a class="item" data-tab="valoracion">Valoración y comentarios</a>
+        </div>
+        <div class="ui bottom attached tab segment" data-tab="info">
+
+          <div class="image content">
+              <table>
+                <tr>
+                  <td>
+                    <div class="ui medium image">
+                      <img src="{% static 'img/no_image.png' %}"/>
+                    </div>
+                </td>
+                <td>
+              <div class="description">
+                <div class="ui header desc">Contact Name</div>
+                <p id="contact_description">Contact description</p>
+              </div>
+              </td>
+              </tr>
+              </table>
+          </div>
+            
+
+        </div>
+        <div class="ui bottom attached tab segment" data-tab="pedidos" id="pedidos_segment">
+
+          <div id="dropdown">
+              <select class="ui dropdown" id="sucursal_select">
+               <option value="">Sucursal</option>
+              </select>
+          </div>
+
+          <div id="table">
+            <table class="pedidosTb">
+              <tr>
+                <td class="cantidad_section">
+                  <div class="ui input">
+                    <input type="number" id="tcantidad" placeholder="Cantidad">
+                  </div>
+                </td>
+                <td class="select_section">
+                  <select class="ui fluid search dropdown" id="MenuSelect" multiple="" placeholder="Menu">
+                  </select>
+                </td>
+                <td>
+                  <button class="ui primary button" id="addToOrderList">Agregar</button>
+                </td>
+              </tr>
+            </table>
+          </div>
+
+          <div id="description">
+
+            <!--
+            <h4 class="ui horizontal divider header1">
+              <i class="tag icon"></i>
+              Descripcion del pedido
+            </h4>-->
+
+            <p>Descripción del pedido.</p>
+            <textarea id="text_description" readonly=""></textarea>
+          </div>
+          {% csrf_token %}
+          <div class="action">
+              <div class="ui black deny button">Cancelar</div>
+              <div class="ui positive right labeled icon button" id="doRequest">Realizar pedido<i class="checkmark icon"></i>
+              </div>
+          </div>
+
+        </div>
+        <div class="ui bottom attached tab segment active" data-tab="sucursales">
+          <table class="branchesTb">
+            <tr>
+              <td>
+                <p>Nuestras sucursales:</p>
+              </td>
+            </tr>
+            
+          </table>
+        </div>
+        <div class="ui bottom attached tab segment active" data-tab="valoracion">
+          Fourth
+        </div>
+
+
+      </div>
+
+
+
+
+
+</body>
+
+
+    <!-- js files -->
+    <script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static '3rd_party/bootstrap/js/bootstrap.min.js' %}"></script>
+
+    <script type="text/javascript" src="{% static '3rd_party/semantic/semantic.js' %}"></script>
+
+    <script type="text/javascript" src="{% static 'home/js/scripts.js' %}"></script>
+
+
+
+    
+</html>
+
+  
+
