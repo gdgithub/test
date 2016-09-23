@@ -13,7 +13,7 @@
 			<p>Pedidos</p>
 		</td>
 		<td>
-			<button class="ui olive button" id="newBtn" data-toggle="modal" data-target="#myModal">Nuevo</button>
+			<button class="ui olive button" id="neworder" data-toggle="modal" data-target="#myModal">Nuevo</button>
 		</td>
 		</tr>
 		</table>
@@ -66,15 +66,17 @@
 
 
 	<!-- Modal -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	<div class="modal fade" id="myModal" class="order_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">
 	      <div class="modal-header">
-	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <button type="button" class="close orderModal" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
 	        <h4 class="modal-title" id="myModalLabel">Nuevo pedido</h4>
+
 	      </div>
 	      <div class="modal-body" id="newOrderModalBody">
 	      
+	      	<p>Seleccione la sucursal donde desea realizar el pedido.</p>
 		    <table class="newOrderTable">
 		      	<tr>
 		      		<td>
@@ -95,6 +97,15 @@
 			</table>
 
 
+			<div id="dropdown" class="menu_select_div">
+				<p>Select menu.</p>
+			    <select class="ui dropdown" id="menu_select">
+			        <option value="">Menu</option>
+			    </select>
+			</div>
+
+			
+<!--
 			<table class="orderDetailsTable">
 				<tr>
 					<td colspan="3">
@@ -110,59 +121,13 @@
 			          	</div>
 	          		</td>
 	          	</tr>
-	        </table>
+	        </table>-->
 
-	        <div class="menu_content">
+	        <div class="order_menu_content">
 
 	        </div>
 
-	       <!-- <table class="orderDetailsTable">
-	          	<tr>
-				    <td>
-				        <div class="ui input" >
-							<input type="number" placeholder="Cant." min="0" id="tcantidad"/>
-						</div>
-				    </td>
-				    <td style="width:100%;">
-				        <select class="ui fluid search dropdown" id="MenuSelect" multiple="" placeholder="Menu">
-				        </select>
-				    </td>
-				    <td>
-				    	<button class="ui olive button" id="addToOrderList">Agregar</button>
-				    </td>
-				</tr>
-	        </table>
-
-	        <table class="orderDetailsTable" style="width:100%;">
-	        	<tr>
-					<td >
-						<p>Descripción del pedido.</p>
-					</td>
-				</tr>
-	          	<tr>
-				    <td>
-				        <textarea  id="text_description" style="width:100%; height:120px;"></textarea>
-				    </td>
-				</tr>
-	        </table>
-
-
-	        -->
-			<!--
-	         <table class="orderDetailsTable" style="width:100%;">
-	        	<tr>
-					<td >
-						<p>Comentarios.</p>
-					</td>
-				</tr>
-	          	<tr>
-				    <td>
-				        <textarea id="text_comentario" style="width:100%; height:40px;"></textarea>
-				    </td>
-				</tr>
-	        </table>
-
-	        -->
+	        <p class="total_order">$ 0.00</p>
 
 	        <table class="orderDetailsTable" style="height:40px; ">
 	        	<tr>
@@ -172,9 +137,11 @@
 					<td >
 						<button class="ui gray button">Declinar</button>
 					</td>
+					<td >
+						
+					</td>
 				</tr>
 	        </table>
-
 	      </div>
 	    </div>
 	  </div>

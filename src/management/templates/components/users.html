@@ -8,11 +8,11 @@
 		<table>
 		<tr>
 			<td>
-				<p>Administración de contactos</p>
+				<p>Administracion de contactos</p>
 			</td>
 			<td>
 				<!--<button style="opacity:0;" class="ui olive button" id="reset_Suggest_Form">Nuevo</button>-->
-				<button class="ui olive button" id="newGroup" data-toggle="modal" data-target="#groupModal">Nuevo</button>
+				<a class="ui olive button" href="/management/suggest/" id="newContact" >Nuevo</a>
 			</td>
 		</tr>
 		</table>
@@ -32,7 +32,61 @@
 	</div>
 
 
-	<!-- Modal -->
+		<!-- Modal - Nuevo contacto -->
+	<div class="modal fade" id="newContactModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	  <div class="modal-dialog" role="document">
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+	        <h4 class="modal-title" id="myModalLabel">Nuevo contacto</h4>
+	      </div>
+	      <div class="modal-body">
+
+	      	<form class="ui form segment" id="menuForm" cid="">
+			  
+			  <div class="content">
+			  <p class="header_one">Seleccione el menu que desee desplegar.</p>
+			  <div class="two fields">
+			  	<div class="field">
+			      <select class="cmenu" name="cmenu">
+			      </select>
+			    </div>
+
+			    <div class="field">
+			     	<button class="ui submit button newMenu" id="newMenu">+</button>
+			     	<button class="ui submit button categories" id="categories">Categorias</button>
+			    </div>
+			  </div>
+
+			  <div class="menu_body">
+				  <div class="menu_body_content" cid="">
+				  	<div class="viewer"></div>
+
+				  </div>
+				  <center><div class="ui submit button newSection" id="newSection">Nueva seccion</div></center>
+			  </div>
+			 
+			  </div>
+			  <div class="menu_modal_actions">
+				  <button class="ui olive button editMenu" id="editMenu">Editar</button>
+				  <!--<button class="ui olive button newSection" id="newSection">Nueva seccion</button>-->
+				  <div class="ui submit button backtomenu">Volver</div>
+				  <div class="ui olive button saveMenu" id="saveMenu">Guardar</div>
+				  <div class="ui submit button deleteMenu" id="deleteMenu">Eliminar menu</div>
+				  <div class="ui submit button closemenu" class="close" data-dismiss="modal" aria-label="Close">Cerrar</div>
+			  </div>
+			  <div class="ui error message"></div>
+			</form>
+			
+			<div class="" id="alert_changePass" role="alert"></div>
+	      </div>
+	   
+	    </div>
+	  </div>
+	</div>
+
+
+	<!-- Modal MENU -->
 	<div class="modal fade" id="menuModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	  <div class="modal-dialog" role="document">
 	    <div class="modal-content">

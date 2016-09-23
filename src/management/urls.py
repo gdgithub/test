@@ -26,6 +26,8 @@ urlpatterns = [
         src.management.views.group_subpage, name='group_subpage'),
     url(r'^contacts/$',
         src.management.views.contacts_subpage, name='contacts_subpage'),
+    url(r'^user/$',
+        src.management.views.users_subpage, name='users_subpage'),
     url(r'^suggest/$',
         src.management.views.suggest_subpage, name='suggest_subpage'),
     url(r'^myinfo/$',
@@ -79,7 +81,9 @@ urlpatterns = [
         src.directories.views.createOrder, name='createOrder'),
     url(r'directories/getCategories/$',
         src.directories.views.getCategories, name='getCategories'),
+
     url(r'suggest_contact/$', src.directories.views.create, name='create'),
+
     url(r'userInfo/$',
         src.home.views.getUserInfo, name='getUserInfo'),
     url(r'userCredentials/$',
@@ -108,7 +112,11 @@ urlpatterns = [
     url(r'createGroup/$',
         src.management.views.createGroup, name='createGroup'),
     url(r'updateGroup/$',
-        src.management.views.updateGroup, name='updateGroup')
+        src.management.views.updateGroup, name='updateGroup'),
+
+    url(r'getnotifications/$',
+        src.management.views.getnotifications, name='getnotifications')
+
 
 
 ]

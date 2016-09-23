@@ -15,6 +15,8 @@ class contacts(models.Model):
     rnc = models.TextField()
     name = models.TextField()
     image = models.TextField()
+    phone = models.TextField()
+    address = models.TextField()
     description = models.TextField()
     categoryId = models.ForeignKey(category, on_delete=models.CASCADE)
     rating = models.FloatField()
@@ -72,7 +74,7 @@ class menu(models.Model):
 class orders(models.Model):
     id = models.AutoField(primary_key=True)
     userId = models.TextField()
-    branchId = models.ForeignKey(branch, on_delete=models.CASCADE)
+    # branchId = models.ForeignKey(branch, on_delete=models.CASCADE)
     description = models.TextField()
     status = models.TextField()
     date = models.DateField(auto_now=True)

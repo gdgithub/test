@@ -1,7 +1,7 @@
 body{
     width:100%;
     margin:auto;
-    background: #F5F7F9 url('http://www.menu.com.do/img/bg.gif') top left repeat;
+    /*background: #F5F7F9 url('http://www.menu.com.do/img/bg.gif') top left repeat;*/
 }
 
 /*Top bar menu*/
@@ -85,7 +85,7 @@ body{
     width: 100%;
 }
 
-#newBtn{
+#neworder{
      float: right;
      margin-right: 15px;
 }
@@ -219,12 +219,8 @@ body{
 }
 
 
-
-
 #newOrderModalBody{
     min-height: 80px;
-
-
 }
 
 #search_contact{
@@ -269,6 +265,89 @@ body{
     background-color: rgb(230,230,230)
 }
 
+/*Menu de creacion de pedidos*/
+
+.menu_select_div{
+    margin-top: 10px;
+}
+
+.menu_select_div select{
+    margin: auto;
+}
+
+#tsearch, #menu_select{
+    font-size: 15px;
+}
+
+.order_menu_content{
+    margin-top: 10px;
+}
+
+.menu_desc_table{
+    width: 100%;
+    margin: auto;
+}
+
+.menu_desc_table tr{
+    height: 28px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.menu_desc_table tr:hover{
+    cursor: pointer;
+    background-color: rgb(235,235,235);
+  /*  animation-name: example;
+    animation-duration: 4s;*/
+}
+
+.order_menu_category_name{
+    font-size: 15px;
+    font-family: arial;
+}
+
+.menu_desc_table td p{
+    font-size: 15px;
+    font-family: arial;
+}
+
+.menu_desc_table .td_desc{
+    width: 30%;
+}
+
+.menu_desc_table .td_cant{
+    width: 30%;
+    border-radius: 15px 50px;
+    /*opacity: 0;*/
+}
+
+.menu_desc_table .td_price{
+    width: 30%;
+}
+
+.menu_desc_table .td_cant input{
+    float: center;
+    width: 60px;
+   display: none;
+}
+
+.menu_desc_table .td_price p{
+    float: right;
+}
+
+.total_order{
+    margin-top: 10px;
+  /*  padding-bottom: 20px;*/
+    float: right;
+    font-size: 16px;
+    font-family: serif;
+    color: #5A9C48;
+}
+
+@keyframes example {
+    from {background-color: red;}
+    to {background-color: rgb(230,230,230)}
+}
 
 /*.order_table{
     width: 100%;
@@ -295,7 +374,7 @@ body{
 }*/
 
 .content{
-    background: #F5F7F9 url('http://www.menu.com.do/img/bg.gif') top left repeat;
+   /* background: #F5F7F9 url('http://www.menu.com.do/img/bg.gif') top left repeat;*/
 }
 
 

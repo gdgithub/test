@@ -1,11 +1,8 @@
-	'use strict' 
-
 $(document).ready(function(){
-	
+
 	var menuBar = $(".menu-bar");
 
 	confirmAuth();
-	//getNotifications();
 
 $('.ui.dropdown')
       .dropdown();
@@ -24,18 +21,18 @@ jQuery(window).load(function () {
 		createCookie("ormemfil");
 		var userId = getCookie("userId");
 
-		if(getCookie("access-type") == 1) // admin
+		if(getCookie("access-type") == 1)
 		{
 			createOrderTableForUserWithId("all", 1);
 		}
-		else if(getCookie("access-type") == 2) // ff
+		else if(getCookie("access-type") == 2)
 		{
 			// Muestra los grupos del usuario
 			// Los grupos son accesibles, muestran los pedidos de los integrantes del grupo
 
 			createOrderTableForUserWithId(userId, 2);
 		}
-		else if (getCookie("access-type") == 3) // dev
+		else if (getCookie("access-type") == 3) 
 		{
 			createOrderTableForUserWithId(userId, 3);
 		}
@@ -67,13 +64,14 @@ jQuery(window).load(function () {
 		if (getCookie("access-type") == 1) 
 		{
 			// Usuario admin: Guarda sugerencia enable
-			/*$("#show_contact_list").css({opacity:'1.0'});*/
+			$("#show_contact_list").css({opacity:'1.0'});
 
 			setContactTableSetting();
+
 		}
 		else
 		{
-			/*$("#show_contact_list").css({opacity:'0.0'});*/
+			$("#show_contact_list").css({opacity:'0.0'});
 		}
 
 	}
@@ -85,12 +83,6 @@ jQuery(window).load(function () {
 	}
 
 });
-
-	$("#neworder").click(function(){
-		$("#menu_select").parent().parent().hide();
-		$(".total_order").hide();
-		$(".order_menu_content").html();
-	});
 
 	$("#search_contact").click(function(e){
 
@@ -105,7 +97,7 @@ jQuery(window).load(function () {
 
 			if(data)
 					{
-						var menu_body = $(".order_menu_content");
+						var menu_body = $(".menu_content");
 						var html = "";
 						var menu_html = "";
 						var menu_content = {};
@@ -124,7 +116,7 @@ jQuery(window).load(function () {
 						getMenuCategories(function(data){
 
 							data = $.parseJSON(data);
-							var all_categories = [];
+							all_categories = [];
 
 							for(var i=0; i<data.length; i++)
 							{
@@ -135,20 +127,14 @@ jQuery(window).load(function () {
 
 							for(var j=0; j<categories.length; j++)
 							{
-								html = `<p class="order_menu_category_name" mcid="`+categories[j]+`"><b>`+category_name[categories[j]].category_name+`:</b></p>`;
+								html = `<p class="category_name" mcid="`+categories[j]+`"><b>`+category_name[categories[j]].category_name+`:</b></p>`;
 
-								html += `<table class="menu_desc_table">`;
 								for(var d=0; d<menu_content[categories[j]].length; d++)
 								{
-									html += `
-									<tr>
-										<td class="td_desc"><p>`+menu_content[categories[j]][d].desc+`</p></td>
-										<td class="td_cant"><input class="mdcant" type="number" min="0" value="0"></input></td>
-										<td class="td_price"><p>$`+menu_content[categories[j]][d].price+`</p></td>
-									</tr>`;
-								
+									//html += `<input type="checkbox" >`+menu_content[categories[j]][d].desc+`</input><br>`; 
+									html += `<input type="checkbox" ><span class="menu_desc">`+menu_content[categories[j]][d].desc+`</span>  <span class="mp">$<span class="menu_price">`+menu_content[categories[j]][d].price+`</span></span></><br>`;
+									//html += `<li class="menu_category_details" mdid="`+menu_content[categories[j]][d].id+`" mdcid="`+categories[j]+`" mdcn="`+category_name[categories[j]].category_name+`"><span class="menu_desc">`+menu_content[categories[j]][d].desc+`</span>  <span class="mp">$<span class="menu_price">`+menu_content[categories[j]][d].price+`</span></span></li>`;
 								}
-								html += `</table>`;
 
 								html += `<div class="menu_section_space"></div>`;
 
@@ -156,19 +142,6 @@ jQuery(window).load(function () {
 							}
 
 							menu_body.html("<div class='menu_viewer'>"+menu_html+"</div>");
-							$(".menu_cant_details").hide();
-							$(".total_order").show();
-
-							$(".td_desc, .td_price").click(function(){
-								$(this).addClass("active");
-								$(this).parent().find("input").fadeToggle(160,function(){
-									calcItemSelected($(".menu_desc_table"),$(".total_order"));
-								});
-							});
-
-							$(".mdcant").change(function(){
-								calcItemSelected($(".menu_desc_table"),$(".total_order"));
-							});
 						});
 
 					}
@@ -176,93 +149,81 @@ jQuery(window).load(function () {
 	});
 
 
-	function calcItemSelected(element,result){
 
-		var total = 0;
 
-		element.each(function() {
-			//var value = $(this).val();
-			$(this).find("tr").each(function() {
 
-				if($(this).find(".mdcant").css('display') != 'none')
-				{
-					var cant = parseFloat($(this).find(".mdcant").val());
-					var item_price = parseFloat($(this).find(".td_price p").html().replace("$","")).toFixed(2);
+	// getting branch menu
+  /*  $('#sucursal_select').change(function(){
+        
+         getBranchMenu($('option:selected', this).attr('branch-id'));
+    });*/
 
-					total += (cant*item_price);
-				}
-			});
-		});
+   /* $("#addToOrderList").click(function(){
 
-		result.html("$"+total.toFixed(2));
+    	var clear_menu = false;
 
-		return "$"+total.toFixed(2);
-	}
+        $("#MenuSelect option").each(function(t)
+        {
+            if($(this).is(":selected"))
+            {
+                if(parseInt($("#tcantidad").val()) > 0)
+                {
+                    var data = "("+$("#tcantidad").val()+")-"+$(this).val();
 
-	$("#doRequest").click(function(){
+                    $("#text_description").val($("#text_description").val()+data+"\n");
+                    clear_menu = true;
+                }
+                else
+                {
+                	alert("Indique la cantidad");
+                	clear_menu = false;
+                }
+            }
+        });
+        
+        if (clear_menu) {
+        	$('#MenuSelect').dropdown('clear');
+        }
+        
+    });*/
 
-		if($("#tsearch").val().length == 0)
-		{
-			swal("Informacion", "No establecimiento de comida");
-			return false;
-		}
+   /* $("#text_comentario").keypress(function(){
+    	$("#text_description").val($("#text_description").val()+"\n\n"+":: "+$(this).val());
+    });*/
 
-		var order_description = "";
-		var total = 0;
+  /*  $("#doRequest").click(function(){
 
-		$(".menu_desc_table").each(function() {
-			
-			$(this).find("tr").each(function() {
+        var request = $("#text_description").val() + "\n\n"+$("#text_comentario").val();
 
-				if($(this).find(".mdcant").css('display') != 'none')
-				{
-					if(parseFloat($(this).find(".mdcant").val()) > 0){
-						var cant = parseFloat($(this).find(".mdcant").val());
-						var item_desc = $(this).find(".td_desc p").html();
-						var item_price = parseFloat($(this).find(".td_price p").html().replace("$",""));
-						total += (cant*item_price);
-						order_description += "- "+cant+" "+item_desc+" ****** $"+item_price+" X "+cant+" = $"+ (cant*item_price)+"\n";
-					}
-				}
-			});
-		});
+        if(request.length > 0)
+        {
+            // hace la solicitud del pedido.
+            if(!$('option:selected', "#sucursal_select").attr('branch-id'))
+            {
+            	alert("error: no branch id");
+            	return;
+            }
 
-		if(order_description.length > 0)
-		{
-			var meta = $("#tsearch").val() +" - "+$("#menu_select").val()+"\n\n";
-
-			order_description = meta +order_description;
-			order_description += "\nTotal: $"+total;
-
-			console.log(order_description);
-
-			var dic = {
+            var dic = {
                 csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                 userId: getCookie('userId'),
-                dataOrder: order_description,
+                branchId: $('option:selected', "#sucursal_select").attr('branch-id'),
+                dataOrder: request,
                 status: "active"
             }
 
             postData('directories/createOrder/',dic,function(data){
 
-            	data = $.parseJSON(data);
-
-            	if(data.success)
-            	{
-            		var msg = getCookie("userId")+" su pedido ha sido enviado.";
-            		swal("Pedido realizado exitosamente.", msg, "success");
-            		$(".close.orderModal").click();
-            		createOrderTableForUserWithId(getCookie("userId"),getCookie("access-type"));
-            	}
-            	else{
-            		swal("Error.", "Ocurrio un error al realizar el pedido, intentelo nuevamente.", "error");
-            	}
+				createOrderTableForUserWithId(getCookie("userId"));
+				show_alert("success","El pedido se ha realizado exitosamente.",3000);
             });
-		}
-		else{
-			swal("Solicitud cancelada", "Debe seleccionar los articulos que desee del menu e indicar la cantidad antes de realizar la solicitud.");
-		}
-    });
+        }
+        else
+        {
+        	alert("No request");
+        } 
+    });*/
+
 
 
 
@@ -381,32 +342,35 @@ jQuery(window).load(function () {
 	          nombre: $("#cnombre").val(),
 	          categoria: $("#ccategoria").val(),
 	          desc: $("#cdescripcion").val(),
-	          telefono: $("#ctelefono").val(),
-	          direccion: $("#cdireccion").val(),
+	          imagen: $("#cimagen").val(),
+	          //telefono: $("#ctelefono").val(),
+	          //direccion: $("#cdireccion").val(),
+	          telefono: $(".branches_info").attr('phones'),
+	          direccion: $(".branches_info").attr('address'),
+	          menu_desc: $(".menu_info").attr('description'),
+	          menu_price: $(".menu_info").attr('price'),
 	          status: getCookie('access-type') == 1 ? 'enable' :'disable',
-	          userId: getCookie('userId'),
+	          userRol: getCookie('access-type'),
 	          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
 	      }
 
 	      postData("suggest_contact/",dict,function(data){
 	       
-		       data = $.parseJSON(data);
+	       data = $.parseJSON(data);
 
-		       if(data.created)
-		       {
-				swal("Contacto almacenado.", "", "success");
-		       }
-		       else if(data.exists)
-		       {
-		       		swal({   
-		       			title: "Adventencia",
-		       		    text: "Existe un contacto asociado al mismo RNC.",
-		       		    type: "warning",   
-		       		    showCancelButton: false,   
-		       		    confirmButtonColor: "#DD6B55",   
-		       		    confirmButtonText: "Ok",   
-		       		    closeOnConfirm: false });
-		       }
+	       if (data.s) {
+
+		       	$('#suggest_form').form('clear');
+
+		        show_alert("success",data.s,3000,$("#alert_msg"));
+	       }
+	       else if (data.f){
+	       		show_alert("danger",data.f,3000,$("#alert_msg"));
+	       }
+	       else if(data.a)
+	       {
+	       		show_alert("danger",data.a,3000,$("#alert_msg"));
+	       }
 	       
 	      });
 	});
@@ -417,7 +381,7 @@ jQuery(window).load(function () {
 
 	/*Sugerencias admin-area*/
 	$(".editContact").click(function(){
-		alert("s");
+
 		var contactId = $(this).find("i").attr("data-val");
 
 		if (!contactId) {
@@ -620,9 +584,7 @@ function initializeSearcher(usrRol=1)
 
     postData('directories/getContactsName/',dic,function(names){
 
-        var contacts_name = $.parseJSON(names);
-
-        console.log(contacts_name);
+        contacts_name = $.parseJSON(names);console.log(contacts_name);
         var name = [];
 
         for(var i = 0; i < contacts_name.length; i++)
@@ -652,6 +614,7 @@ function initializeSearcher(usrRol=1)
 function reorder(id,userId)
 {
 	// Reordena el pedido.
+
 	var dic = {
           orderId: id,
           userId: userId,
@@ -664,13 +627,11 @@ function reorder(id,userId)
 
 		if(data.data)
 		{
-			var msg = getCookie("userId")+" su pedido ha sido enviado.";
-			swal("Pedido realizado exitosamente.", msg, "success");
-
+			show_alert("warning","El pedido success.",3000);
 			createOrderTableForUserWithId(userId, getCookie("access-type"), getCookie("ormemfil"));
 		}
 		else{
-			swal("Error","Ocurrio un error al realizar el pedido, intente nuevamente.", "error");
+			show_alert("danger","No se ha podido reenviar el pedido.",3000);
 		}
 	});
 }
@@ -688,13 +649,11 @@ function cancelOrder(id,userId)
 
 		if(data.data)
 		{
-			var msg = getCookie("userId")+" su pedido ha sido cancelado.";
-			swal("La orden ha sido cancelada.", msg, "success");
-
-			createOrderTableForUserWithId(userId, getCookie("access-type"), getCookie("ormemfil"));
+			show_alert("warning","La orden ha sido cancelada.",3000);
+			createOrderTableForUserWithId(userId);
 		}
 		else{
-			swal("Error: No se ha podido cancelar la orden.", msg, "success");
+			show_alert("danger","Error: No se ha podido cancelar la orden.",5000);
 		}
 	});
 }
@@ -715,6 +674,7 @@ function createOrderTableForUserWithId(id, access_type=false, filter=null)
 		postData('getUserOrders/',dic,function(data){
 
 			// Retorna los pedidos realizados por el usuario
+
 			data = $.parseJSON(data);
 
 			if(data)
@@ -993,48 +953,15 @@ function confirmAuth()
 
 		$(".close_sesion").click(function(){
 			deleteCookies();
-			window.location.assign("/login");
+			window.location.assign("/index");
+			//window.location.assign("/");
 		});
 	}
 	else
 	{
-		//window.location.assign("/login");
+		window.location.assign("/index");
 		//window.location.assign("/");
 	}
-}
-
-function getNotifications(){
-
-	//var code                                              = Math.floor((Math.random()*1000000)+1);
-	var current = 0;
-
-	check = function(){
-
-		if(getCookie("nc")!=current)
-		{
-			var dic = {
-	                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-	            }
-
-			postData("getnotifications/",dic,function(data){
-
-				data = $.parseJSON(data);
-
-				if(data)
-				{
-					swal("Notificaciones", "It's pretty, isn't it?");
-
-					current = data.length;
-					createCookie("nc",current,3000000);
-					setTimeout(check, 1000);
-				}
-			});
-		}else{
-			setTimeout(check, 1000);
-		}
-	}
-
-	setTimeout(check, 1000);
 }
 
 function createMenu(userRol)
@@ -1071,7 +998,7 @@ function getCategories()
 
         if(data)
         {
-            var categories = $.parseJSON(data);
+            categories = $.parseJSON(data);
 
             for(var i = 0; i < categories.length; i++)
             {
@@ -1125,9 +1052,10 @@ function deleteCookie(name)
 	createCookie(name,null,3000);
 }
 
-/*});*/
-/////////////////////////JQUERY//////////////////////////////////////////////////
-//});
+});
+
+
+
 
 
 
@@ -1199,7 +1127,6 @@ function createContactTableWithData(data,page=1,rows=10,parent)
 				<th>Contacto</th>
 				<th>Categoria</th>
 				<th>Puntuacion</th>
-				<th>Estado</th>
 				<th>Menu</th>
 				<th id='options'>Opciones</th>
 				</tr>
@@ -1215,7 +1142,6 @@ function createContactTableWithData(data,page=1,rows=10,parent)
 			      <td>`+data[i].name+`</td>
 			      <td>`+data[i].categoryId_id+`</td>
 			      <td>`+data[i].rating+`</td>
-			      <td>`+data[i].status+`</td>
 			      <td>
 			      	<div class="ui button load_menu" cid="`+data[i].id+`" data-toggle="modal" data-target="#menuModal">Menu</div>
 			      </td>
@@ -1225,7 +1151,7 @@ function createContactTableWithData(data,page=1,rows=10,parent)
 						<div class="ui flowing popup top left transition hidden">
 						  <div class="ui two column divided center aligned grid">
 						    <div class="column">
-						      <div class="ui button editcontact" cid="`+data[i].id+`">Editar</div>
+						      <div class="ui button editcontact" cid="`+data[i].id+`" data-toggle="modal" data-target="#menuModal">Editar</div>
 						    </div>
 						    <div class="column">
 						      <div class="ui button deletecontact" cid="`+data[i].id+`">Eliminar</div>
@@ -1339,11 +1265,10 @@ function createContactTableWithData(data,page=1,rows=10,parent)
 				$(".deleteMenu").hide();
 				$(".backtomenu").hide();
 
-				getMenuDetails($('option:selected', this).attr('mid'),function(data){
+				getMenuDetails($(".cmenu option:selected").attr('mid'),function(data){
 
 					data = $.parseJSON(data);
 
-					//console.log($(".cmenu option:selected").attr('mid'));
 					if(data)
 					{
 						var menu_body = $(".menu_body_content");
@@ -1456,7 +1381,8 @@ function createContactTableWithData(data,page=1,rows=10,parent)
 
 			category_control += "</select>";
 
-			$('.menu_category_details').each(function(i,o,f) {
+
+			$('.menu_category_details').each(function() {
 
 				if(secheader != $(this).attr("mdcid"))
 				{
@@ -1491,15 +1417,11 @@ function createContactTableWithData(data,page=1,rows=10,parent)
 			// establece categoria de menu
 			var menuSelectedVal = [];
 			$(".category_name").each(function(){
-				//if(!menuSelectedVal.includes($(this).attr('mcid')))
 				menuSelectedVal.push($(this).attr('mcid'));
 			});
-
 			$(".dropdown_category").each(function(i,obj){
 				$(this).val(menuSelectedVal[i]);
-				
 			});
-			console.log(menuSelectedVal);
 
 			// elimina menu - viewer
 			$('.menu_category_details').each(function() {
@@ -1629,9 +1551,8 @@ function createContactTableWithData(data,page=1,rows=10,parent)
 						<div class="ui button delete_section" >Eliminar</div>
 						</div>`);
 
-
 			$(`.addfieldn`+($(".section").length - 1) * 100+``).click(function(){
-			
+
 				$(this).parent().find(".sc").append(`
 						<div class="fields menurow_create">
 						  <div class="twelve wide field">
@@ -1772,42 +1693,20 @@ function createContactTableWithData(data,page=1,rows=10,parent)
 
 		});
 
-		$(".editContact").click(function(){
-
-				var contactId = $(this).attr('cid');
-
-				if (!contactId) {
-					alert("Error: No contact id provided.");
-					return;
-				}
-				else
-				{
-					load_contactForm(contactId);
-				}
-
-			});
-
 		$(".deletecontact").click(function(){
-			var contactId = $(this).attr('cid');
-				swal({   
-					title: "Are you sure?",
-					text: "You will not be able to recover this imaginary file!",
-					type: "warning",
-					showCancelButton: true,
-					confirmButtonColor: "#DD6B55",
-					confirmButtonText: "Yes, delete it!",
-					closeOnConfirm: false }, 
-					function(){   
-					   	var paramns = {};
+				
+				if(confirm("¿Desea eliminar este contacto?"))
+				{
+					var paramns = {};
 
-						paramns.data = data;
-						paramns.page = 1;
-						paramns.rows = rows;
-						paramns.parent = parent;
+					paramns.data = data;
+					paramns.page = 1;
+					paramns.rows = rows;
+					paramns.parent = parent;
 
-						deleteContact(contactId,paramns);
-				});
-		});
+					deleteContact($(this).attr('cid'),paramns);
+				}
+			});
 	}
 }
 
@@ -1860,38 +1759,14 @@ function getCategoryWithId(id, callback)
      postData('getcategorywithid/',dic,callback);
 }
 
-function deleteContact(contactId,paramns=null)
-{
-	var dic = {
-          id: contactId,
-          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-    	}
-
-	postData('deleteContact/',dic,function(data){
-
-		if(data)
-		{
-			swal("Directorio", "El contacto ha sido eliminado.", "success"); 
-			getContacts();
-
-			//if(paramns!=null)
-			//	createContactTableWithData(paramns['data'],paramns['page'],paramns['rows'],paramns['parent']);
-		}
-		else{
-			wal("Error", "Ocurrio un error al eliminar el contacto, por favor intentelo nuevamente.", "error"); 
-		}
-	});
-}
 
 function findContact(e,f=false)
 {
 	$("#menu_select").parent().parent().hide();
-	$(".total_order").hide();
 
     if(e.which == 13 || f) {
         
-        if($("#tsearch").val().length==0)
-        	return false;
+        //$("#directory_loader").show();
 
         var dic = {
             csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
@@ -1935,7 +1810,7 @@ function findContact(e,f=false)
         });
     }
 }
-/*
+
 function getBranchForContactId(id)
 {
 	$('#sucursal_select').html('<option value="">Sucursales</option>');
@@ -1960,8 +1835,8 @@ function getBranchForContactId(id)
             .appendTo('#sucursal_select');
        }
     });
-}*/
-/*
+}
+
 function getBranchMenu(branchid)
 {
 	$("#MenuSelect").html("");
@@ -1987,7 +1862,7 @@ function getBranchMenu(branchid)
             $("#menu_content").html("");
         }); 
 }
-*/
+
 function validate_suggestForm()
 {
 	$('.ui.form')
@@ -2020,12 +1895,21 @@ function validate_suggestForm()
 		          }
 		        ]
 		      },
+		      cimagen: {
+		        identifier: 'cimagen',
+		        rules: [
+		          {
+		            type   : 'empty',
+		            prompt : 'Por favor, introduzca la direccion del logo.'
+		          }
+		        ]
+		      },
 		      ctelefono: {
 		        identifier: 'ctelefono',
 		        rules: [
 		          {
 		            type   : 'empty',
-		            prompt : 'Por favor, introduzca el numero de telefono del contacto.'
+		            prompt : 'Por favor, introduzca el numero de telefono de la sucursal.'
 		          },
 		          {
 		            type   : 'minLength[10]',
@@ -2038,7 +1922,7 @@ function validate_suggestForm()
 		        rules: [
 		          {
 		            type   : 'empty',
-		            prompt : 'Por favor introduzca la direccion del contacto.'
+		            prompt : 'Por favor introduzca la direccion de la sucursal.'
 		          }
 		        ]
 		      }
@@ -2459,6 +2343,27 @@ function load_contactForm(contactId)
 	}	
 }
 
+function deleteContact(contactId,paramns=null)
+{
+	var dic = {
+          id: contactId,
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+    	}
+
+	postData('deleteContact/',dic,function(data){
+
+		if(data)
+		{
+			alert("eliminado");
+			if(paramns!=null)
+				createContactTableWithData(paramns['data'],paramns['page'],paramns['rows'],paramns['parent']);
+		}
+		else{
+			alert("er");
+		}
+	});
+}
+
 function setContactTableSetting()
 {
 	// Contacts DataTable - Settings
@@ -2495,5 +2400,4 @@ function setContactTableSetting()
 
 
 
-});
-//});
+

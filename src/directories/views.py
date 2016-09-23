@@ -1,6 +1,7 @@
 
 from django.http import HttpResponse
 from src.directories.models import *
+from src.management.models import *
 import json
 import copy
 
@@ -219,6 +220,58 @@ def getContactWithId(request):
 
 
 def create(request):
+    if request.method == "POST":
+        rnc = request.POST['rnc']
+        nombre = request.POST['nombre']
+        categoria = request.POST['categoria']
+        desc = request.POST['desc']
+        telefono = request.POST['telefono']
+        direccion = request.POST['direccion']
+        status = request.POST['status']
+        userId = request.POST['userId']
+
+        exists = contacts.objects.filter(rnc=rnc)
+        created = False
+
+        if not exists:
+            ci = category.objects.get(description=categoria)
+            contacts.objects.create(
+                rnc=rnc,
+                categoryId=ci,
+                name=nombre,
+                image='',
+                phone=telefono,
+                address=direccion,
+                rating=0,
+                description=desc,
+                status=status)
+
+            if status == "enable":
+                status = "new contact"
+            elif status == "disable":
+                status = "contact suggest"
+
+            notifications.objects.create(
+                uid=userId,
+                oid=rnc,
+                type="contact",
+                description="",
+                status=status
+            )
+
+            created = True
+            exists = False
+        elif exists:
+            exists = True
+
+        return HttpResponse(json.dumps({
+            "exists": exists,
+            "created": created
+        }))
+
+
+'''
+def create(request):
     """
     Usuario administrador: 
     *si existe el contacto, lo actualiza. de lo contrario, lo crea.
@@ -284,8 +337,9 @@ def create(request):
                 msg = {"a": "Contacto existe."}
 
     return HttpResponse(json.dumps(msg))
+'''
 
-
+"""
 def saveContact(rnc, name, image, description, categoryId, rating,
                 status, phone, addr, menu_desc, menu_price):
 
@@ -332,6 +386,7 @@ def saveContact(rnc, name, image, description, categoryId, rating,
             )
 
     return success
+"""
 
 
 def delete(request):
@@ -368,17 +423,31 @@ def getBranchMenu(request):
 def createOrder(request):
     if request.method == "POST":
         userId = request.POST['userId']
-        branchId = request.POST['branchId']
         description = request.POST['dataOrder']
         status = request.POST['status']
 
-        b = branch.objects.get(id=branchId)
-
-        orders.objects.create(
+        data = orders.objects.create(
             userId=userId,
-            branchId=b,
             description=description,
             status=status
         )
 
-    return HttpResponse('Informacion almacenada exitosamente.')
+        if data:
+            data = True
+            orderId = orders.objects.filter(
+                userId=userId,
+                description=description,
+                status=status)
+
+            notifications.objects.create(
+                uid=userId,
+                oid=orderId[0].id,
+                type="order",
+                description=description,
+                status="no checked"
+            )
+        elif not data:
+            data = False
+
+    return HttpResponse(json.dumps({
+        "success": data}))

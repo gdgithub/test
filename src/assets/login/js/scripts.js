@@ -34,7 +34,7 @@ $(document).ready(function(){
 
 				if($(".lcorreo").val().length==0 || $(".lcontrasena").val().length==0)
 				{
-					sweetAlert("Campos vacios", "Complete todos los campos.", "error");
+					sweetAlert("Campos vacios", "Completar todos los campos.", "error");
 					return false;
 				}
 
@@ -64,8 +64,8 @@ $(document).ready(function(){
 				    		}
 				    		else{
 				    			swal({   
-				    			   title: "Contrasena incorrecta",
-				    			   text: "Su contrasena es incorrecta, por favor intente nuevamente.",   
+				    			   title: "Contraseña incorrecta",
+				    			   text: "La contrasena ingresada es incorrecta, por favor intente nuevamente.",   
 				    			   type: "info",   showCancelButton: false,   
 				    			   closeOnConfirm: false,   
 				    			   showLoaderOnConfirm: true, });
@@ -83,11 +83,11 @@ $(document).ready(function(){
 			    });
 			}
 			else{
-				sweetAlert("Dominio de correos incorrecto.", "“@intellisys.com.do” o “@cincinnatus.com.do”", "error");
+				sweetAlert("Dominio de correos incorrecto", "Los dominios validos son “@intellisys.com.do” o “@cincinnatus.com.do”", "error");
 			}
 		}
 		else{
-			sweetAlert("Campo vacio", "Debe introducir una cuenta de correo - dom: “@intellisys.com.do” o “@cincinnatus.com.do”", "error");
+			sweetAlert("Campo vacio", "El dominio de la cuenta de correo debe ser “@intellisys.com.do” o “@cincinnatus.com.do”", "error");
 		}
 
 	});
@@ -97,7 +97,7 @@ $(document).ready(function(){
 
 		if(validate($(".rcorreo"),"value"))
 		{
-			if(!validate($(".rcorreo"),"email")){
+			if(validate($(".rcorreo"),"email")){
 
 				if($(".rnombre").val().length==0 || $(".rapellido").val().length==0 || 
 					$(".rcorreo").val().length==0 || $(".rcontrasena").val().length==0)
@@ -107,7 +107,7 @@ $(document).ready(function(){
 				}
 				else if($(".rcontrasena").val() != $(".rccontrasena").val())
 				{
-					sweetAlert("Contrasena no coinciden", "Introduzca la contrasena nuevamente.", "error");
+					sweetAlert("Contraseña no coinciden", "Introduzca la contraseña nuevamente.", "error");
 					return false;
 				}
 

@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.core import serializers
+from django.core.mail import send_mail
 from src.login.models import *
 import json
-import smtplib
-from email.MIMEMultipart import MIMEMultipart
-from email.MIMEText import MIMEText
+from django.http import HttpResponseRedirect
+from django.core.urlresolvers import reverse
 # Create your views here.
 
 
@@ -77,10 +77,17 @@ def saveuser(request):
                 success = True
 
                 link = "https://g-052.herokuapp.com/activation?uc=" + valcode
+                body = "Para activar su cuenta en MyOrders haga click en el enlace siguiente:\n{0}.\n\nEn caso de ser un error, obvie este mensaje.".format(
+                    link)
 
+                """
                 sent = sendMessage("starlin.gil.cruz@gmail.com",
                                    "macbookpro13", "smtp.gmail.com:587",
                                    "starlin.gil.cruz@gmail.com", link)
+                """
+
+                sent = send_mail('Activacion de cuenta MyOrders', body, 'starlin.gil.cruz@gmail.com', [
+                    email])
 
             elif not success:
                 success = False
@@ -128,4 +135,4 @@ def uActivation(request):
             )
             pass
 
-    return HttpResponse("")
+    return HttpResponseRedirect(reverse('login'))

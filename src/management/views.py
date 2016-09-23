@@ -1,6 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from src.directories.models import *
+from src.management.models import *
 from src.home.models import *
 from django.core import serializers
 import json
@@ -34,6 +35,10 @@ def contacts_subpage(request):
     return render(request, 'components/contact.html', dic)
 
 
+def users_subpage(request):
+    return render(request, 'components/users.html', {})
+
+
 def suggest_subpage(request):
     data = contacts.objects.select_related()
     rows = [x for x in data]
@@ -52,6 +57,13 @@ def suggest_subpage(request):
 
 def myinfo_subpage(request):
     return render(request, 'components/myinfo.html', {})
+
+
+def getnotifications(request):
+
+    data = list(notifications.objects.values().all())
+
+    return HttpResponse(json.dumps(data))
 
 
 def contactList(request):
@@ -100,7 +112,6 @@ def reorder(request):
 
         orders.objects.create(
             userId=userId,
-            branchId=data[0].branchId,
             description=data[0].description,
             status='active'
         )
