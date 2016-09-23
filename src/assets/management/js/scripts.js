@@ -1,11 +1,8 @@
-	'use strict' 
-
 $(document).ready(function(){
-	
+
 	var menuBar = $(".menu-bar");
 
 	confirmAuth();
-	//getNotifications();
 
 $('.ui.dropdown')
       .dropdown();
@@ -18,37 +15,29 @@ jQuery(window).load(function () {
 	}
 	else if(window.location.pathname == "/management/orders/")
 	{
-		$("#userForm .options").hide();
-		$("#order_loader").show();
-		initializeSearcher();
-		createCookie("ormemfil");
-		var userId = getCookie("userId");
+		if (getCookie("access-type") == 2) 
+		{
+			// El usuario ya ha sido autenticado. DEV
+			// Carga tabla con los pedidos realizados por el mismo usuario.
 
-		if(getCookie("access-type") == 1) // admin
-		{
-			createOrderTableForUserWithId("all", 1);
-		}
-		else if(getCookie("access-type") == 2) // ff
-		{
-			// Muestra los grupos del usuario
-			// Los grupos son accesibles, muestran los pedidos de los integrantes del grupo
+			$("#order_loader").show();
 
-			createOrderTableForUserWithId(userId, 2);
+			var userId = getCookie("userId");
+
+			createOrderTableForUserWithId(userId);
+
+			initializeSearcher();
 		}
-		else if (getCookie("access-type") == 3) // dev
+		else if(getCookie("access-type") == 3)
 		{
-			createOrderTableForUserWithId(userId, 3);
+			// Usuario FF.
 		}
-		
-	}
-	else if(window.location.pathname == "/management/contacts/")
-	{
-		initializeSearcher(getCookie("access-type"));
-		getContacts();
 	}
 	else if(window.location.pathname == "/management/group/")
 	{
-		if (getCookie("access-type") != 3) 
+		
+
+		if (getCookie("access-type") == 1) 
 		{
 			// Usuario admin: Guarda sugerencia enable
 			getGroups(getCookie('userId'),getCookie("access-type"));
@@ -67,13 +56,14 @@ jQuery(window).load(function () {
 		if (getCookie("access-type") == 1) 
 		{
 			// Usuario admin: Guarda sugerencia enable
-			/*$("#show_contact_list").css({opacity:'1.0'});*/
+			$("#show_contact_list").css({opacity:'1.0'});
 
 			setContactTableSetting();
+
 		}
 		else
 		{
-			/*$("#show_contact_list").css({opacity:'0.0'});*/
+			$("#show_contact_list").css({opacity:'0.0'});
 		}
 
 	}
@@ -86,203 +76,85 @@ jQuery(window).load(function () {
 
 });
 
-	$("#neworder").click(function(){
-		$("#menu_select").parent().parent().hide();
-		$(".total_order").hide();
-		$(".order_menu_content").html();
-	});
-
 	$("#search_contact").click(function(e){
 
 	    findContact(e,true);
 	});
 
-	$("#menu_select").change(function(){
 
-		getMenuDetails($('option:selected', this).attr('mid'),function(data){
+	// getting branch menu
+    $('#sucursal_select').change(function(){
+        
+         getBranchMenu($('option:selected', this).attr('branch-id'));
+    });
 
-			data = $.parseJSON(data);
+    $("#addToOrderList").click(function(){
 
-			if(data)
-					{
-						var menu_body = $(".order_menu_content");
-						var html = "";
-						var menu_html = "";
-						var menu_content = {};
+    	var clear_menu = false;
 
-						for(var i=0; i<data.length; i++)
-						{
-							if(!menu_content[data[i].categoryId_id])
-								menu_content[data[i].categoryId_id] = [];
+        $("#MenuSelect option").each(function(t)
+        {
+            if($(this).is(":selected"))
+            {
+                if(parseInt($("#tcantidad").val()) > 0)
+                {
+                    var data = "("+$("#tcantidad").val()+")-"+$(this).val();
 
-							menu_content[data[i].categoryId_id].push({'id': data[i].id, 'desc': data[i].description, 'price':data[i].price});
-						}	
+                    $("#text_description").val($("#text_description").val()+data+"\n");
+                    clear_menu = true;
+                }
+                else
+                {
+                	alert("Indique la cantidad");
+                	clear_menu = false;
+                }
+            }
+        });
+        
+        if (clear_menu) {
+        	$('#MenuSelect').dropdown('clear');
+        }
+        
+    });
 
-						var categories = Object.keys(menu_content);
-						var category_name = {};
+    $("#text_comentario").keypress(function(){
+    	$("#text_description").val($("#text_description").val()+"\n\n"+":: "+$(this).val());
+    });
 
-						getMenuCategories(function(data){
+    $("#doRequest").click(function(){
 
-							data = $.parseJSON(data);
-							var all_categories = [];
+        var request = $("#text_description").val();
 
-							for(var i=0; i<data.length; i++)
-							{
-								category_name[data[i].id] = {'category_name': data[i].description};
+        if(request.length > 0)
+        {
+            // hace la solicitud del pedido.
+            if(!$('option:selected', "#sucursal_select").attr('branch-id'))
+            {
+            	alert("error: no branch id");
+            	return;
+            }
 
-								all_categories.push(data[i].id);
-							}
-
-							for(var j=0; j<categories.length; j++)
-							{
-								html = `<p class="order_menu_category_name" mcid="`+categories[j]+`"><b>`+category_name[categories[j]].category_name+`:</b></p>`;
-
-								html += `<table class="menu_desc_table">`;
-								for(var d=0; d<menu_content[categories[j]].length; d++)
-								{
-									html += `
-									<tr>
-										<td class="td_desc"><p>`+menu_content[categories[j]][d].desc+`</p></td>
-										<td class="td_cant"><input class="mdcant" type="number" min="0" value="0"></input></td>
-										<td class="td_price"><p>$`+menu_content[categories[j]][d].price+`</p></td>
-									</tr>`;
-								
-								}
-								html += `</table>`;
-
-								html += `<div class="menu_section_space"></div>`;
-
-								menu_html += html;
-							}
-
-							menu_body.html("<div class='menu_viewer'>"+menu_html+"</div>");
-							$(".menu_cant_details").hide();
-							$(".total_order").show();
-
-							$(".td_desc, .td_price").click(function(){
-								$(this).addClass("active");
-								$(this).parent().find("input").fadeToggle(160,function(){
-									calcItemSelected($(".menu_desc_table"),$(".total_order"));
-								});
-							});
-
-							$(".mdcant").change(function(){
-								calcItemSelected($(".menu_desc_table"),$(".total_order"));
-							});
-						});
-
-					}
-		});
-	});
-
-
-	function calcItemSelected(element,result){
-
-		var total = 0;
-
-		element.each(function() {
-			//var value = $(this).val();
-			$(this).find("tr").each(function() {
-
-				if($(this).find(".mdcant").css('display') != 'none')
-				{
-					var cant = parseFloat($(this).find(".mdcant").val());
-					var item_price = parseFloat($(this).find(".td_price p").html().replace("$","")).toFixed(2);
-
-					total += (cant*item_price);
-				}
-			});
-		});
-
-		result.html("$"+total.toFixed(2));
-
-		return "$"+total.toFixed(2);
-	}
-
-	$("#doRequest").click(function(){
-
-		if($("#tsearch").val().length == 0)
-		{
-			swal("Informacion", "No establecimiento de comida");
-			return false;
-		}
-
-		var order_description = "";
-		var total = 0;
-
-		$(".menu_desc_table").each(function() {
-			
-			$(this).find("tr").each(function() {
-
-				if($(this).find(".mdcant").css('display') != 'none')
-				{
-					if(parseFloat($(this).find(".mdcant").val()) > 0){
-						var cant = parseFloat($(this).find(".mdcant").val());
-						var item_desc = $(this).find(".td_desc p").html();
-						var item_price = parseFloat($(this).find(".td_price p").html().replace("$",""));
-						total += (cant*item_price);
-						order_description += "- "+cant+" "+item_desc+" ****** $"+item_price+" X "+cant+" = $"+ (cant*item_price)+"\n";
-					}
-				}
-			});
-		});
-
-		if(order_description.length > 0)
-		{
-			var meta = $("#tsearch").val() +" - "+$("#menu_select").val()+"\n\n";
-
-			order_description = meta +order_description;
-			order_description += "\nTotal: $"+total;
-
-			console.log(order_description);
-
-			var dic = {
+            var dic = {
                 csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
                 userId: getCookie('userId'),
-                dataOrder: order_description,
+                branchId: $('option:selected', "#sucursal_select").attr('branch-id'),
+                dataOrder: request,
                 status: "active"
             }
 
             postData('directories/createOrder/',dic,function(data){
 
-            	data = $.parseJSON(data);
-
-            	if(data.success)
-            	{
-            		var msg = getCookie("userId")+" su pedido ha sido enviado.";
-            		swal("Pedido realizado exitosamente.", msg, "success");
-            		$(".close.orderModal").click();
-            		createOrderTableForUserWithId(getCookie("userId"),getCookie("access-type"));
-            	}
-            	else{
-            		swal("Error.", "Ocurrio un error al realizar el pedido, intentelo nuevamente.", "error");
-            	}
+				createOrderTableForUserWithId(getCookie("userId"));
+				show_alert("success","El pedido se ha realizado exitosamente.",3000);
             });
-		}
-		else{
-			swal("Solicitud cancelada", "Debe seleccionar los articulos que desee del menu e indicar la cantidad antes de realizar la solicitud.");
-		}
+        }
+        else
+        {
+        	alert("No request");
+        } 
     });
-
-
-
-
-
-
-
-
-
-
-
 
     /**Grupos**/
-    $("#newGroup").click(function(){
-    	$("#addGruopForm").attr("mode","create");
-    	$("#addGruopForm").attr("gid","-1");
-    	$("#gencargado").prop('disabled', false);
-
-    });
-
     $("#addGruopForm").submit(function(e){
 		e.preventDefault();
 	});
@@ -294,7 +166,7 @@ jQuery(window).load(function () {
 		obj.append(`
 			<div class="two fields">
 			  	<div class="field">
-			      <input placeholder="Ej. Juan Perez / Jp1592" name="gmiembro" id="gmiembro" class="gmiembro" type="text">
+			      <input placeholder="Ej. Juan Perez / Jp1592" name="gmiembro" id="gmiembro" type="text">
 			    </div>
 			   <div class="delrow">
 			      <div class="ui submit button delGroupRow" id="delGroupRow">X</div>
@@ -318,55 +190,27 @@ jQuery(window).load(function () {
 		});
 
 		var dic = {
-			  gid: $("#addGruopForm").attr("gid"),
 	          gname: $("#gnombre").val(),
 	          gff: $("#gencargado").val(),
 	          gmembers : members.join("|"),
 	          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
 	    }
 
-	    if($("#addGruopForm").attr("mode")=="create")
-	    {
-	    	postData('createGroup/',dic,function(data){
+	     postData('createGroup/',dic,function(data){
 
-		     	if(data)
-		     	{
-		     		getGroups(getCookie('userId'),getCookie('access-type'));
-		     		show_alert("success","Grupo creado.",3000);
-		     	}
-		     	else{
-		     		show_alert("danger","Error.",3000);
-		     	}
-         	});
-	    }
-	    else if($("#addGruopForm").attr("mode")=="edit")
-	    {
+	     	/*data = $.parseJSON(data);*/
 
-	    	postData('updateGroup/',dic,function(data){
-
-		     	if(data)
-		     	{
-		     		getGroups(getCookie('userId'),getCookie('access-type'));
-		     		show_alert("success","Grupo Actualizado.",3000);
-		     	}
-		     	else{
-		     		show_alert("danger","Error.",3000);
-		     	}
-         	});
-	    }
-	     
+	     	if(data)
+	     	{
+	     		getGroups(getCookie('userId'),getCookie('access-type'));
+	     		show_alert("success","Grupo creado.",3000);
+	     	}
+			
+         });
 
 		//$(".gruop_info").attr('members',members.join("|"));
 		//$(".gruop_info").attr('groupName',$("#gnombre").val());
-	    
 	});
-
-    /*Contactos*/
-   /* $(".newMenu").click(function(){
-
-    	alert("asd");
-    });*/
-
 
 
     /**Sugerencia**/
@@ -381,32 +225,35 @@ jQuery(window).load(function () {
 	          nombre: $("#cnombre").val(),
 	          categoria: $("#ccategoria").val(),
 	          desc: $("#cdescripcion").val(),
-	          telefono: $("#ctelefono").val(),
-	          direccion: $("#cdireccion").val(),
+	          imagen: $("#cimagen").val(),
+	          //telefono: $("#ctelefono").val(),
+	          //direccion: $("#cdireccion").val(),
+	          telefono: $(".branches_info").attr('phones'),
+	          direccion: $(".branches_info").attr('address'),
+	          menu_desc: $(".menu_info").attr('description'),
+	          menu_price: $(".menu_info").attr('price'),
 	          status: getCookie('access-type') == 1 ? 'enable' :'disable',
-	          userId: getCookie('userId'),
+	          userRol: getCookie('access-type'),
 	          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
 	      }
 
 	      postData("suggest_contact/",dict,function(data){
 	       
-		       data = $.parseJSON(data);
+	       data = $.parseJSON(data);
 
-		       if(data.created)
-		       {
-				swal("Contacto almacenado.", "", "success");
-		       }
-		       else if(data.exists)
-		       {
-		       		swal({   
-		       			title: "Adventencia",
-		       		    text: "Existe un contacto asociado al mismo RNC.",
-		       		    type: "warning",   
-		       		    showCancelButton: false,   
-		       		    confirmButtonColor: "#DD6B55",   
-		       		    confirmButtonText: "Ok",   
-		       		    closeOnConfirm: false });
-		       }
+	       if (data.s) {
+
+		       	$('#suggest_form').form('clear');
+
+		        show_alert("success",data.s,3000,$("#alert_msg"));
+	       }
+	       else if (data.f){
+	       		show_alert("danger",data.f,3000,$("#alert_msg"));
+	       }
+	       else if(data.a)
+	       {
+	       		show_alert("danger",data.a,3000,$("#alert_msg"));
+	       }
 	       
 	      });
 	});
@@ -417,7 +264,7 @@ jQuery(window).load(function () {
 
 	/*Sugerencias admin-area*/
 	$(".editContact").click(function(){
-		alert("s");
+
 		var contactId = $(this).find("i").attr("data-val");
 
 		if (!contactId) {
@@ -596,33 +443,15 @@ jQuery(window).load(function () {
 	});	
 
 
-/**********Contactos******************/
-
-function getContacts()
-{
-	var dic = {
-        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-    }
-
-     postData('contactList/',dic,function(data){
-
-     	createContactTableWithData($.parseJSON(data),1,10,$(".contact_adm_body .table_content"));
-     });
-}
-
-
-function initializeSearcher(usrRol=1)
+function initializeSearcher()
 {
     var dic = {
-    	userRol: usrRol,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
     }
 
     postData('directories/getContactsName/',dic,function(names){
 
-        var contacts_name = $.parseJSON(names);
-
-        console.log(contacts_name);
+        contacts_name = $.parseJSON(names);
         var name = [];
 
         for(var i = 0; i < contacts_name.length; i++)
@@ -648,10 +477,10 @@ function initializeSearcher(usrRol=1)
     });
 }
 
-
 function reorder(id,userId)
 {
 	// Reordena el pedido.
+
 	var dic = {
           orderId: id,
           userId: userId,
@@ -664,13 +493,11 @@ function reorder(id,userId)
 
 		if(data.data)
 		{
-			var msg = getCookie("userId")+" su pedido ha sido enviado.";
-			swal("Pedido realizado exitosamente.", msg, "success");
-
-			createOrderTableForUserWithId(userId, getCookie("access-type"), getCookie("ormemfil"));
+			show_alert("warning","El pedido success.",3000);
+			createOrderTableForUserWithId(userId);
 		}
 		else{
-			swal("Error","Ocurrio un error al realizar el pedido, intente nuevamente.", "error");
+			show_alert("danger","No se ha podido reenviar el pedido.",3000);
 		}
 	});
 }
@@ -688,150 +515,44 @@ function cancelOrder(id,userId)
 
 		if(data.data)
 		{
-			var msg = getCookie("userId")+" su pedido ha sido cancelado.";
-			swal("La orden ha sido cancelada.", msg, "success");
-
-			createOrderTableForUserWithId(userId, getCookie("access-type"), getCookie("ormemfil"));
+			show_alert("warning","La orden ha sido cancelada.",3000);
+			createOrderTableForUserWithId(userId);
 		}
 		else{
-			swal("Error: No se ha podido cancelar la orden.", msg, "success");
+			show_alert("danger","Error: No se ha podido cancelar la orden.",5000);
 		}
 	});
 }
 
-function createOrderTableForUserWithId(id, access_type=false, filter=null)
+function createOrderTableForUserWithId(id)
 {
-	if(access_type == 1 || access_type == 3)
-	{
-		if (access_type == 1) {
-			id = "all"; // todos los pedidos (admin)
+	var dic = {
+          userId: id,
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+    }
+
+	postData('getUserOrders/',dic,function(data){
+
+		// Retorna los pedidos realizados por el usuario
+
+		data = $.parseJSON(data);
+
+		if(data)
+		{
+			constructTableWithData(data,5,1);
+			$("#order_loader").hide();
+		}
+		else{
+			show_alert("danger","Error: no data fetched -(consulta de pedidos).",5000);
 		}
 		
-		var dic = {
-	          userId: id,
-	          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-	    }
-
-		postData('getUserOrders/',dic,function(data){
-
-			// Retorna los pedidos realizados por el usuario
-			data = $.parseJSON(data);
-
-			if(data)
-			{
-				constructTableWithData(data,5,1);
-				$("#order_loader").hide();
-			}
-			else{
-				show_alert("danger","Error: no data fetched -(consulta de pedidos).",5000);
-				$("#order_loader").hide();
-			}
-			
-		});
-	}
-	else if(access_type == 2)
-	{
-		getGroupMeta(id, 2,function(data){
-
-			var group = $.parseJSON(data);
-				
-			if (group) {
-
-				var html ="";
-
-				html = "Estos son tus grupos, <b>"+id+"</b>. Seleccione el grupo en el cual desea ver los pedidos realizados: <br><br>";
-				$("#userForm .data").append(html);
-
-				for(var i=0; i<group.length; i++)
-				{						
-					html = `<li><a class="order_gruop" gid="`+group[i].id+`">`+group[i].name+`</a></li>`;
-
-					$("#userForm .data").append(html);
-
-					$(".order_gruop").click(function(){
-
-						$("#order_loader").show();	
-						var gid = $(this).attr("gid");
-						var group_name = $(this).text();
-
-						if(gid.length==0){
-							show_alert("Ocurrio un error al cargar los pedidos de este grupo.","gid - error",3000);
-							$("#order_loader").hide();
-							return false;
-						}
-
-						getGroupMemOrders(gid,2,function(data){
-
-							data = $.parseJSON(data);
-
-							$(".group_name").text(group_name);
-							$("#userForm .options").show();
-							$("#order_loader").show();
-							constructTableWithData(data,5,1);
-							$("#order_loader").hide();	
-
-							// Filtro
-							var members = [];
-							for(var i=0; i<data.length; i++)
-							{
-								members.push(data[i].fields.userId);
-							}	
-
-							members = members.filter(function( item, index, inputArray ) {
-								           		return inputArray.indexOf(item) == index;
-								    		});
-
-							$(".members_selecter optgroup").html(`
-								<option value="" disabled selected>Filtrar por miembro</option>
-								<option value="" >Todos</option>
-							`);
-
-							for(var i=0; i<members.length; i++)
-							{
-								$(".members_selecter optgroup").append(`<option>`+members[i]+`</option>`);
-							}
-
-							$(".members_selecter").click(function(){
-
-								var filter_selected = filter != null ? filter: $(".members_selecter option:selected").text();
-
-								// filter cookie for fowards handle
-								createCookie("ormemfil",filter_selected,3000);
-
-								if(filter_selected != "Todos")
-								{
-									var temp_data = [];
-
-									for(var i=0; i<data.length; i++)
-									{
-										if(data[i].fields.userId == filter_selected)
-										{
-											temp_data.push(data[i]);
-										}
-										constructTableWithData(temp_data,5,1);
-									}
-								}
-								else
-								{
-									constructTableWithData(data,5,1);
-								}
-									
-							});
-
-						});
-					});
-				}
-
-				$("#order_loader").hide();
-			}
-		});
-	}
-	
+	});
 }
 
 
 function constructTableWithData(data,display_n=10,current_page=1,pg=true,dpg="")
 {
+	console.log(data);
 	var container = $(".data");
 
 	var pagination = dpg;
@@ -843,6 +564,9 @@ function constructTableWithData(data,display_n=10,current_page=1,pg=true,dpg="")
 			<th>#</th>
 			<th>Usuario</th>
 			<th>Descripcion de los pedidos</th>
+			<th>Estado</th>
+			<th>Fecha</th>
+			<th>Acciones</th>
 		</tr>
 	`;
 
@@ -856,7 +580,7 @@ function constructTableWithData(data,display_n=10,current_page=1,pg=true,dpg="")
 
 			var color = data[i].fields.status == "active" ? "rgb(200,220,100)" : "";
 			color = data[i].fields.status == "received" ? "rgb(100,220,100)" : color;
-			color = data[i].fields.status == "banned" ? "rgb(240,240,240)" : color;
+			color = data[i].fields.status == "banned" ? "rgb(255,200,100)" : color;
 
 			html += `
 			<tr>
@@ -864,20 +588,21 @@ function constructTableWithData(data,display_n=10,current_page=1,pg=true,dpg="")
 				<td><p title="`+data[i].fields.userId+`">`+data[i].fields.userId+`</p></td>
 				<td>
 					<div id="order_div" style="background-color: `+color+`;">
-						<p id="odate">`+data[i].fields.date+`</p>
 						<p>`+data[i].fields.description.replace(/\n/g, "<br />")+`</p>
-						<p id="ostatus">`+status_trans(data[i].fields.status)+`</p>
-						<i class="reply icon" orderId="`+data[i].pk+`" title="Volver a pedir"></i>
-						`; 
-						if(data[i].fields.status != "banned"){ 
-							html +=`<i class="remove circle icon" orderId="`+data[i].pk+`" title="Cancelar pedido"></i>`;
-						}
-					html +=`</div>
+					</div>
+				</td>
+				<td>`+status_trans(data[i].fields.status)+`</td>
+				<td>`+data[i].fields.date+`</td>
+				<td>
+					<ul style="display:inline-flex ">
+						<li><i class="reply icon" orderId="`+data[i].pk+`" title="Volver a pedir"></i></li>
+						<li><i class="remove circle icon" orderId="`+data[i].pk+`" title="Cancelar pedido"></i></li>
+					</ul>
 				</td>
 			</tr>
 			`;
 		}
-
+	
 		if(i >= (display_n * page_number) && pg)
 		{
 			page_number++;
@@ -993,48 +718,13 @@ function confirmAuth()
 
 		$(".close_sesion").click(function(){
 			deleteCookies();
-			window.location.assign("/login");
+			window.location.assign("/index");
 		});
 	}
 	else
 	{
-		//window.location.assign("/login");
-		//window.location.assign("/");
+		window.location.assign("/index");
 	}
-}
-
-function getNotifications(){
-
-	//var code                                              = Math.floor((Math.random()*1000000)+1);
-	var current = 0;
-
-	check = function(){
-
-		if(getCookie("nc")!=current)
-		{
-			var dic = {
-	                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-	            }
-
-			postData("getnotifications/",dic,function(data){
-
-				data = $.parseJSON(data);
-
-				if(data)
-				{
-					swal("Notificaciones", "It's pretty, isn't it?");
-
-					current = data.length;
-					createCookie("nc",current,3000000);
-					setTimeout(check, 1000);
-				}
-			});
-		}else{
-			setTimeout(check, 1000);
-		}
-	}
-
-	setTimeout(check, 1000);
 }
 
 function createMenu(userRol)
@@ -1071,7 +761,7 @@ function getCategories()
 
         if(data)
         {
-            var categories = $.parseJSON(data);
+            categories = $.parseJSON(data);
 
             for(var i = 0; i < categories.length; i++)
             {
@@ -1117,37 +807,11 @@ function deleteCookies()
 {
 	createCookie('userId',null,3000);
 	createCookie('access-type',null,3000);
-	createCookie('ormemfil',null,3000);
 }
 
-function deleteCookie(name)
-{
-	createCookie(name,null,3000);
-}
-
-/*});*/
-/////////////////////////JQUERY//////////////////////////////////////////////////
-//});
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+});
 
 
 
@@ -1163,738 +827,13 @@ function postData(url,vars,callback)
   });
 }
 
-function findContactWithName(e,f=false)
-{
-    if(e.which == 13 || f) {
 
-        var dic = {
-            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
-            name:$("#tsearch").val()
-        }
-
-        postData('findContact/',dic,function(data){
-
-            createContactTableWithData($.parseJSON(data),1,10,$(".contact_adm_body .table_content"));
-        });
-    }
-}
-
-
-function createContactTableWithData(data,page=1,rows=10,parent)
-{
-	if (data.length>0) {
-
-		var pagCount = 1;
-
-		if((data.length % rows) == 0)
-			pagCount = Math.floor(data.length/rows);
-		else
-			pagCount = Math.floor(data.length/rows)+1;
-		
-
-		var content = `
-		<table class="ui celled table">
-			  <thead>
-			  <tr>
-				<th>Contacto</th>
-				<th>Categoria</th>
-				<th>Puntuacion</th>
-				<th>Estado</th>
-				<th>Menu</th>
-				<th id='options'>Opciones</th>
-				</tr>
-			  </thead>
-			  <tbody>`;
-
-		for(var i=(page-1)*rows; i<(((page-1)*rows)+rows); i++)
-		{
-			if((data.length-1) < i)
-				break;
-
-			content += `<tr>
-			      <td>`+data[i].name+`</td>
-			      <td>`+data[i].categoryId_id+`</td>
-			      <td>`+data[i].rating+`</td>
-			      <td>`+data[i].status+`</td>
-			      <td>
-			      	<div class="ui button load_menu" cid="`+data[i].id+`" data-toggle="modal" data-target="#menuModal">Menu</div>
-			      </td>
-			      <td>
-
-			      	<div class="ui button">Mostrar opciones</div>
-						<div class="ui flowing popup top left transition hidden">
-						  <div class="ui two column divided center aligned grid">
-						    <div class="column">
-						      <div class="ui button editcontact" cid="`+data[i].id+`">Editar</div>
-						    </div>
-						    <div class="column">
-						      <div class="ui button deletecontact" cid="`+data[i].id+`">Eliminar</div>
-						    </div>
-						  </div>
-						</div>
-			      </td>
-			    </tr>`;
-		}
-
-		var pagination = "";
-
-		for(var i=0; i<pagCount; i++)
-		{
-			pagination += `<a class="item pagebutton" pag=`+(i+1)+`>`+(i+1)+`</a>`;
-		}
-
-		content +=`
-			  </tbody>
-			  <tfoot>
-			    <tr><th colspan="3">
-			      <div class="ui right floated pagination menu">
-			        <a class="icon item prevpagebutton">
-			          <i class="left chevron icon"></i>
-			        </a>
-			        `+pagination+`
-			        <a class="icon item nextpagebutton">
-			          <i class="right chevron icon"></i>
-			        </a>
-			      </div>
-			    </th>
-			  </tr></tfoot>
-			</table>`;
-
-		parent.html(content);
-
-		$('.button')
-		  .popup({
-		    inline: true,
-			hoverable:true
-		  });
-
-		$(".pagebutton").click(function(){
-				createContactTableWithData(data,$(this).attr('pag'),rows,parent)
-			});
-
-		$(".prevpagebutton").click(function(){
-				if((page-1) >= 1)
-					createContactTableWithData(data,page-1,rows,parent)
-			});
-
-		$(".nextpagebutton").click(function(){
-				if((page+1) <= pagCount)
-					createContactTableWithData(data,page+1,rows,parent)
-			});
-
-
-		//Menu
-		var categories;
-		var all_categories = [];
-		var category_name = {};
-		var category_control;
-		
-		$(".load_menu, .backtomenu").click(function(){
-
-			$(".newMenu").css('display','inline');
-			if($(".menuname").length>0)
-				$(".menuname").replaceWith('<select class="cmenu" name="cmenu"></select>');
-
-			$(".cmenu").html("");
-			$(".menu_body_content").html("");
-			$(".editMenu").hide();
-			$(".newSection").hide();
-			$(".saveMenu").hide();
-			$(".deleteMenu").hide();
-			$(".backtomenu").hide();
-
-			$(".header_one").html("Seleccione el menu que desee desplegar.");
-
-			var cid = $(this).attr('cid');
-			if (typeof cid !== typeof undefined && cid !== false){
-
-				$(".menu_body_content").attr("cid",cid);
-				$("#menuForm").attr("cid",cid);
-			}else
-			{
-				cid = $(".menu_body_content").attr("cid");
-			}
-				
-
-			getContactListMenu(cid,function(data){
-
-				data = $.parseJSON(data);
-
-				if(data)
-				{
-					for(var i=0; i<data.length; i++)
-					{
-						$(".cmenu").append(`<option mid=`+data[i].id+`>`+data[i].name+`</option>`);
-					}
-				}
-			});
-
-			$(".cmenu").click(function(){
-
-				$(".menu_body_content").html("");
-				$(".newMenu").css('display','inline');
-				$(".editMenu").hide();
-				$(".newSection").hide();
-				$(".saveMenu").hide();
-				$(".deleteMenu").hide();
-				$(".backtomenu").hide();
-
-				getMenuDetails($('option:selected', this).attr('mid'),function(data){
-
-					data = $.parseJSON(data);
-
-					//console.log($(".cmenu option:selected").attr('mid'));
-					if(data)
-					{
-						var menu_body = $(".menu_body_content");
-						var html = "";
-						var menu_html = "";
-						var menu_content = {};
-
-						for(var i=0; i<data.length; i++)
-						{
-							if(!menu_content[data[i].categoryId_id])
-								menu_content[data[i].categoryId_id] = [];
-
-							menu_content[data[i].categoryId_id].push({'id': data[i].id, 'desc': data[i].description, 'price':data[i].price});
-						}	
-
-						categories = Object.keys(menu_content);
-						category_name = {};
-
-						getMenuCategories(function(data){
-
-							data = $.parseJSON(data);
-							all_categories = [];
-
-							for(var i=0; i<data.length; i++)
-							{
-								category_name[data[i].id] = {'category_name': data[i].description};
-
-								all_categories.push(data[i].id);
-							}
-
-							for(var j=0; j<categories.length; j++)
-							{
-								html = `<p class="category_name" mcid="`+categories[j]+`"><b>`+category_name[categories[j]].category_name+`:</b></p>`;
-
-								for(var d=0; d<menu_content[categories[j]].length; d++)
-								{
-									html += `<li class="menu_category_details" mdid="`+menu_content[categories[j]][d].id+`" mdcid="`+categories[j]+`" mdcn="`+category_name[categories[j]].category_name+`"><span class="menu_desc">`+menu_content[categories[j]][d].desc+`</span>  <span class="mp">$<span class="menu_price">`+menu_content[categories[j]][d].price+`</span></span></li>`;
-								}
-
-								html += `<div class="menu_section_space"></div>`;
-
-								menu_html += html;
-							}
-
-							$(".editMenu").show();
-							$(".deleteMenu").show();
-
-							menu_body.html("<div class='menu_viewer'>"+menu_html+"</div>");
-						});
-
-					}
-				});
-			});
-
-		});
-
-		$(".newMenu").click(function(e){
-			e.preventDefault();
-			$(this).css('display','none');
-			$(".newSection").show();
-			$(".editMenu").hide();
-			$(".deleteMenu").hide();
-			$(".saveMenu").show();
-			$(".backtomenu").show();
-	    	$(".menu_body_content").html("");
-
-	    	$(".header_one").html("Introduzca el nombre del menu. Presione el boton <b>'Crear nueva seccion'</b> para crear categorias del menu.");
-	    	$(".cmenu").replaceWith('<input type="text" class="menuname" placeholder="Nombre del menu">');
-
-	    	getMenuCategories(function(data){
-
-				data = $.parseJSON(data);
-				all_categories = [];
-
-				for(var i=0; i<data.length; i++)
-				{
-					category_name[data[i].id] = {'category_name': data[i].description};
-
-					all_categories.push(data[i].id);
-				}
-
-				category_control = "<select class='dropdown_category'><option value='-1' disabled>Seleccione la categoria</option>";
-
-				for (var i=0; i<all_categories.length; i++)
-				{
-					category_control += `<option value="`+all_categories[i]+`">`+category_name[all_categories[i]].category_name+`</option>`;
-				}
-
-				category_control += "</select>";
-			});
-	    });
-
-		$(".editMenu").click(function(e){
-			e.preventDefault();
-			$(this).hide();
-			$(".newSection").show();
-			$(".saveMenu").show();
-			$(".deleteMenu").show();
-			$(".backtomenu").show();
-
-			var secheader = "";
-			var field = "";
-
-			category_control = "<select class='dropdown_category'><option value='-1' disabled>Seleccione la categoria</option>";
-
-			for (var i=0; i<all_categories.length; i++)
-			{
-				category_control += `<option value="`+all_categories[i]+`">`+category_name[all_categories[i]].category_name+`</option>`;
-			}
-
-			category_control += "</select>";
-
-			$('.menu_category_details').each(function(i,o,f) {
-
-				if(secheader != $(this).attr("mdcid"))
-				{
-					secheader = $(this).attr("mdcid");
-
-					$(".menu_body_content").append(
-						`<div class='section section`+$(this).attr("mdcid")+`' id="section`+$(this).attr("mdcid")+`">`
-						+`<h5 class="ui dividing header">`+category_control+`</h5>`
-						+`<div class="sc"></div>`
-						+`<div class="ui button addfield" >+</div>
-						<div class="ui button hide_section" >Ver menos</div>
-						<div class="ui button delete_section" >Eliminar</div>
-						</div>`);
-				}
-
-				field = `
-						<div class="fields menurow_edit" mdid="`+$(this).attr("mdid")+`">
-						  <div class="twelve wide field">
-						     <input type="text" class="desc" placeholder="Descripcion" value="`+$(this).find(".menu_desc").html()+`">
-						  </div>
-						  <div class="four wide field">
-						     <input type="number" class="price" min="0" placeholder="Precio RD$" value="`+$(this).find(".menu_price").html()+`">
-						  </div>
-						  <div class="four wide field">
-						    <div class="ui button removefield" mdid="`+$(this).attr("mdid")+`">X</div>
-						  </div>
-						</div>`; 
-
-				$(".section"+$(this).attr('mdcid')+" .sc").append(field);
-			});
-
-			// establece categoria de menu
-			var menuSelectedVal = [];
-			$(".category_name").each(function(){
-				//if(!menuSelectedVal.includes($(this).attr('mcid')))
-				menuSelectedVal.push($(this).attr('mcid'));
-			});
-
-			$(".dropdown_category").each(function(i,obj){
-				$(this).val(menuSelectedVal[i]);
-				
-			});
-
-			// elimina menu - viewer
-			$('.menu_category_details').each(function() {
-				$(this).remove();
-				$('.menu_body_content p').remove();
-				$('.menu_section_space').remove();
-				$('.menu_viewer').remove();
-			});
-
-			$(".addfield").click(function(){
-				$(this).parent().find(".sc").append(`
-						<div class="fields menurow_create">
-						  <div class="twelve wide field">
-						     <input type="text" class="desc" placeholder="Descripcion">
-						  </div>
-						  <div class="four wide field">
-						     <input type="number" class="price" min="0" placeholder="Precio RD$">
-						  </div>
-						  <div class="four wide field">
-						    <div class="ui button removefield" mdid="none">X</div>
-						  </div>
-						</div>`);
-
-				$(".removefield").click(function(){
-					$(this).parent().parent().remove();
-				});
-			});
-
-			$(".removefield").click(function(){
-				// just for edition
-				var obj = $(this);
-				deleteMenuItemWithId($(this).attr("mdid"),function(success){
-					if(success){
-						obj.parent().parent().remove();
-					}
-				});
-				
-
-			});
-
-			$(".hide_section").click(function(){
-				$(this).parent().find(".sc").slideToggle("slow");
-
-				if($(this).parent().find(".addfield").css('opacity')==0){
-					$(this).parent().find(".addfield").animate({opacity:"1"},200);
-					$(this).html('Ver menos');
-				}
-				else{
-					$(this).parent().find(".addfield").animate({opacity:"0"},200);
-					$(this).html('Ver mas');
-				}
-			});
-
-			$(".delete_section").click(function(){
-
-				var obj = $(this);
-				var parentClassName = obj.parent().attr("id");
-
-				alert(parentClassName);
-
-				if(confirm("Desea eliminar esta seccion?"))
-				{
-					var mdid = [];
-
-					$("#"+parentClassName+" .menurow_edit").each(function(){
-
-						var value = $(this).attr('mdid');
-
-						if (typeof value !== typeof undefined && value !== false)
-							mdid.push(value);
-					});
-
-					$("#"+parentClassName+" .menurow_create").each(function(){
-
-						var value = $(this).attr('mdid');
-
-						if (typeof value !== typeof undefined && value !== false)
-							mdid.push(value);
-					});
-
-					if(mdid.length > 0)
-					{
-						var dic = {
-							mdid: mdid.join('|'),
-				            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-				    	}
-
-				     	postData('deletemenuelements/',dic,function(success){
-
-				     		if(success)
-				     			obj.parent().remove();
-				     	});
-					}
-					else
-					{
-						//obj.parent().remove();
-					}
-					
-				}
-			});
-			
-		});
-
-		$(".newSection").click(function(){
-
-			$(".menu_body_content").append(
-						`<div class='section section`+($(".section").length) * 100+`'>`
-						+`<h5 class="ui dividing header">`+category_control+`</h5>`
-						+`<div class="sc">
-
-						<div class="fields menurow_create">
-						  <div class="twelve wide field">
-						     <input type="text" class="desc" placeholder="Descripcion">
-						  </div>
-						  <div class="four wide field">
-						     <input type="number" class="price" min="0" placeholder="Precio RD$">
-						  </div>
-						  <div class="four wide field">
-						    <div class="ui button removefield" >X</div>
-						  </div>
-						</div>
-
-
-						</div>`
-						+`<div class="ui button addfieldni addfieldn`+($(".section").length) * 100+`" >+</div>
-						<div class="ui button hide_sectionn`+($(".section").length) * 100+`" >Ver menos</div>
-						<div class="ui button delete_sectionn`+($(".section").length) * 100+`" >Eliminar</div>
-						</div>`);
-
-
-			$(`.addfieldn`+($(".section").length - 1) * 100+``).click(function(){
-			
-				$(this).parent().find(".sc").append(`
-						<div class="fields menurow_create">
-						  <div class="twelve wide field">
-						     <input type="text" class="desc" placeholder="Descripcion">
-						  </div>
-						  <div class="four wide field">
-						     <input type="number" class="price" min="0" placeholder="Precio RD$">
-						  </div>
-						  <div class="four wide field">
-						    <div class="ui button removefield" >X</div>
-						  </div>
-						</div>`);
-
-				$(".removefield").click(function(){
-					$(this).parent().parent().remove();
-				});
-			});
-
-			$(`.hide_sectionn`+($(".section").length - 1) * 100+``).click(function(){
-					$(this).parent().find(".sc").slideToggle("slow");
-
-					if($(this).parent().find(`.addfieldni`).css('opacity')==0){
-						$(this).parent().find(`.addfieldni`).animate({opacity:"1"},200);
-						$(this).html('Ver menos');
-					}
-					else{
-						$(this).parent().find(`.addfieldni`).animate({opacity:"0"},200);
-						$(this).html('Ver mas');
-					}
-				});
-
-			$(`.delete_sectionn`+($(".section").length - 1) * 100+``).click(function(){
-					$(this).parent().remove();
-				});
-		});
-
-		$(".saveMenu").click(function(){
-
-			var cid = $(".menu_body_content").attr("cid");
-			var mid = "";
-			var mdid = [];
-			var mcid = [];
-			var mdesc = [];
-			var mprice = [];
-			var task = [];
-			var newmenu = "false";
-
-			if($(".cmenu").length > 0 && $(".menuname").length==0)
-			{
-				mid = $(".cmenu option:selected").attr('mid');
-				newmenu = "false";
-			}
-			else
-			{
-				mid = $(".menuname").val();
-				newmenu = "true";
-
-				if(mid.length==0)
-				{
-					alert("no menu name");
-					return;
-				}
-			}
-
-			$(".menurow_edit").each(function(){
-
-				if($(this).find(".desc").val().length > 0)
-				{
-					var price = 0;
-					if($(this).find(".price").val().length > 0)
-						price = $(this).find(".price").val();
-
-					mdid.push($(this).attr('mdid'));
-					mcid.push($(this).parent().parent().find('.dropdown_category').val());
-					mdesc.push($(this).find(".desc").val());
-					mprice.push(price);
-					task.push('edit');
-				}
-			});
-
-			$(".menurow_create").each(function(){
-
-				if($(this).find(".desc").val().length > 0)
-				{
-					var price = 0;
-					if($(this).find(".price").val().length > 0)
-						price = $(this).find(".price").val();
-
-					mdid.push('none');
-					mcid.push($(this).parent().parent().find('.dropdown_category').val());
-					mdesc.push($(this).find(".desc").val());
-					mprice.push(price);
-					task.push('create');
-				}
-			});
-
-			var dic = {
-				cid: cid,
-				mid: mid,
-				mdid: mdid.join('|'),
-				mcid: mcid.join('|'),
-				mdesc: mdesc.join('|'),
-				mprice: mprice.join('|'),
-				task: task.join('|'),
-				newmenu, newmenu,
-	            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-	    	}
-
-	     	postData('managemenu/',dic,function(success){
-
-	     		if(success)
-	     			alert(success);
-	     	});
-
-		});
-
-		$(".deleteMenu").click(function(){
-			if(confirm("Desea eliminar este menu?"))
-			{
-				var dic = {
-				mid: $(".cmenu option:selected").attr('mid'),
-	            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-		    	}
-
-		     	postData('deletemenu/',dic,function(success){
-
-		     		if(success)
-		     			alert(success);
-
-		     		$(".backtomenu").click();
-		     	});
-			}
-		});
-
-		$(".categories").click(function(e){
-			e.preventDefault();
-			$(this).hide();
-			$(".newSection").hide();
-			$(".saveMenu").hide();
-			$(".deleteMenu").hide();
-			$(".backtomenu").show();
-
-		});
-
-		$(".editContact").click(function(){
-
-				var contactId = $(this).attr('cid');
-
-				if (!contactId) {
-					alert("Error: No contact id provided.");
-					return;
-				}
-				else
-				{
-					load_contactForm(contactId);
-				}
-
-			});
-
-		$(".deletecontact").click(function(){
-			var contactId = $(this).attr('cid');
-				swal({   
-					title: "Are you sure?",
-					text: "You will not be able to recover this imaginary file!",
-					type: "warning",
-					showCancelButton: true,
-					confirmButtonColor: "#DD6B55",
-					confirmButtonText: "Yes, delete it!",
-					closeOnConfirm: false }, 
-					function(){   
-					   	var paramns = {};
-
-						paramns.data = data;
-						paramns.page = 1;
-						paramns.rows = rows;
-						paramns.parent = parent;
-
-						deleteContact(contactId,paramns);
-				});
-		});
-	}
-}
-
-function getContactListMenu(cid, callback)
-{
-	var dic = {
-            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
-            cid:cid
-    	}
-
-     postData('getcontactlistmenu/',dic,callback);
-}
-
-function getMenuDetails(mid, callback)
-{
-	var dic = {
-            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
-            mid:mid
-    	}
-
-     postData('getmenudetails/',dic,callback);
-}
-
-function getMenuCategories(callback)
-{
-	var dic = {
-            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-        }
-
-     postData('getmenucategories/',dic,callback);
-}
-
-function deleteMenuItemWithId(eid, callback)
-{
-	var dic = {
-		eid: eid,
-	    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-	}
-
-	postData('deletemenuitem/',dic,callback);
-}
-
-function getCategoryWithId(id, callback)
-{
-	var dic = {
-            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
-            id:id
-    	}
-
-     postData('getcategorywithid/',dic,callback);
-}
-
-function deleteContact(contactId,paramns=null)
-{
-	var dic = {
-          id: contactId,
-          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-    	}
-
-	postData('deleteContact/',dic,function(data){
-
-		if(data)
-		{
-			swal("Directorio", "El contacto ha sido eliminado.", "success"); 
-			getContacts();
-
-			//if(paramns!=null)
-			//	createContactTableWithData(paramns['data'],paramns['page'],paramns['rows'],paramns['parent']);
-		}
-		else{
-			wal("Error", "Ocurrio un error al eliminar el contacto, por favor intentelo nuevamente.", "error"); 
-		}
-	});
-}
 
 function findContact(e,f=false)
 {
-	$("#menu_select").parent().parent().hide();
-	$(".total_order").hide();
-
     if(e.which == 13 || f) {
         
-        if($("#tsearch").val().length==0)
-        	return false;
+        //$("#directory_loader").show();
 
         var dic = {
             csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
@@ -1907,28 +846,7 @@ function findContact(e,f=false)
 
             if (data) 
             {   
-               //getBranchForContactId(data[0].id);
-               $('#menu_select').html('<option value="">Menu</option>');
-
-               getContactListMenu(data[0].id,function(data){
-
-               		data = $.parseJSON(data);
-
-               		if(data){
-
-               			$("#menu_select").parent().parent().show();
-
-	               		for (var i=0; i<data.length; i++){
-
-	               			$('<option>').val(data[i].name).text(data[i].name)
-				            .attr("mid",data[i].id)
-				            .appendTo('#menu_select');
-	               		}	
-	               	}
-	               	else{
-	               		$("#menu_select").parent().parent().hide();
-	               	}
-               });
+               getBranchForContactId(data[0].id);
             }
             else
             {
@@ -1938,7 +856,7 @@ function findContact(e,f=false)
         });
     }
 }
-/*
+
 function getBranchForContactId(id)
 {
 	$('#sucursal_select').html('<option value="">Sucursales</option>');
@@ -1963,8 +881,8 @@ function getBranchForContactId(id)
             .appendTo('#sucursal_select');
        }
     });
-}*/
-/*
+}
+
 function getBranchMenu(branchid)
 {
 	$("#MenuSelect").html("");
@@ -1990,7 +908,7 @@ function getBranchMenu(branchid)
             $("#menu_content").html("");
         }); 
 }
-*/
+
 function validate_suggestForm()
 {
 	$('.ui.form')
@@ -2023,12 +941,21 @@ function validate_suggestForm()
 		          }
 		        ]
 		      },
+		      cimagen: {
+		        identifier: 'cimagen',
+		        rules: [
+		          {
+		            type   : 'empty',
+		            prompt : 'Por favor, introduzca la direccion del logo.'
+		          }
+		        ]
+		      },
 		      ctelefono: {
 		        identifier: 'ctelefono',
 		        rules: [
 		          {
 		            type   : 'empty',
-		            prompt : 'Por favor, introduzca el numero de telefono del contacto.'
+		            prompt : 'Por favor, introduzca el numero de telefono de la sucursal.'
 		          },
 		          {
 		            type   : 'minLength[10]',
@@ -2041,7 +968,7 @@ function validate_suggestForm()
 		        rules: [
 		          {
 		            type   : 'empty',
-		            prompt : 'Por favor introduzca la direccion del contacto.'
+		            prompt : 'Por favor introduzca la direccion de la sucursal.'
 		          }
 		        ]
 		      }
@@ -2179,28 +1106,6 @@ function load_userFormData(userId)
 	}
 }
 
-function getGroupMeta(ffid, userRol=2,callback)
-{
-	var dic = {
-		userId: ffid,
-		userRol: userRol,
-		csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-	}
-
-	postData('getGroups/',dic,callback);
-}
-
-function getGroupMemOrders(gid, userRol=2,callback)
-{
-	var dic = {
-		groupId: gid,
-		userRol: userRol,
-		csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-	}
-
-	postData('getGroupMemOrders/',dic,callback);
-}
-
 function getGroups(userId, usrRol)
 {
 	// userid=1: obtiene todos los grupos
@@ -2215,9 +1120,11 @@ function getGroups(userId, usrRol)
 
     	data = $.parseJSON(data);
 
+    	console.log(data);
+
 			if(data)
 			{
-				var obj = `<div class="ui styled accordion" style="width:100%;">`;
+				var obj = `<div class="ui styled accordion">`;
 
 				for(var i=0; i<data.length; i++)
 				{
@@ -2238,7 +1145,7 @@ function getGroups(userId, usrRol)
 					users = users.length == 0? "<li>No contiene integrantes.</li>" : users;
 
 					var del_group = usrRol == 1 ? `<div class="delete_group" gid="`+data[i].id+`" style="float:right; color:rgb(200,90,50);">Eliminar</div>` : "";
-					var edit_group = (usrRol == 1 || usrRol == 2) ? `<div class="edit_group" gid="`+data[i].id+`" style="float:right; color:rgb(90,170,50); margin-right:10px;" data-toggle="modal" data-target="#groupModal">Editar</div>` : "";
+					var edit_group = (usrRol == 1 || usrRol == 2) ? `<div class="edit_group" gid="`+data[i].id+`" style="float:right; color:rgb(90,170,50); margin-right:10px;">Editar</div>` : "";
 
 					obj += `<div class="title">
 						    <i class="dropdown icon"></i>
@@ -2277,7 +1184,7 @@ function getGroups(userId, usrRol)
 
 			    		if(data)
 			    		{
-			    			getGroups(userId,usrRol);
+			    				getGroups(userId,usrRol);
 			    		}
 			    	});
 			    }
@@ -2285,8 +1192,7 @@ function getGroups(userId, usrRol)
 
 			$(".edit_group").click(function(){
 
-			//	console.log($(this).prev().html());
-				load_groupInfo($(this).attr('gid'),usrRol);
+				
 			});
 
 			$(".delete_user").click(function(){
@@ -2364,69 +1270,6 @@ function getGroupMembers(uid)
 		});
 }
 
-function load_groupInfo(gid,usrRol=null)
-{
-	var dic = {
-          groupId: gid,
-          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
-    }
-
-    postData('getGroupInfo/',dic,function(data){
-
-    	data = $.parseJSON(data);
-
-		if(data)
-		{
-			var form = $("#addGruopForm");
-			var obj = form.find(".content");
-			var gnombre = $("#gnombre");
-			var gencargado = $("#gencargado");
-			
-			form.attr("mode","edit");
-			form.attr("gid",gid);
-			gencargado.val(data.group[0].ffId);
-			gnombre.val(data.group[0].name);
-
-			if(usrRol != null && usrRol == 2) 
-				gencargado.prop('disabled', true);
-
-			$(".gmiembro").parent().parent().remove();
-
-			if (data.members.length == 0) {
-
-				obj.append(`
-					<div class="two fields">
-					  	<div class="field">
-					      <input placeholder="Ej. Juan Perez / Jp1592" name="gmiembro" id="gmiembro" class="gmiembro" type="text"></input>
-					    </div>
-					  </div>
-					`);
-			}
-			
-			for(var i=0; i<data.members.length; i++)
-			{
-				obj.append(`
-					<div class="two fields">
-					  	<div class="field">
-					      <input placeholder="Ej. Juan Perez / Jp1592" name="gmiembro" id="gmiembro" class="gmiembro" type="text" value="`+data.members[i].uid_id+`"></input>
-					    </div>
-					   <div class="delrow">
-					      <div class="ui submit button delGroupRow" id="delGroupRow">X</div>
-					   </div>
-					  </div>
-					`);
-
-				$(".delGroupRow").click(function(){
-
-					$(this).parent().parent().remove();
-				});
-			}
-		}
-		else{
-			alert("er");
-		}
-	});
-}
 
 function load_contactForm(contactId)
 {
@@ -2460,6 +1303,25 @@ function load_contactForm(contactId)
 			}
 		});
 	}	
+}
+
+function deleteContact(contactId)
+{
+	var dic = {
+          id: contactId,
+          csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+    	}
+
+	postData('deleteContact/',dic,function(data){
+
+		if(data)
+		{
+			alert("Contact deleted");
+		}
+		else{
+			alert("er");
+		}
+	});
 }
 
 function setContactTableSetting()
@@ -2498,5 +1360,4 @@ function setContactTableSetting()
 
 
 
-});
-//});
+

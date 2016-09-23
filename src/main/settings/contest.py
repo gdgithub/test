@@ -3,7 +3,7 @@ from base import *
 
 SITE_ID = 1
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = ['*']
 
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

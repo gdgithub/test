@@ -168,7 +168,7 @@ def getGroups(request):
 
         elif int(rol) == 2:
             # ff user groups
-            group = list(groups.objects.values().filter(ffId=userId))
+            group = list(groups.objects.filter(ffId=userId))
         else:
             pass
 
@@ -197,25 +197,12 @@ def createGroup(request):
     if request.method == "POST":
         gname = request.POST['gname']
         gff = request.POST['gff']
-        gmembers = request.POST['gmembers']
+        # gmembers = request.POST['gmembers']
 
-        gmembers = gmembers.split('|')
-
-        # creating group
         groups.objects.create(name=gname, ffId=gff)
 
-        # getting group id
-        gid = groups.objects.values().filter(name=gname, ffId=gff)
-
-        # setting group members
-        for i in range(len(gmembers)):
-            # taking each uid
-            userInfo.objects.filter(uid_id=gmembers[i]).update(
-                groupId=gid[0]['id']
-            )
-
         # setting members
-    return HttpResponse("json.dumps(gid)")
+    return HttpResponse("ok")
 
 
 def notifications(request):

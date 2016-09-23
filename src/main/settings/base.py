@@ -27,9 +27,6 @@ SECRET_KEY = 'vwep=_q(=*+a2n@ur9*n@xdm_2fofhx3)^xqd8y*#q2ca-!t-q'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-EMAIL_BACKEND = "sgbackend.SendGridBackend"
-SENDGRID_API_KEY = "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"
-
 ALLOWED_HOSTS = []
 
 
@@ -50,8 +47,7 @@ PROJECT_APPS = (
     'src.uadmin',
     'src.home',
     'src.directories',
-    'src.management',
-    'src.login'
+    'src.management'
 )
 
 INSTALLED_APPS = PREREQ_APPS + PROJECT_APPS

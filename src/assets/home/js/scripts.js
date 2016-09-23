@@ -106,36 +106,36 @@ $(document).ready(function(){
         }
         else
         {
-                var dict = {
-                    email: semail.val(),
-                    password: spassword.val(),
-                    csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            var dict = {
+                email: semail.val(),
+                password: spassword.val(),
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+            }
+
+            postData("authenticate/signup/",dict,function(data){
+
+                if(data.exists)
+                {
+                    $(".register-form #authAlert").attr("class","alert alert-warning");
+                    $(".register-form #authAlert").html("El usuario ya posee una cuenta de acceso.");
+                    $(".register-form #authAlert").show();
                 }
-
-                postData("authenticate/signup/",dict,function(data){
-
-                    if(data.exists)
-                    {
-                        $(".register-form #authAlert").attr("class","alert alert-warning");
-                        $(".register-form #authAlert").html("El usuario ya posee una cuenta de acceso.");
-                        $(".register-form #authAlert").show();
-                    }
-                    else if(data.success)
-                    { 
-                        $(".register-form #authAlert").attr("class","alert alert-success");
-                        $(".register-form #authAlert").html("El registro se ha realizado exitosamente, por favor valide su cuenta.");
-                        $(".register-form #authAlert").show();
-                    }
-                    else if(data.fail)
-                    {
-                        $(".register-form #authAlert").attr("class","alert alert-danger");
-                        $(".register-form #authAlert").html(data.fail);
-                        $(".register-form #authAlert").show();
-                    }
-                    else{
-                        $(".register-form #authAlert").hide();
-                    }
-                });
+                else if(data.success)
+                { 
+                    $(".register-form #authAlert").attr("class","alert alert-success");
+                    $(".register-form #authAlert").html("El registro se ha realizado exitosamente, por favor valide su cuenta.");
+                    $(".register-form #authAlert").show();
+                }
+                else if(data.fail)
+                {
+                    $(".register-form #authAlert").attr("class","alert alert-danger");
+                    $(".register-form #authAlert").html(data.fail);
+                    $(".register-form #authAlert").show();
+                }
+                else{
+                    $(".register-form #authAlert").hide();
+                }
+            });
         }
     });
 
@@ -157,11 +157,6 @@ $(document).ready(function(){
     });
     
 });
-
-function isValidEmail(mail)
-{
-    return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,4})+$/.test(mail);
-}
 
 function findContact(e,f=false)
 {
@@ -194,7 +189,6 @@ function findContact(e,f=false)
 function initializeSearcher()
 {
     var dic = {
-        userRol: 0,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
     }
 

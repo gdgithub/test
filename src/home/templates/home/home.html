@@ -34,6 +34,7 @@
                     <ul>
                         <li><i class="grid Layout icon"></i></li>
                         <a data-toggle="modal" data-target="#login-modal" id="login"><li><i class="user icon"></i> Iniciar Sesión</li></a>
+                        <a data-toggle="modal" data-target="#login-modal" id="register"><li>Registrarse</li></a>
                     </ul>
                 </td>
             </tr>
@@ -122,7 +123,7 @@
                 </form>
                 <form class="login-form">
                   {% csrf_token %}
-                  <div id="authAlert" role="alert"></div>
+                  <div id="authAlert" role="alert">45</div>
 
                   <input type="text" id="temail" placeholder="Email"/>
                   <input type="password" id="tpass" placeholder="Contraseña"/>
