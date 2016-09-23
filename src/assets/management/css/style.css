@@ -1,6 +1,7 @@
 body{
     width:100%;
     margin:auto;
+    background: #F5F7F9 url('http://www.menu.com.do/img/bg.gif') top left repeat;
 }
 
 /*Top bar menu*/
@@ -84,7 +85,7 @@ body{
     width: 100%;
 }
 
-#newBtn{
+#neworder{
      float: right;
      margin-right: 15px;
 }
@@ -118,6 +119,14 @@ body{
 
 .orders_table{
     margin: auto;
+    width: 100%;
+   /* width: 100%;*/
+    max-width: 800px;
+    /*min-width: 500px;*/
+    overflow: scroll;
+
+   /* overflow-y: scroll;
+    overflow-x: scroll;*/
 }
 
 .orders_table tr td, .orders_table tr th{
@@ -154,6 +163,34 @@ body{
     padding-right: 5px;*/
 }
 
+#order_div{
+    width: 100%;
+}
+
+#odate{
+    float: right;
+    margin-right: 10px;
+    color: rgb(100,100,100);
+}
+
+#ostatus{
+    margin: auto;
+    width: 100%;
+    text-align: center;
+    color: rgb(100,100,100);
+}
+
+.order_gruop{
+    cursor: pointer;
+    font-family: Heveltica;
+    font-size: 16px;
+
+}
+
+.order_gruop:hover{
+    opacity: 0.6;
+}
+
 .pagination_tb{
     margin: auto;
 }
@@ -164,13 +201,26 @@ body{
     font-family: sans-serif;
 }
 
+.options{
+    padding: 5px;
+    margin-bottom: 15px;
+    background-color:rgb(240,240,240);
+    border-radius:10;
+    display: none;
+}
 
+.options p{
+    float: right;
+    margin: auto;
+    font-family: Heveltica;
+    font-size: 16px;
+    font-weight: bold;
+    margin-right: 10px;
+}
 
 
 #newOrderModalBody{
     min-height: 80px;
-
-
 }
 
 #search_contact{
@@ -196,10 +246,165 @@ body{
     width: 100%;
 }
 
+.menu_cant_details {
+    width: 50px;
+    margin-right: 10px;
+}
+
+.menu_row_details{
+    
+    cursor: pointer;
+    height: 40;
+}
+
+.menu_row_details span{
+    vertical-align: middle;
+}
+
+.menu_row_details:hover{
+    background-color: rgb(230,230,230)
+}
+
+/*Menu de creacion de pedidos*/
+
+.menu_select_div{
+    margin-top: 20px;
+}
+
+.menu_select_div select{
+    margin: auto;
+}
+
+#tsearch, #menu_select{
+    font-size: 15px;
+}
+
+.order_menu_content{
+    margin-top: 10px;
+}
+
+.menu_desc_table{
+    width: 100%;
+    margin: auto;
+}
+
+.menu_desc_table tr{
+    height: 28px;
+    padding-left: 5px;
+    padding-right: 5px;
+}
+
+.menu_desc_table tr:hover{
+    cursor: pointer;
+    background-color: rgb(235,235,235);
+  /*  animation-name: example;
+    animation-duration: 4s;*/
+}
+
+.order_menu_category_name{
+    font-size: 15px;
+    font-family: arial;
+}
+
+.menu_desc_table td p{
+    font-size: 15px;
+    font-family: arial;
+}
+
+.menu_desc_table .td_desc{
+    width: 30%;
+}
+
+.menu_desc_table .td_cant{
+    width: 30%;
+    border-radius: 15px 50px;
+    /*opacity: 0;*/
+}
+
+.menu_desc_table .td_price{
+    width: 30%;
+}
+
+.menu_desc_table .td_cant input{
+    float: center;
+    width: 60px;
+   display: none;
+}
+
+.menu_desc_table .td_price p{
+    float: right;
+}
+
+.total_order{
+    margin-top: 10px;
+  /*  padding-bottom: 20px;*/
+    float: right;
+    font-size: 16px;
+    font-family: serif;
+    color: #5A9C48;
+}
+
+@keyframes example {
+    from {background-color: red;}
+    to {background-color: rgb(230,230,230)}
+}
+
+/*.order_table{
+    width: 100%;
+    height: 100%;
+}
+
+.order_table .tdoptions{
+    width: 200px;
+}
+
+.order_table .tdorder{
+    width: 100%;
+
+}
+*/
 .body_orders{
     margin: auto;
-    width: 80%;
+    width: 100%;
+    /*float: left;*/
 }
+
+/*.order_menu{
+    width: 200px;
+}*/
+
+.content{
+   /* background: #F5F7F9 url('http://www.menu.com.do/img/bg.gif') top left repeat;*/
+}
+
+
+/*
+.ulmenu {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    width: 200px;
+    background-color: #f1f1f1;
+}
+
+.ulmenu li a {
+    display: block;
+    color: #000;
+    padding: 8px 16px;
+    text-decoration: none;
+}
+
+.ulmenu li a.active {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.ulmenu li a:hover:not(.active) {
+    background-color: #555;
+    color: white;
+}
+
+*/
 
 
 /*Suggest*/
@@ -213,6 +418,106 @@ body{
     opacity: 0.0;
 }
 /******************/
+
+
+
+/**CONTACT**/
+
+.contact_adm_body{
+    width: 80%;
+    padding-top: 20px;
+    margin: auto;
+}
+
+.contact_adm_table{
+    width: 100%;
+    margin: auto;
+}
+
+.contact_adm_table tr{
+    height: 35px;
+}
+
+.contact_adm_table tr th{
+    /*text-align: center;*/
+}
+
+.contact_adm_table tr #options{
+    width: 120px;
+}
+
+.table_content{
+    padding-top: 40px;
+}
+
+
+.menu_modal_actions{
+    padding-top: 10px;
+    margin-top: 10px;
+    border-width: 1px;
+    border-top: solid rgb(244,244,244);
+}
+
+.menu_category_details{
+    font-style: italic;
+    padding-left: 15px;
+    width: 100%;
+    border-width: 1px;
+    border-bottom: solid rgb(238,238,238);
+}
+
+.mp{
+    float: right;
+}
+
+.section{
+    padding-top: 8px;
+    padding-bottom: 8px;
+    padding-left: 8px;
+    padding-right: 8px;
+    margin-bottom: 25px;
+    background-color: rgb(244,244,244);
+}
+
+.menu_section_space{
+    padding-bottom: 20px;
+}
+
+.menu_viewer{
+   padding-top: 20px;
+   padding-left: 10px;
+   margin-right: 10px;
+   padding-right: 10px;
+   background-color: rgb(244,244,244);
+}
+
+.gosh{
+    opacity: 0;
+}
+/*.dropdown_category{
+    width: 200px;
+}*/
+
+.addfield{
+    padding-bottom: 20px;
+}
+
+.closemenu{
+    float: right;
+}
+
+.newSection{
+    display: none;
+}
+
+.saveMenu{
+    display: none;
+}
+
+.delete_section{
+    margin-left: 20px;
+}
+
 
 
 /**********************************/

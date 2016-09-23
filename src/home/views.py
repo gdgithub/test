@@ -5,9 +5,10 @@ from src.directories.models import *
 from django.template import loader, RequestContext
 import json
 import smtplib
+from email.mime import multipart
+
 
 # Create your views here.
-
 
 def home(request):
 
@@ -48,7 +49,8 @@ def signup(request):
             users.objects.create(
                 email=email,
                 password=pwd,
-                rol="dev",
+                # rol_id = 1 es el usuario dev, rol_id = 2 ff
+                rol=roles.objects.filter(name='dev')[0],
                 status="pending")  # save user
 
             uid = users.objects.get(email=email)
@@ -98,7 +100,13 @@ def sendMessage(user, pwd, server, to, message):
         return False
 
     try:
-        srv.sendmail(user, to, message)
+        msg = multipart.MIMEMultipart()
+        msg['from'] = user
+        msg['to'] = to
+        msg['subject'] = 'Activacion de cuenta MyOrders.'
+
+        srv.sendmail(user, to, msg.as_string())
+            
     except:
         return False
 
@@ -119,3 +127,8 @@ def getUserInfo(request):
                 'fail': """Ocurrio un error al momento de enviar el correo.
                      por valor verifique e intente nuevamente."""
             }), content_type='application/json')
+
+
+def getGroupInfo(request):
+    if request.method == "POST":
+        email = request.POST["email"]

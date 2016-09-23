@@ -15,10 +15,13 @@ class contacts(models.Model):
     rnc = models.TextField()
     name = models.TextField()
     image = models.TextField()
+    phone = models.TextField()
+    address = models.TextField()
     description = models.TextField()
     categoryId = models.ForeignKey(category, on_delete=models.CASCADE)
     rating = models.FloatField()
     status = models.TextField()
+
 
 class branch(models.Model):
     id = models.AutoField(primary_key=True)
@@ -43,15 +46,35 @@ class comment(models.Model):
 
 class menu(models.Model):
     id = models.AutoField(primary_key=True)
+    cid = models.ForeignKey(contacts, on_delete=models.CASCADE)
+    name = models.TextField()
+
+
+class menu_category(models.Model):
+    id = models.AutoField(primary_key=True)
+    description = models.TextField()
+
+
+class menu_desc(models.Model):
+    id = models.AutoField(primary_key=True)
+    mid = models.ForeignKey(menu, on_delete=models.CASCADE)
+    categoryId = models.ForeignKey(menu_category, on_delete=models.CASCADE)
+    description = models.TextField()
+    price = models.FloatField()
+
+"""
+class menu(models.Model):
+    id = models.AutoField(primary_key=True)
     branchId = models.ForeignKey(branch, on_delete=models.CASCADE)
     description = models.TextField()
     price = models.FloatField()
+"""
 
 
 class orders(models.Model):
     id = models.AutoField(primary_key=True)
     userId = models.TextField()
-    branchId = models.ForeignKey(branch, on_delete=models.CASCADE)
+    # branchId = models.ForeignKey(branch, on_delete=models.CASCADE)
     description = models.TextField()
     status = models.TextField()
     date = models.DateField(auto_now=True)
