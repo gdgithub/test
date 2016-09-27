@@ -1,0 +1,62 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<!--Meta-->
+<link rel="stylesheet" type="text/css" href="{% static 'administration/css/contacts.css' %}">
+
+<div class="contact_page_content">
+
+	<section class="section_contacts_operations">
+		<ul>
+			<li>
+				<select class="select_contact_filter">
+					<option value="-1" disabled="true">Ordenar por: </option>
+					<option value="cid">Categoria</option>
+					<option value="name">Nombre</option>
+					<option value="rate">Puntuacion</option>
+				</select>
+
+				<select class="select_contact_filter_order">
+					<option value="desc">de mayor a menor</option>
+					<option value="asc">de menor a mayor</option>
+				</select>
+
+				<a class="button_contact_filter" value="Filtrar">FILTRAR</a>
+
+				
+			</li>
+			<li id="li_contact_searcher">
+				<div class="ui search">
+			        <div class="ui search">
+			              <div class="ui icon input">
+			                 <input class="prompt" id="tsearch" type="text" placeholder="Buscar contacto">
+			                 <i class="search icon"></i>
+			              </div>
+			           <div class="results"></div>
+			        </div>
+			    </div>
+			</li>
+		</ul>
+	</section>
+
+	<section class="menu-divider divider-top"></section>
+
+	<section class="section_contacts_table">
+
+	</section>
+
+	<section class="section_contacts_options">
+		<ul>
+			<li><a>Adm. categorias</a></li>
+			<li><a href="/administration/create_contact">Crear contactos</a></li>
+		</ul>
+	</section>
+
+	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'administration/js/contacts/scripts.js' %}"></script>
+	
+</div>
+
+{% endblock %}

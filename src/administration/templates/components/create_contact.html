@@ -1,0 +1,76 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<!--Meta-->
+<link rel="stylesheet" type="text/css" href="{% static 'administration/css/create_contact.css' %}">
+
+<div class="contact_page_content">
+
+	<section class="section_contacts_operations">
+		<ul>
+			<li>
+				<a href="/administration/contacts"></a>
+			</li>
+		</ul>
+	</section>
+
+	<section class="menu-divider divider-top"></section>
+
+	<section class="section_create_contact">
+		<div class="form_div">
+			<form class="ui form segment" id="contact_form">
+				  <p>Información del contacto</p>
+				  <div class="two fields">
+				    <div class="required field">
+				      <label>RNC</label>
+				      <input placeholder="RNC del contacto" name="rnc" id="rnc" type="number">
+				    </div>
+				    <div class="required field">
+				      <label>Categoría</label>
+				      <select class="ui dropdown" name="categoria" id="categoria">
+				        <option value="Cat 1">Categoría</option>
+				      </select>
+				    </div>
+				  </div>
+				  <div class="required two fields">
+				    <div class="required field">
+				      <label>Nombre</label>
+				      <input placeholder="Nombre" name="nombre" id="nombre" type="text">
+				    </div>
+				    <div class="field">
+				      <label>Telefono</label>
+				      <input placeholder="Telefono" type="number" name="telefono" id="telefono">
+				    </div>
+				  </div>
+				  <div class="two fields">
+				    <div class="field">
+				      <label>Direccion</label>
+				      <input placeholder="Direccion" name="direccion" id="direccion" type="text">
+				    </div>
+				  </div>
+				  <div class="field">
+				    <textarea id="descripcion">
+				    	
+				    </textarea>
+				  </div>
+		
+				  <div class="inline field">
+				  	<div class="ui error message"></div>
+				    <a class="save submit" editting="">Guardar</a>
+				    <a class="save reset">Cancelar</a>
+				  </div>
+					
+				</form>
+			</div>
+
+	</section>
+
+
+	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'administration/js/contacts/create_contact.js' %}"></script>
+	
+</div>
+
+{% endblock %}

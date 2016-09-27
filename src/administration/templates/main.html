@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en" xml:lang="en">
+
+<head>
+
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+	<!-- Content metadata -->
+	<title>MyOrder - Administracion</title>
+	<meta name="Author" content="Starlin Gil Cruz, Ivan Gil Cruz">
+
+	<!-- Behavioral metadata -->
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+	
+	<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE7, IE=9">
+
+	<!-- Behavior metadata (iOS) -->
+	<meta name="apple-mobile-web-app-capable" content="yes">
+
+	{% load staticfiles %}
+
+	<!-- Favicons -->
+	<link rel="shortcut icon" href="http://icons.iconarchive.com/icons/paomedia/small-n-flat/1024/sign-check-icon.png">
+
+	<!-- Fonts -->
+	<link rel="stylesheet" type="text/css" href="{% static 'administration/fonts/fonts' %}">
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" type="text/css" href="{% static 'administration/css/global.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'administration/css/developer-account.min.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static '3rd_party/semantic/semantic.css' %}"/>
+
+</head>
+
+<body>
+
+<!-- Header (desktop) -->
+<header class="desktop divider-bottom text-center bg-light">
+    
+	<nav role="navigation">
+		
+		<!-- Left -->
+		<section class="left text-left" id="left_bar_side">
+			
+			<!-- Brandmark -->
+			<a class="appname">
+				<span class="text-replaced778">My Orders</span>
+			</a>
+			
+		</section>
+		
+		<!-- Center -->
+		<section class="inline-block center text-center">
+			
+			<!-- Account header -->
+			<a class="inline-block" href="">
+				<h5 class="inline-block no-margin no-select title-page">Administracion de contactos</h5>
+			</a>
+			
+		</section>
+		
+	<!-- Right -->
+	<section class="right text-right">
+				
+		<!-- User menu toggle -->
+		<section class="user-menu-toggle" >
+		
+			<section class="">
+			
+				<!-- User name -->
+				<p class="no-margin-bottom truncate no-select user-name">Starlin Gil Cruz</p>
+				
+				<!-- uid - User Email -->
+				<p class="smaller lighter no-select user-email">starlin.gil.cruz@gmail.com</p>
+			
+			</section>
+		
+		</section>
+				
+	</section>
+
+	</nav>
+	        
+</header>
+
+<!-- Header (mobile) -->
+<header class="mobile text-center" >
+	
+	<!-- User menu toggle -->
+	<section class="user-menu-toggle" >
+		
+		<section class="">
+		
+			<!-- User name -->
+			<p class="no-margin-bottom truncate no-select user-name">Starlin Gil Cruz</p>
+				
+			<!-- uid - User Email -->
+			<p class="smaller lighter no-select user-email">starlin.gil.cruz@gmail.com</p>
+		
+		</section>
+		
+	</section>
+
+<!-- Sidebar toggle -->
+<button class="sidebar-toggle hamburger-button inactive" ui-component="ui.buttons.sidebarToggle" ui-trigger="" ui-trigger-for="ui.menus.sidebar" ui-follow="" ui-follow-for="ui.menus.sidebar">
+	<svg x="0px" y="0px" width="100%" viewBox="0 0 96 96" enable-background="new 0 0 96 96"><rect x="16" y="44" width="64" height="8"></rect></svg>
+	<svg x="0px" y="0px" width="100%" viewBox="0 0 96 96" enable-background="new 0 0 96 96"><rect x="16" y="44" width="64" height="8"></rect></svg>
+	<span class="text-replace">Menu</span>
+</button>
+	
+</header>
+
+	<!-- App panels -->
+	<ul class="panels">
+
+		<!-- Loader -->
+		<section class="loader inactive" ui-component="ui.loader" style=""></section>
+
+		<!-- Left app panel -->
+		<li class="panel fixed inactive" ui-component="ui.menus.sidebar">
+
+			<!-- Sidebar --> 
+			<section class="sidebar">
+
+				<!-- Mobile-only controls -->
+				<section class="mobile-controls">
+
+					<!-- Account brandmark -->
+					<a class="brandmark" href="https://developer.apple.com/">
+						<span class="text-replaceg">Apple e</span>
+					</a>
+
+					<!-- Close button -->
+					<button class="close right" ui-trigger="" ui-trigger-for="ui.menus.sidebar" ui-trigger-state="inactive">
+						<span class="text-replace">Close</span>
+					</button>
+
+				</section>
+
+				<!-- Navigation menu -->
+				<nav class="navigation-menu">
+
+					<!-- RAD navigation -->
+					<ul class="menu-options links small margin-top-small ng-hide" ng-hide="userHasTeams()">
+
+						<!-- Welcome -->
+						<li class="menu-option" data-menu-option="welcome" ng-class="{ &#39;active&#39;: currentView === &#39;welcome&#39; }" style="">
+							<a href="/mainpage">Bienvenido</a>
+						</li>
+
+					</ul>
+
+
+					<!-- Menu divider -->
+					<section class="menu-divider divider-top">
+						<span>Recursos</span>
+					</section>
+
+					<!-- User navigation -->
+					<ul class="menu-options links small">
+
+						
+						<!-- Documentation -->
+						<li class="menu-option adm_contactos" data-menu-option="documentation">
+							<a href="/administration/contacts">Adm. contactos</a>
+						</li>
+
+						<!-- Downloads -->
+						<li class="menu-option menu" data-menu-option="downloads">
+							<a ng-href="/download/" href="https://developer.apple.com/download/">Menu</a>
+						</li>
+
+						<!-- Downloads -->
+						<li class="menu-option" data-menu-option="downloads">
+							<a ng-href="/download/" href="https://developer.apple.com/download/">Ordenes</a>
+						</li>
+
+						<section class="menu-divider divider-top">
+							<span>Grupos</span>
+						</section>
+
+						<!-- Downloads -->
+						<li class="menu-option" data-menu-option="downloads">
+							<a ng-href="/download/" href="https://developer.apple.com/download/">Adm. de Grupos</a>
+						</li>
+
+						<section class="menu-divider divider-top">
+							<span>Usuarios y cuenta</span>
+						</section>
+
+
+						<!-- Downloads -->
+						<li class="menu-option" data-menu-option="downloads">
+							<a ng-href="/download/" href="https://developer.apple.com/download/">Adm. de Usuarios</a>
+						</li>
+
+						<!-- Downloads -->
+						<li class="menu-option" data-menu-option="downloads">
+							<a ng-href="/download/" href="https://developer.apple.com/download/">Cuenta</a>
+						</li>
+
+						<section class="menu-divider divider-top">
+							<span>Recursos adicionales</span>
+						</section>
+
+						<!-- Downloads -->
+						<li class="menu-option" data-menu-option="downloads">
+							<a ng-href="/download/">Notificaciones</a>
+						</li>
+
+						<!-- Downloads -->
+						<li class="menu-option" data-menu-option="downloads">
+							<a ng-href="/download/" href="https://developer.apple.com/download/">Reportes</a>
+						</li>
+
+					</ul>
+
+				</nav>
+
+			</section>
+		</li>
+		
+		<!-- Right app panel -->
+		<li class="panel grid fluid">
+		
+			{% csrf_token %}
+
+    		{% block content %}{% endblock %}
+		</li>
+
+	</ul>
+
+
+<!--<script src="{% static '3rd_party/angular/params.js' %}"></script>-->
+<!--<script src="{% static '3rd_party/angular/jquery-2.0.2.min.js' %}"></script>-->
+<!--<script src="{% static '3rd_party/angular/angular.min.js' %}"></script>-->
+<!--<script src="{% static '3rd_party/angular/angular-route.min.js' %}"></script>-->
+<!--<script src="{% static '3rd_party/angular/angular-animate.min.js' %}"></script>-->
+<script type="text/javascript" src="{% static '3rd_party/semantic/semantic.js' %}"></script>
+<script type="text/javascript" src="{% static 'administration/js/main/scripts.js' %}"></script>
+<!--<script src="{% static '3rd_party/angular/developer-account.min.js' %}"></script>-->
+
+
+</body>
+
+</html>

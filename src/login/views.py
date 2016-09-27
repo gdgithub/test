@@ -31,6 +31,24 @@ def usercredentials(request):
         }))
 
 
+def userinfo(request):
+    if request.method == "POST":
+        email = request.POST['email']
+
+        uid_exists = users.objects.values().filter(email=email)
+        exists = False
+
+        if uid_exists:
+            exists = True
+        elif not uid_exists:
+            exists = False
+
+        return HttpResponse(json.dumps({
+            "exists": exists,
+            "data": list(uid_exists)
+        }))
+
+
 def saveuser(request):
     if request.method == "POST":
         email = request.POST['email']

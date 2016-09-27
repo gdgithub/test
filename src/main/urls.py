@@ -16,6 +16,7 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 import src.login.views
+import src.administration.views
 import view
 
 urlpatterns = [
@@ -23,7 +24,5 @@ urlpatterns = [
     url(r'^$', view.main, name='main'),
     url(r'^activation/$', src.login.views.uActivation, name='uActivation'),
     url(r'^login/', include('src.login.urls')),
-    url(r'^index/', include('src.home.urls')),
-    url(r'^uadmin/', include('src.uadmin.urls')),
-    url(r'^management/', include('src.management.urls'))
+    url(r'^administration/', include('src.administration.urls'))
 ]
