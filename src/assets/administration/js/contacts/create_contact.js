@@ -62,7 +62,11 @@ $(".save").click(function(e){
 });
 
 $(".reset").click(function(){
-    reset_contactForm();
+    if($(".save").attr("editting") == "false")
+        reset_contactForm();
+    else
+     window.location.href="/administration/contacts";
+    
 });
 
 function reset_contactForm()

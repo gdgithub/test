@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
 // Top bar actions
-$("#tsearch").keyup(function(){
+$("#tsearch").keypress(function(){
     console.log("data");
     getContactWithName($(this).val(),function(data){
         data = $.parseJSON(data);
@@ -27,31 +27,27 @@ $(".button_contact_filter").click(function(){
     });
 });
 
-getContacts(function(data){
+getCategories(function(data){
 
 	data = $.parseJSON(data);
 	
 	if(data.data.length > 0)
     {
         console.log(data);
-        contacts_table(data.data,1,10,$(".section_contacts_table"),true);
+        categories_table(data.data,1,10,$(".section_categories_table"),true);
     }
     else{
-        console.log("no contacts");
+        console.log("no categories");
     }
 });
 
-function contacts_table(data, page=1, rows=10, parent,admin=true){
+function categories_table(data, page=1, rows=10, parent,admin=true){
 
     var html = `
-        <table class="table_contacts_adm">
+        <table class="table_categories_adm">
             <tr id="title">
-                <th>RNC</th>
-                <th>Nombre</th>
-                <th>Categoria</th>
-                <th>Puntuacion</th>
-                <th class="removable">Estado</th>
-                <th>Menu</th>
+                <th>Id</th>
+                <th>Descripcion</th>
                 <th class="removable">Operacion</th>
             </tr>
         </table>`;
@@ -71,16 +67,8 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
             break;
 
         var trows = `<tr id="rows">
-                <td><a class="contact_rnc">`+data[i].rnc+`</a></td>
-                <td>`+data[i].name+`</td>
-                <td>`+data[i].category+`</td>
-                <td class="pu">
-                <span class="right floated">
-                    <div class="ui star rating" data-rating="`+data[i].rate+`" data-max-rating="5"></div>
-                </span>
-                </td>
-                <td class="removable">`+data[i].status+`</td>
-                <td><a href='getmenu?id=`+data[i].id+`'>Ver</a></td>
+                <td><a>`+data[i].id+`</a></td>
+                <td>`+data[i].description+`</td>
                 <td class="removable">
                     <div class="ui compact menu">
                       <div class="ui simple dropdown item">
@@ -95,7 +83,7 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
                 </td>
             </tr>`;
 
-        $(".table_contacts_adm").append(trows);
+        $(".table_categories_adm").append(trows);
     }
 
     var pagination = "";
@@ -120,46 +108,42 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
             </a>
         </div>`);
 
-    $(".contact_rnc").click(function(){
-        console.log($(this).html());
-    });
-
     $(".pagebutton").click(function(){
-        contacts_table(data,$(this).attr('pag'),rows,parent,admin);
+        categories_table(data,$(this).attr('pag'),rows,parent,admin);
     });
 
     $(".prevpagebutton").click(function(){
         if((page-1) >= 1)
-            contacts_table(data,page-1,rows,parent,admin);
+            categories_table(data,page-1,rows,parent,admin);
     });
 
     $(".nextpagebutton").click(function(){
         if((page+1) <= pag_count)
-            contacts_table(data,page+1,rows,parent,admin);
+            categories_table(data,page+1,rows,parent,admin);
     });
 
     $(".edit").click(function(){
-        createCookie("edit-contact",$(this).attr("cid"),30000);
-        window.location.href="/administration/create_contact";
+        /*createCookie("edit-contact",$(this).attr("cid"),30000);
+        window.location.href="/administration/create_contact";*/
     });
 
     $(".delete").click(function(){
 
         if (confirm("Desea eliminar este contacto?")) {
 
-            deleteContact($(this).attr("cid"),function(data){
+            deleteCategory($(this).attr("cid"),function(data){
                 data = $.parseJSON(data);
 
                 if(data.success){
 
-                    getContacts(function(data){
+                    getCategories(function(data){
                         data = $.parseJSON(data);
                         if(data.data.length > 0)
                         {
-                            contacts_table(data.data,1,10,$(".section_contacts_table"),true);
+                            categories_table(data.data,1,10,$(".section_categories_table"),true);
                         }
                         else{
-                            console.log("no contacts");
+                            console.log("no categories");
                         }
                     });
                 }
@@ -179,49 +163,22 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
 }
 
 
-function getContacts(callback, cstatus="non-status"){
-	// Non status: retorna todos los contactos sin dif. de estados.
+function getCategories(callback){
 	var dic = {
-		status: cstatus,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getcontacts/",dic,callback);
+    postData("getcontactscategories/",dic,callback);
 }
 
-function getContactWithName(cname,callback, cstatus="non-status")
-{
-    // Non status: retorna todos los contactos sin dif. de estados.
-    var dic = {
-        name: cname,
-        status: cstatus,
-        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
-    }
-
-    postData("getcontactwithname/",dic,callback);
-}
-
-function getContactWithFilter(cfield, corderType ,callback, cstatus="non-status")
-{
-    // Non status: retorna todos los contactos sin dif. de estados.
-    var dic = {
-        field: cfield,
-        orderType: corderType,
-        status: cstatus,
-        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
-    }
-
-    postData("getcontactwithfilter/",dic,callback);
-}
-
-function deleteContact(cid,callback){
+function deleteCategory(cid,callback){
 
     var dic = {
         id: cid,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("deletecontact/",dic,callback);
+    postData("deletecontact_category/",dic,callback);
 }
 
 function postData(url,vars,callback)

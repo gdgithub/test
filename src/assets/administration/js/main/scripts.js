@@ -22,6 +22,18 @@ function activeUserNavigationButtons()
         $(".adm_contactos").addClass("selected");
         $(".title-page").html("Registro de contactos");
     }
+    else if(window.location.pathname=="/administration/contact_categories/"){
+        $(".adm_contactos").addClass("selected");
+        $(".title-page").html("Administracion de categorias");
+    }
+    else if(window.location.pathname=="/administration/menu/"){
+        $(".adm_menu").addClass("selected");
+        $(".title-page").html("Administracion de menu");
+    }
+    else if(window.location.pathname=="/administration/create_menu/"){
+        $(".adm_menu").addClass("selected");
+        $(".title-page").html("Registro de menu");
+    }
 }
 
 function getUserInfo(uemail,callback){

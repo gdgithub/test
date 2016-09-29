@@ -3,55 +3,52 @@ $(document).ready(function(){
 // Top bar actions
 $("#tsearch").keyup(function(){
     console.log("data");
-    getContactWithName($(this).val(),function(data){
+    getMenuWithName($(this).val(),function(data){
         data = $.parseJSON(data);
         if(data.data.length > 0)
         {
             console.log(data);
-            contacts_table(data.data,1,10,$(".section_contacts_table"),true);
+            menu_table(data.data,1,10,$(".section_menu_table"),true);
         }
     })
 });
 
-$(".button_contact_filter").click(function(){
+$(".button_menu_filter").click(function(){
     var order_field = $(".select_contact_filter").val();
     var order_px = $(".select_contact_filter_order").val();
 
-    getContactWithFilter(order_field,order_px,function(data){
+    getMenuWithFilter(order_field,order_px,function(data){
         data = $.parseJSON(data);
         if(data.data.length > 0)
         {
             console.log(data);
-            contacts_table(data.data,1,10,$(".section_contacts_table"),true);
+            contacts_table(data.data,1,10,$(".section_menu_table"),true);
         }
     });
 });
 
-getContacts(function(data){
+getMenu(function(data){
 
 	data = $.parseJSON(data);
 	
 	if(data.data.length > 0)
     {
         console.log(data);
-        contacts_table(data.data,1,10,$(".section_contacts_table"),true);
+        menu_table(data.data,1,10,$(".section_menu_table"),true);
     }
     else{
         console.log("no contacts");
     }
 });
 
-function contacts_table(data, page=1, rows=10, parent,admin=true){
+function menu_table(data, page=1, rows=10, parent,admin=true){
 
     var html = `
-        <table class="table_contacts_adm">
+        <table class="table_menu_adm">
             <tr id="title">
-                <th>RNC</th>
-                <th>Nombre</th>
-                <th>Categoria</th>
-                <th>Puntuacion</th>
-                <th class="removable">Estado</th>
                 <th>Menu</th>
+                <th>Contacto</th>
+                <th>Detalles</th>
                 <th class="removable">Operacion</th>
             </tr>
         </table>`;
@@ -71,23 +68,16 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
             break;
 
         var trows = `<tr id="rows">
-                <td><a class="contact_rnc">`+data[i].rnc+`</a></td>
-                <td>`+data[i].name+`</td>
-                <td>`+data[i].category+`</td>
-                <td class="pu">
-                <span class="right floated">
-                    <div class="ui star rating" data-rating="`+data[i].rate+`" data-max-rating="5"></div>
-                </span>
-                </td>
-                <td class="removable">`+data[i].status+`</td>
-                <td><a href='getmenu?id=`+data[i].id+`'>Ver</a></td>
+                <td><a>`+data[i].menu+`</a></td>
+                <td>`+data[i].contact+`</td>
+                <td><a class="menu_viewer" id=`+data[i].id+`>Ver</a></td>
                 <td class="removable">
                     <div class="ui compact menu">
                       <div class="ui simple dropdown item">
                         -->
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                          <div class="item edit" cid="`+data[i].id+`">Editar</div>
+                          <div class="item edit" id="`+data[i].id+`">Editar</div>
                           <div class="item delete" cid="`+data[i].id+`">Eliminar</div>
                         </div>
                       </div>
@@ -95,7 +85,7 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
                 </td>
             </tr>`;
 
-        $(".table_contacts_adm").append(trows);
+        $(".table_menu_adm").append(trows);
     }
 
     var pagination = "";
@@ -110,7 +100,7 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
     }
 
     parent.append(`
-        <div class="ui right floated menu pagination" id="contact_pagination">
+        <div class="ui right floated menu pagination" id="menu_pagination">
             <a class="icon item prevpagebutton">
                 <i class="left chevron icon"></i>
             </a>
@@ -120,43 +110,45 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
             </a>
         </div>`);
 
-    $(".contact_rnc").click(function(){
-        console.log($(this).html());
-    });
 
     $(".pagebutton").click(function(){
-        contacts_table(data,$(this).attr('pag'),rows,parent,admin);
+        menu_table(data,$(this).attr('pag'),rows,parent,admin);
     });
 
     $(".prevpagebutton").click(function(){
         if((page-1) >= 1)
-            contacts_table(data,page-1,rows,parent,admin);
+            menu_table(data,page-1,rows,parent,admin);
     });
 
     $(".nextpagebutton").click(function(){
         if((page+1) <= pag_count)
-            contacts_table(data,page+1,rows,parent,admin);
+            menu_table(data,page+1,rows,parent,admin);
+    });
+
+    $(".menu_viewer").click(function(){
+        createCookie("view-menu",$(this).attr("id"),30000);
+        window.location.href="/administration/menu_viewer";
     });
 
     $(".edit").click(function(){
-        createCookie("edit-contact",$(this).attr("cid"),30000);
-        window.location.href="/administration/create_contact";
+        createCookie("edit-menu",$(this).attr("id"),30000);
+        window.location.href="/administration/create_menu";
     });
 
     $(".delete").click(function(){
 
-        if (confirm("Desea eliminar este contacto?")) {
+        if (confirm("Desea eliminar este menu?")) {
 
-            deleteContact($(this).attr("cid"),function(data){
+            deleteMenu($(this).attr("cid"),function(data){
                 data = $.parseJSON(data);
 
                 if(data.success){
 
-                    getContacts(function(data){
+                    getMenu(function(data){
                         data = $.parseJSON(data);
                         if(data.data.length > 0)
                         {
-                            contacts_table(data.data,1,10,$(".section_contacts_table"),true);
+                            menu_table(data.data,1,10,$(".section_menu_table"),true);
                         }
                         else{
                             console.log("no contacts");
@@ -173,55 +165,48 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
     });
 
     if(admin==false)
-        $(".table_contacts_adm").find(".removable").remove();
+        $(".table_menu_adm").find(".removable").remove();
 
     $('.ui.rating').rating('disable');
 }
 
-
-function getContacts(callback, cstatus="non-status"){
-	// Non status: retorna todos los contactos sin dif. de estados.
+function getMenu(callback){
 	var dic = {
-		status: cstatus,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getcontacts/",dic,callback);
+    postData("getmenu/",dic,callback);
 }
 
-function getContactWithName(cname,callback, cstatus="non-status")
+function getMenuWithName(mname,callback)
 {
-    // Non status: retorna todos los contactos sin dif. de estados.
     var dic = {
-        name: cname,
-        status: cstatus,
+        name: mname,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getcontactwithname/",dic,callback);
+    postData("getmenutwithname/",dic,callback);
 }
 
-function getContactWithFilter(cfield, corderType ,callback, cstatus="non-status")
+function getMenuWithFilter(cfield, corderType ,callback)
 {
-    // Non status: retorna todos los contactos sin dif. de estados.
     var dic = {
         field: cfield,
         orderType: corderType,
-        status: cstatus,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getcontactwithfilter/",dic,callback);
+    postData("getmenuwithfilter/",dic,callback);
 }
 
-function deleteContact(cid,callback){
+function deleteMenu(cid,callback){
 
     var dic = {
         id: cid,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("deletecontact/",dic,callback);
+    postData("deletemenu/",dic,callback);
 }
 
 function postData(url,vars,callback)
@@ -234,7 +219,7 @@ function postData(url,vars,callback)
   });
 }
 
-var createCookie = function(name, value, days) {
+function createCookie(name, value, days) {
     var expires;
     if (days) {
         var date = new Date();

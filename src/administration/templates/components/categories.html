@@ -1,0 +1,30 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<!--Meta-->
+<link rel="stylesheet" type="text/css" href="{% static 'administration/css/categories.css' %}">
+
+<div class="contact_categories_page_content">
+
+
+	<section class="menu-divider divider-top"></section>
+
+	<section class="section_categories_table">
+
+	</section>
+
+	<section class="section_categories_options">
+		<ul>
+			<li><a href="/administration/contacts">Volver a contactos</a></li>
+			<li><a >Nueva categoria</a></li>
+		</ul>
+	</section>
+
+	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'administration/js/contacts/categories.js' %}"></script>
+	
+</div>
+
+{% endblock %}

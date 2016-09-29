@@ -1,0 +1,62 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<!--Meta-->
+<link rel="stylesheet" type="text/css" href="{% static 'administration/css/create_menu.css' %}">
+
+<div class="contact_page_content">
+
+	<section class="section_menu_operations">
+		<ul>
+			<li>
+				<a href="/administration/menu">Volver</a>
+			</li>
+		</ul>
+	</section>
+
+	<section class="menu-divider divider-top"></section>
+	<!--<section class="menu-divider divider-top"></section>-->
+
+	<section class="section_create_menu">
+		<div class="form_div">
+			<form class="ui form segment" id="menu_form">
+
+				<div class="menu_form_content">
+				  <p>Información del menu</p>
+				  <div class="two fields">
+				    <div class="required field">
+				      <label>Menu</label>
+				      <input placeholder="Titulo del menu" name="titulo" id="titulo" type="text">
+				    </div>
+				    <div class="required field">
+				    	<label>Contacto</label>
+					  	<select class="ui search dropdown select_contact">
+							
+						</select>
+					</div>
+				  </div>
+				</div>
+
+				<section class="menu-divider divider-top control"></section>
+
+				  <div class="inline field mcontrol">
+				  	<div class="ui error message no-select"></div>
+				  	<a class="addRow no-select">Añadir plato</a>
+				    <a class="save submit no-select">Guardar</a>
+				    <a class="reset no-select">Cancelar</a>
+				  </div>
+					
+				</form>
+			</div>
+
+	</section>
+
+
+	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'administration/js/menu/create_menu.js' %}"></script>
+	
+</div>
+
+{% endblock %}

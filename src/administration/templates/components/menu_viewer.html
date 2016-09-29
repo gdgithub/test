@@ -1,0 +1,53 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<!--Meta-->
+<link rel="stylesheet" type="text/css" href="{% static 'administration/css/menu_viewer.css' %}">
+
+<div class="contact_page_content">
+
+	<section class="section_menu_operations">
+		<ul>
+			<li>
+				<a href="/administration/menu">Volver</a>
+			</li>
+			<li id="li_dishes_searcher">
+			      <div class="ui search">
+			            <div class="ui icon input">
+			               <input class="prompt" id="tsearch" type="text" placeholder="Buscar plato">
+			               <i class="search icon"></i>
+			            </div>
+			         <div class="results"></div>
+			      </div>
+			</li>
+		</ul>
+	</section>
+
+	<section class="menu-divider divider-top"></section>
+
+	<section class="section_menu_viewer">
+		<section>
+			<ul>
+				<li><p class="menu-name"></p></li>
+				<li><p class="contact-name"></p></li>
+			</ul>
+		</section>
+		<section>
+			<div class="menu-content"></div>
+		</section>
+	</section>
+
+	<section class="section_menu_options">
+		<ul>
+			<li><a href="/administration/create_menu"></a></li>
+		</ul>
+	</section>
+
+	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'administration/js/menu/menu_viewer.js' %}"></script>
+	
+</div>
+
+{% endblock %}

@@ -1,0 +1,39 @@
+.section_menu_operations{
+	
+}
+.section_menu_operations li{
+	margin:8px;
+	margin-left: 20px;
+}
+.section_create_menu{
+
+}
+.section_create_menu .form_div{
+	width: 70%;
+	margin-left: 2%;
+	margin-top: 20px;
+}
+.section_create_menu .form_div form {
+	border-color: white;
+}
+.mcontrol{
+	padding-top: 20px;
+	margin-top: 20px;
+}
+.submit:hover, .reset:hover{
+	text-decoration: underline;
+}
+.submit, .reset{
+	margin-left: 20px;
+}
+.control{
+	margin-bottom: 10px;
+}
+.mcontrol a{
+	margin: 20px;
+}
+.mcontrol a:hover{
+	text-decoration: underline;
+}
+
+

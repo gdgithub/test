@@ -18,6 +18,22 @@ def create_contact_page(request):
     return render(request, 'components/create_contact.html', {})
 
 
+def contact_categories(request):
+    return render(request, 'components/categories.html', {})
+
+
+def menu_page(request):
+    return render(request, 'components/menu.html', {})
+
+
+def create_menu_page(request):
+    return render(request, 'components/create_menu.html', {})
+
+
+def menu_viewer(request):
+    return render(request, 'components/menu_viewer.html', {})
+
+
 def getcontacts(request):
     if request.method == "POST":
         status = request.POST["status"]
@@ -152,6 +168,21 @@ def getcontactscategories(request):
     }))
 
 
+def deletecontact_category(request):
+    if request.method == "POST":
+        id = request.POST["id"]
+
+        result = category.objects.filter(id=id).delete()
+        if result:
+            result = True
+        elif not result:
+            result = False
+
+    return HttpResponse(json.dumps({
+        "success": result
+    }))
+
+
 def createcontact(request):
     if request.method == "POST":
         rnc = request.POST["rnc"]
@@ -238,6 +269,230 @@ def deletecontact(request):
         id = request.POST["id"]
 
         result = contacts.objects.filter(id=id).delete()
+        if result:
+            result = True
+        elif not result:
+            result = False
+
+    return HttpResponse(json.dumps({
+        "success": result
+    }))
+
+
+def getmenu(request):
+    if request.method == "POST":
+
+        data = menu.objects.prefetch_related("contact_id")
+
+        menu_array = []
+        for i in range(len(data)):
+            menu_array.append({
+                "id": data[i].id,
+                "menu": data[i].name,
+                "contact": data[i].contact_id.name,
+                "contactId": data[i].contact_id.id
+            })
+
+    return HttpResponse(json.dumps({
+        "data": menu_array
+    }))
+
+
+def getmenutwithname(request):
+    if request.method == "POST":
+        name = request.POST["name"]
+
+        data = menu.objects.prefetch_related("contact_id").filter(
+            name__icontains=name)
+
+        menu_array = []
+        for i in range(len(data)):
+            menu_array.append({
+                "id": data[i].id,
+                "menu": data[i].name,
+                "contact": data[i].contact_id.name,
+                "contactId": data[i].contact_id.id
+            })
+
+    return HttpResponse(json.dumps({
+        "data": menu_array
+    }))
+
+
+def getmenuwithfilter(request):
+    if request.method == "POST":
+        field = request.POST["field"]
+        orderType = request.POST["orderType"]
+
+        if orderType == "asc":
+            data = menu.objects.prefetch_related("contact_id").order_by(field)
+        elif orderType == "desc":
+            data = menu.objects.prefetch_related(
+                "contact_id").order_by(field).reverse()
+
+        menu_array = []
+        for i in range(len(data)):
+            menu_array.append({
+                "id": data[i].id,
+                "menu": data[i].name,
+                "contact": data[i].contact_id.name,
+                "contactId": data[i].contact_id.id
+            })
+
+    return HttpResponse(json.dumps({
+        "data": menu_array
+    }))
+
+
+def getmenuwithid(request):
+    if request.method == "POST":
+        id = request.POST["id"]
+        # data = []
+
+        data = menu.objects.prefetch_related("contact_id").filter(
+            id=id)
+        # data.append(row)
+
+        ddishes = dishes.objects.prefetch_related("menuId").\
+            prefetch_related("menu_category_id").filter(
+            menuId=id)
+
+        dishes_array = []
+        for i in range(len(ddishes)):
+            dishes_array.append({
+                "id": ddishes[i].id,
+                "name": ddishes[i].name,
+                "description": ddishes[i].description,
+                "price": ddishes[i].price,
+                "menu_category_id": ddishes[i].menu_category_id.id,
+                "menu_category_name": ddishes[i].menu_category_id.description
+            })
+
+        menu_array = []
+        for i in range(len(data)):
+            menu_array.append({
+                "id": data[i].id,
+                "menu": data[i].name,
+                "contact": data[i].contact_id.name,
+                "contactId": data[i].contact_id.id,
+                "dishes": dishes_array
+            })
+
+    return HttpResponse(json.dumps({
+        "data": menu_array
+    }))
+
+
+def savemenu(request):
+    if request.method == "POST":
+        title = request.POST["menu_title"]
+        cid = request.POST["cid"]
+        dishe = request.POST["dishes"].split("|")
+        price = request.POST["price"].split("|")
+        categ = request.POST["categ"].split("|")
+
+        success = True
+        if len(dishe) > 0 and \
+                len(price) > 0 and \
+                len(categ) > 0:
+            success = True
+        else:
+            success = False
+
+        if success:
+            cid = contacts.objects.get(id=cid)
+            success = menu.objects.create(
+                contact_id=cid,
+                name=title
+            )
+            menu_id = menu.objects.get(
+                contact_id=cid,
+                name=title
+            )
+
+            for i in range(len(dishe)):
+                if success:
+                    menu_cid = menu_category.objects.get(id=categ[i])
+                    dishes.objects.create(
+                        menuId=menu_id,
+                        name=dishe[i],
+                        description="",
+                        price=price[i],
+                        menu_category_id=menu_cid
+                    )
+                    success = True
+                elif not success:
+                    success = False
+
+    return HttpResponse(json.dumps({
+        "success": success
+    }))
+
+
+def updatemenu(request):
+    if request.method == "POST":
+        menu_id = request.POST["mid"]
+        title = request.POST["menu_title"]
+        cid = request.POST["cid"]
+        dishe = request.POST["dishes"].split("|")
+        price = request.POST["price"].split("|")
+        categ = request.POST["categ"].split("|")
+
+        success = True
+        if len(dishe) > 0 and \
+                len(price) > 0 and \
+                len(categ) > 0:
+            success = True
+        else:
+            success = False
+
+        if success:
+            cid = contacts.objects.get(id=cid)
+            success = menu.objects.filter(
+                id=menu_id
+            ).update(
+                contact_id=cid,
+                name=title
+            )
+
+            dishes.objects.filter(menuId=menu_id).delete()
+
+            menu_id = menu.objects.get(id=menu_id)
+
+            for i in range(len(dishe)):
+                if success:
+                    menu_cid = menu_category.objects.get(id=categ[i])
+                    dishes.objects.create(
+                        menuId=menu_id,
+                        name=dishe[i],
+                        description="",
+                        price=price[i],
+                        menu_category_id=menu_cid
+                    )
+                    success = True
+                elif not success:
+                    success = False
+
+    return HttpResponse(json.dumps({
+        "success": success
+    }))
+
+
+def getmenucategories(request):
+    if request.method == "POST":
+
+        data = list(menu_category.objects.values().all())
+
+    return HttpResponse(json.dumps({
+        "data": data
+    }))
+
+
+def deletemenu(request):
+    if request.method == "POST":
+        id = request.POST["id"]
+
+        result = menu.objects.filter(id=id).delete()
         if result:
             result = True
         elif not result:

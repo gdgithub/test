@@ -1,0 +1,56 @@
+.menu_li_category, .menu_li, .menu-name, .contact-name{
+	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif";	
+}
+
+.section_menu_operations ul li{
+	display: inline-block;
+}
+
+#li_dishes_searcher{
+	float: right;
+	font-size: 15px;
+	margin-left: 20px;
+}
+.section_menu_operations li{
+	margin-left: 20px;
+}
+
+.menu-name{
+	font-size: 20px;
+}
+.contact-name{
+	font-size: 15px;
+	color: rgb(90,90,90);
+}
+.section_menu_viewer{
+	margin-top: 30px;
+	margin-bottom: 30px;
+	margin-left: 20px;
+}
+.section_menu_viewer section{
+	margin-bottom: 20px;
+}
+.ulcategory{
+	margin-left: 20px;
+}
+.ulcategory .menu_li_category{
+	font-size: 16px;
+	text-transform: uppercase;
+	color: rgb(60,60,60);
+	margin-bottom: 5px;
+	margin-top: 25px;
+}
+.ulcategory .menu_li{
+	/*margin-left: 20px;*/
+	margin-right: 70px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	font-size: 15px;
+	color: rgb(90,90,90);
+	border-bottom: solid 1px rgb(225,225,225);
+	cursor: pointer;
+}
+.ulcategory .menu_li:hover{
+	/*margin-left: 20px;*/
+	background-color: rgb(245,245,245);
+}

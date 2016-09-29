@@ -22,6 +22,14 @@ urlpatterns = [
     url(r'^contacts/$', src.administration.views.contacts_page, name='contacts_page'),
     url(r'^create_contact/$', src.administration.views.create_contact_page,
         name='create_contact_page'),
+    url(r'^contact_categories/$', src.administration.views.contact_categories,
+        name='contact_categories'),
+    url(r'^menu/$', src.administration.views.menu_page, name='menu_page'),
+    url(r'^create_menu/$', src.administration.views.create_menu_page,
+        name='create_menu_page'),
+    url(r'^menu_viewer/$', src.administration.views.menu_viewer,
+        name='menu_viewer'),
+
     url(r'getcontacts/$', src.administration.views.getcontacts,
         name='getcontacts'),
     url(r'getcontactwithname/$', src.administration.views.getcontactwithname,
@@ -32,6 +40,8 @@ urlpatterns = [
         getcontactswithid, name='getcontactswithid'),
     url(r'getcontactscategories/$', src.administration.views.
         getcontactscategories, name='getcontactscategories'),
+    url(r'deletecontact_category/$', src.administration.views.
+        deletecontact_category, name='deletecontact_category'),
 
     url(r'createcontact/$', src.administration.views.
         createcontact, name='createcontact'),
@@ -39,6 +49,23 @@ urlpatterns = [
         updatecontact, name='updatecontact'),
     url(r'deletecontact/$', src.administration.views.
         deletecontact, name='deletecontact'),
+
+    url(r'getmenu/$', src.administration.views.
+        getmenu, name='getmenu'),
+    url(r'getmenuwithid/$', src.administration.views.
+        getmenuwithid, name='getmenuwithid'),
+    url(r'getmenutwithname/$', src.administration.views.
+        getmenutwithname, name='getmenutwithname'),
+    url(r'getmenuwithfilter/$', src.administration.views.
+        getmenuwithfilter, name='getmenuwithfilter'),
+    url(r'savemenu/$', src.administration.views.
+        savemenu, name='savemenu'),
+    url(r'updatemenu/$', src.administration.views.
+        updatemenu, name='updatemenu'),
+    url(r'getmenucategories/$', src.administration.views.
+        getmenucategories, name='getmenucategories'),
+    url(r'deletemenu/$', src.administration.views.
+        deletemenu, name='deletemenu'),
 
     url(r'usercredentials/$', src.login.views.
         usercredentials, name='usercredentials'),
