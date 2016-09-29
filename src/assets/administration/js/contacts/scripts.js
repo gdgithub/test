@@ -80,7 +80,7 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
                 </span>
                 </td>
                 <td class="removable">`+data[i].status+`</td>
-                <td><a href='getmenu?id=`+data[i].id+`'>Ver</a></td>
+                <td><a class="menu_viewer" id='`+data[i].id+`'>Ver</a></td>
                 <td class="removable">
                     <div class="ui compact menu">
                       <div class="ui simple dropdown item">
@@ -136,6 +136,11 @@ function contacts_table(data, page=1, rows=10, parent,admin=true){
     $(".nextpagebutton").click(function(){
         if((page+1) <= pag_count)
             contacts_table(data,page+1,rows,parent,admin);
+    });
+
+    $(".menu_viewer").click(function(){
+        /*createCookie("view-menu",$(this).attr("id"),30000);
+        window.location.href="/administration/menu_viewer";*/
     });
 
     $(".edit").click(function(){
