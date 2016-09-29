@@ -1775,7 +1775,6 @@ select {
   width: 100%;
   overflow: hidden;
   border: 1px solid #CCCCCC;
-  background: url(/assets/elements/arrows/thin-arrow-down.svg) no-repeat right #FFF; }
 
 fieldset.multi-field {
   width: 100%;
