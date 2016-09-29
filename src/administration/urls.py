@@ -27,6 +27,8 @@ urlpatterns = [
     url(r'^menu/$', src.administration.views.menu_page, name='menu_page'),
     url(r'^create_menu/$', src.administration.views.create_menu_page,
         name='create_menu_page'),
+    url(r'^menu_categories/$', src.administration.views.menu_categories,
+        name='menu_categories'),
     url(r'^menu_viewer/$', src.administration.views.menu_viewer,
         name='menu_viewer'),
 
@@ -40,6 +42,8 @@ urlpatterns = [
         getcontactswithid, name='getcontactswithid'),
     url(r'getcontactscategories/$', src.administration.views.
         getcontactscategories, name='getcontactscategories'),
+    url(r'createcontactcategory/$', src.administration.views.
+        createcontactcategory, name='createcontactcategory'),
     url(r'deletecontact_category/$', src.administration.views.
         deletecontact_category, name='deletecontact_category'),
 
@@ -62,8 +66,12 @@ urlpatterns = [
         savemenu, name='savemenu'),
     url(r'updatemenu/$', src.administration.views.
         updatemenu, name='updatemenu'),
+    url(r'createmenucategory/$', src.administration.views.
+        createmenucategory, name='createmenucategory'),
     url(r'getmenucategories/$', src.administration.views.
         getmenucategories, name='getmenucategories'),
+    url(r'deletemenu_category/$', src.administration.views.
+        deletemenu_category, name='deletemenu_category'),
     url(r'deletemenu/$', src.administration.views.
         deletemenu, name='deletemenu'),
 

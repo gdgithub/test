@@ -24,7 +24,7 @@ function activeUserNavigationButtons()
     }
     else if(window.location.pathname=="/administration/contact_categories/"){
         $(".adm_contactos").addClass("selected");
-        $(".title-page").html("Administracion de categorias");
+        $(".title-page").html("Administración de categorias");
     }
     else if(window.location.pathname=="/administration/menu/"){
         $(".adm_menu").addClass("selected");
@@ -33,6 +33,14 @@ function activeUserNavigationButtons()
     else if(window.location.pathname=="/administration/create_menu/"){
         $(".adm_menu").addClass("selected");
         $(".title-page").html("Registro de menu");
+    }
+    else if(window.location.pathname=="/administration/menu_categories/"){
+        $(".adm_menu").addClass("selected");
+        $(".title-page").html("Administración de categorias");
+    }
+    else if(window.location.pathname=="/administration/menu_viewer/"){
+        $(".adm_menu").addClass("selected");
+        $(".title-page").html("Detalles del menu");
     }
 }
 

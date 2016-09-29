@@ -111,7 +111,7 @@ function categories_table(data, page=1, rows=10, parent,admin=true){
                         -->
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                          <div class="item edit" cid="`+data[i].id+`">Editar</div>
+                          <div class="item edit" cid="`+data[i].id+`" cname="`+data[i].description+`">Editar</div>
                           <div class="item delete" cid="`+data[i].id+`">Eliminar</div>
                         </div>
                       </div>
@@ -161,6 +161,27 @@ function categories_table(data, page=1, rows=10, parent,admin=true){
     $(".edit").click(function(){
         /*createCookie("edit-contact",$(this).attr("cid"),30000);
         window.location.href="/administration/create_contact";*/
+         swal({   
+            title: "Editar categoria",   
+            text: "Introduzca el nombre de la categoria en el campo debajo.",   
+            type: "input",   
+            showCancelButton: true,   
+            closeOnConfirm: false,   
+            animation: "slide-from-top", 
+            inputValue:   $(this).attr("cname"),
+            inputPlaceholder: "Categoria" }, 
+            function(inputValue){   
+                if (inputValue === false) 
+                    return false;      
+                if (inputValue === "") {     
+                    swal.showInputError("Debe introducir algun valor.");     
+                    return false   
+                }
+                else
+                {
+                    
+                }
+            });
     });
 
     $(".delete").click(function(){
@@ -204,7 +225,7 @@ function getCategories(callback){
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getcontactscategories/",dic,callback);
+    postData("getmenucategories/",dic,callback);
 }
 
 function createCategory(cname,callback)
@@ -214,7 +235,18 @@ function createCategory(cname,callback)
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("createcontactcategory/",dic,callback);
+    postData("createmenucategory/",dic,callback);
+}
+
+function updateCategory(cid,cname,callback)
+{
+    var dic = {
+        id: cid,
+        name: cname,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+    }
+
+    postData("updatemenucategory/",dic,callback);
 }
 
 function deleteCategory(cid,callback){
@@ -224,7 +256,7 @@ function deleteCategory(cid,callback){
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("deletecontact_category/",dic,callback);
+    postData("deletemenu_category/",dic,callback);
 }
 
 function postData(url,vars,callback)

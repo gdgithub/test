@@ -60,7 +60,7 @@ $(document).ready(function(){
 			    			if(user_pwd==$(".lcontrasena").val()){
 				    			createCookie('userId',user_email,3000);
 				    			createCookie('access-type',user_rol,3000);
-				    			window.location.replace("/management");
+				    			window.location.replace("/administration");
 				    		}
 				    		else{
 				    			swal({   

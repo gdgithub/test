@@ -34,6 +34,10 @@ def menu_viewer(request):
     return render(request, 'components/menu_viewer.html', {})
 
 
+def menu_categories(request):
+    return render(request, 'components/menu_categories.html', {})
+
+
 def getcontacts(request):
     if request.method == "POST":
         status = request.POST["status"]
@@ -165,6 +169,28 @@ def getcontactscategories(request):
 
     return HttpResponse(json.dumps({
         "data": data
+    }))
+
+
+def createcontactcategory(request):
+    if request.method == "POST":
+        name = request.POST["name"]
+
+        rest = category.objects.filter(
+            description=name)
+
+        if rest:
+            rest = False
+        elif not rest:
+            rest = category.objects.create(
+                description=name)
+            if rest:
+                rest = True
+            elif not rest:
+                rest = False
+
+    return HttpResponse(json.dumps({
+        "success": rest
     }))
 
 
@@ -478,6 +504,28 @@ def updatemenu(request):
     }))
 
 
+def createmenucategory(request):
+    if request.method == "POST":
+        name = request.POST["name"]
+
+        rest = menu_category.objects.filter(
+            description=name)
+
+        if rest:
+            rest = False
+        elif not rest:
+            rest = menu_category.objects.create(
+                description=name)
+            if rest:
+                rest = True
+            elif not rest:
+                rest = False
+
+    return HttpResponse(json.dumps({
+        "success": rest
+    }))
+
+
 def getmenucategories(request):
     if request.method == "POST":
 
@@ -485,6 +533,21 @@ def getmenucategories(request):
 
     return HttpResponse(json.dumps({
         "data": data
+    }))
+
+
+def deletemenu_category(request):
+    if request.method == "POST":
+        id = request.POST["id"]
+
+        result = menu_category.objects.filter(id=id).delete()
+        if result:
+            result = True
+        elif not result:
+            result = False
+
+    return HttpResponse(json.dumps({
+        "success": result
     }))
 
 
