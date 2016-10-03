@@ -91,6 +91,8 @@
 	margin-left: 20px;
 	margin-right: 20px;
 	font-size: 15px;
+	padding: 10px;
+	background: rgb(230,230,230);
 }
 .section_menu_options ul li:hover{
 	text-decoration: underline;

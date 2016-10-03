@@ -1,7 +1,9 @@
 $(document).ready(function(){
 
+var hasFullPermission = getCookie("urol") == "admin" ? true : false;
+
 // Top bar actions
-$("#tsearch").keypress(function(){
+/*$("#tsearch").keypress(function(){
     console.log("data");
     getContactWithName($(this).val(),function(data){
         data = $.parseJSON(data);
@@ -26,7 +28,7 @@ $(".button_contact_filter").click(function(){
         }
     });
 });
-
+*/
 $(".new-category").click(function(){
     swal({   
         title: "Nueva categoria",   
@@ -69,7 +71,7 @@ function load_categories()
         if(data.data.length > 0)
         {
             console.log(data);
-            categories_table(data.data,1,10,$(".section_categories_table"),true);
+            categories_table(data.data,1,10,$(".section_categories_table"),hasFullPermission);
         }
         else{
             console.log("no categories");
@@ -82,7 +84,7 @@ function categories_table(data, page=1, rows=10, parent,admin=true){
     var html = `
         <table class="table_categories_adm">
             <tr id="title">
-                <th>Id</th>
+                <th class="removable">Id</th>
                 <th>Descripcion</th>
                 <th class="removable">Operacion</th>
             </tr>
@@ -103,7 +105,7 @@ function categories_table(data, page=1, rows=10, parent,admin=true){
             break;
 
         var trows = `<tr id="rows">
-                <td><a>`+data[i].id+`</a></td>
+                <td class="removable"><a>`+data[i].id+`</a></td>
                 <td>`+data[i].description+`</td>
                 <td class="removable">
                     <div class="ui compact menu">
@@ -111,7 +113,7 @@ function categories_table(data, page=1, rows=10, parent,admin=true){
                         -->
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                          <div class="item edit" cid="`+data[i].id+`">Editar</div>
+                          <div class="item edit" cid="`+data[i].id+`" cname="`+data[i].description+`">Editar</div>
                           <div class="item delete" cid="`+data[i].id+`">Eliminar</div>
                         </div>
                       </div>
@@ -159,8 +161,37 @@ function categories_table(data, page=1, rows=10, parent,admin=true){
     });
 
     $(".edit").click(function(){
-        /*createCookie("edit-contact",$(this).attr("cid"),30000);
-        window.location.href="/administration/create_contact";*/
+        var contactId = $(this).attr("cid");
+        var contactName = $(this).attr("cname");
+         swal({   
+            title: "Editar categoria",   
+            text: "Introduzca el nuevo nombre de la categoria en el campo debajo.",   
+            type: "input",   
+            showCancelButton: true,   
+            closeOnConfirm: false,   
+            animation: "slide-from-top", 
+            inputValue: contactName,
+            inputPlaceholder: "Categoria" }, 
+            function(inputValue){   
+                if (inputValue === false) 
+                    return false;      
+                if (inputValue === "") {     
+                    swal.showInputError("Debe introducir algun valor.");     
+                    return false   
+                }
+                else
+                {
+                    updateContact(contactId,inputValue,function(data){
+                        data = $.parseJSON(data);
+                        if(data.success){
+                            swal.close();
+                            load_categories();
+                        }
+                        else
+                            swal.showInputError("Ocurrio un error durante la actualizacion de la informacion, intentelo nuevamente."); 
+                    });
+                }
+            });
     });
 
     $(".delete").click(function(){
@@ -193,7 +224,7 @@ function categories_table(data, page=1, rows=10, parent,admin=true){
     });
 
     if(admin==false)
-        $(".table_contacts_adm").find(".removable").remove();
+        $(".table_categories_adm").find(".removable").remove();
 
     $('.ui.rating').rating('disable');
 }
@@ -225,6 +256,17 @@ function deleteCategory(cid,callback){
     }
 
     postData("deletecontact_category/",dic,callback);
+}
+
+function updateContact(cid,cname,callback)
+{
+    var dic = {
+        id: cid,
+        name: cname,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+    }
+
+    postData("updatecontact_category/",dic,callback);
 }
 
 function postData(url,vars,callback)

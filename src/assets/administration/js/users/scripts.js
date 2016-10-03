@@ -1,56 +1,67 @@
 $(document).ready(function(){
 
 var hasFullPermission = getCookie("urol") == "admin" ? true : false;
+var users_status = (hasFullPermission == true) ? "all" : "active";
+
+interface();
 
 // Top bar actions
 $("#tsearch").keyup(function(){
-    console.log("data");
-    getMenuWithName($(this).val(),function(data){
+    getUserWithName($(this).val(),function(data){
         data = $.parseJSON(data);
+        console.log(data);
         if(data.data.length > 0)
         {
             console.log(data);
-            menu_table(data.data,1,10,$(".section_menu_table"),hasFullPermission);
+            users_table(data.data,1,10,$(".section_users_table"),hasFullPermission);
         }
-    })
+    },users_status)
 });
 
-$(".button_menu_filter").click(function(){
-    var order_field = $(".select_contact_filter").val();
-    var order_px = $(".select_contact_filter_order").val();
+$(".button_users_filter").click(function(){
+    var order_field = $(".select_users_filter").val();
+    var order_px = $(".select_users_filter_order").val();
 
-    getMenuWithFilter(order_field,order_px,function(data){
+    getContactWithFilter(order_field,order_px,function(data){
         data = $.parseJSON(data);
         if(data.data.length > 0)
         {
             console.log(data);
-            menu_table(data.data,1,10,$(".section_menu_table"),hasFullPermission);
+            users_table(data.data,1,10,$(".section_users_table"),hasFullPermission);
+        }
+    },users_status);
+});
+
+load_users();
+
+function load_users(){
+
+    getUsers(function(data){
+
+        data = $.parseJSON(data);
+        console.log(data);
+        if(data.data.length > 0)
+        {
+            console.log(data);
+            users_table(data.data,1,10,$(".section_users_table"),hasFullPermission);
+        }
+        else{
+            console.log("no users");
         }
     });
-});
+}
 
-getMenu(function(data){
-
-	data = $.parseJSON(data);
-	
-	if(data.data.length > 0)
-    {
-        console.log(data);
-        menu_table(data.data,1,10,$(".section_menu_table"),hasFullPermission);
-    }
-    else{
-        console.log("no contacts");
-    }
-});
-
-function menu_table(data, page=1, rows=10, parent,admin=true){
+function users_table(data, page=1, rows=10, parent,admin=hasFullPermission){
 
     var html = `
-        <table class="table_menu_adm">
+        <table class="table_users_adm">
             <tr id="title">
-                <th>Menu</th>
-                <th>Contacto</th>
-                <th>Detalles</th>
+                <th>#</th>
+                <th>Correo</th>
+                <th>Nombres</th>
+                <th>Apellidos</th>
+                <th class="removable">Rol</th>
+                <th class="removable">Estado</th>
                 <th class="removable">Operacion</th>
             </tr>
         </table>`;
@@ -69,25 +80,36 @@ function menu_table(data, page=1, rows=10, parent,admin=true){
         if((data.length-1) < i)
             break;
 
+        var urol = "";
+        if (data[i].rol == 1)
+            urol = "Administrador";
+        else if (data[i].rol == 2)
+            urol = "FireFighter";
+        else if (data[i].rol == 3)
+            urol = "Developer";
+
         var trows = `<tr id="rows">
-                <td><a>`+data[i].menu+`</a></td>
-                <td>`+data[i].contact+`</td>
-                <td><a class="menu_viewer" id=`+data[i].id+`>Ver</a></td>
+                <td>`+(i+1)+`</td>
+                <td>`+data[i].email+`</td>
+                <td>`+data[i].first_name+`</td>
+                <td>`+data[i].last_name+`</td>
+                <td class="removable">`+urol+`</td>
+                <td class="removable">`+data[i].status+`</td>
                 <td class="removable">
                     <div class="ui compact menu">
                       <div class="ui simple dropdown item">
                         -->
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                          <div class="item edit" id="`+data[i].id+`">Editar</div>
-                          <div class="item delete" cid="`+data[i].id+`">Eliminar</div>
+                          <div class="item edit" uid="`+data[i].id+`">Editar</div>
+                          <div class="item delete" uid="`+data[i].id+`">Eliminar</div>
                         </div>
                       </div>
                     </div>
                 </td>
             </tr>`;
 
-        $(".table_menu_adm").append(trows);
+        $(".table_users_adm").append(trows);
     }
 
     var pagination = "";
@@ -102,7 +124,7 @@ function menu_table(data, page=1, rows=10, parent,admin=true){
     }
 
     parent.append(`
-        <div class="ui right floated menu pagination" id="menu_pagination">
+        <div class="ui right floated menu pagination" id="users_pagination">
             <a class="icon item prevpagebutton">
                 <i class="left chevron icon"></i>
             </a>
@@ -112,50 +134,44 @@ function menu_table(data, page=1, rows=10, parent,admin=true){
             </a>
         </div>`);
 
+    $(".users_rnc").click(function(){
+        console.log($(this).html());
+    });
 
     $(".pagebutton").click(function(){
-        menu_table(data,$(this).attr('pag'),rows,parent,admin);
+        users_table(data,$(this).attr('pag'),rows,parent,admin);
     });
 
     $(".prevpagebutton").click(function(){
         if((page-1) >= 1)
-            menu_table(data,page-1,rows,parent,admin);
+            users_table(data,page-1,rows,parent,admin);
     });
 
     $(".nextpagebutton").click(function(){
         if((page+1) <= pag_count)
-            menu_table(data,page+1,rows,parent,admin);
+            users_table(data,page+1,rows,parent,admin);
     });
 
     $(".menu_viewer").click(function(){
-        createCookie("view-menu",$(this).attr("id"),30000);
-        window.location.href="/administration/menu_viewer";
+        /*createCookie("view-menu",$(this).attr("id"),30000);
+        window.location.href="/administration/menu_viewer";*/
     });
 
     $(".edit").click(function(){
-        createCookie("edit-menu",$(this).attr("id"),30000);
-        window.location.href="/administration/create_menu";
+        createCookie("edit-contact",$(this).attr("cid"),30000);
+        window.location.href="/administration/create_user";
     });
 
     $(".delete").click(function(){
 
-        if (confirm("Desea eliminar este menu?")) {
+        if (confirm("Desea eliminar este usuario?")) {
 
-            deleteMenu($(this).attr("cid"),function(data){
+            deleteContact($(this).attr("cid"),function(data){
                 data = $.parseJSON(data);
 
                 if(data.success){
 
-                    getMenu(function(data){
-                        data = $.parseJSON(data);
-                        if(data.data.length > 0)
-                        {
-                            menu_table(data.data,1,10,$(".section_menu_table"),hasFullPermission);
-                        }
-                        else{
-                            console.log("no contacts");
-                        }
-                    });
+                    load_users();
                 }
                 else
                 {
@@ -167,48 +183,64 @@ function menu_table(data, page=1, rows=10, parent,admin=true){
     });
 
     if(admin==false)
-        $(".table_menu_adm").find(".removable").remove();
+        $(".table_users_adm").find(".removable").remove();
 
     $('.ui.rating').rating('disable');
 }
 
-function getMenu(callback){
+
+function getUsers(callback,ustatus="all"){
 	var dic = {
+        status: ustatus,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getmenu/",dic,callback);
+    postData("getUsers/",dic,callback);
 }
 
-function getMenuWithName(mname,callback)
+function getUserWithName(uname,callback, ustatus="all")
 {
     var dic = {
-        name: mname,
+        name: uname,
+        status: ustatus,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getmenutwithname/",dic,callback);
+    postData("getuserwithname/",dic,callback);
 }
 
-function getMenuWithFilter(cfield, corderType ,callback)
+function getContactWithFilter(cfield, corderType ,callback, cstatus="non-status")
 {
+    // Non status: retorna todos los contactos sin dif. de estados.
     var dic = {
         field: cfield,
         orderType: corderType,
+        status: cstatus,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getmenuwithfilter/",dic,callback);
+    postData("getcontactwithfilter/",dic,callback);
 }
 
-function deleteMenu(cid,callback){
+function deleteContact(cid,callback){
 
     var dic = {
         id: cid,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("deletemenu/",dic,callback);
+    postData("deletecontact/",dic,callback);
+}
+
+function interface(){
+    if (hasFullPermission) {
+        $(".create_contact").html("Crear Nuevo Contacto");
+        $(".contact_categories").html("Adm. Categorias");
+    }
+    else{
+        $(".create_contact").html("Sugerir Contacto");
+        $(".contact_categories").html("Categorias");
+    }
 }
 
 function postData(url,vars,callback)
@@ -221,7 +253,7 @@ function postData(url,vars,callback)
   });
 }
 
-function createCookie(name, value, days) {
+var createCookie = function(name, value, days) {
     var expires;
     if (days) {
         var date = new Date();

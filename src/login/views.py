@@ -35,18 +35,105 @@ def userinfo(request):
     if request.method == "POST":
         email = request.POST['email']
 
-        uid_exists = users.objects.values().filter(email=email)
+        data = userInfo.objects.prefetch_related("uid").filter(uid=email)
+        userinfo = []
+        userinfo.append({
+            "email": data[0].uid.email,
+            "password": data[0].uid.password,
+            "rol": data[0].uid.rol.name,
+            "status": data[0].uid.status,
+            "first_name": data[0].first_name,
+            "last_name": data[0].last_name,
+            "group_id": data[0].groupId,
+        })
+
         exists = False
 
-        if uid_exists:
+        if data:
             exists = True
-        elif not uid_exists:
+        elif not data:
             exists = False
 
         return HttpResponse(json.dumps({
             "exists": exists,
-            "data": list(uid_exists)
+            "data": userinfo
         }))
+
+
+def getUsers(request):
+    if request.method == "POST":
+        status = request.POST['status']
+
+        if status == "all":
+            data = userInfo.objects.prefetch_related("uid")
+        else:
+            data = userInfo.objects.prefetch_related(
+                "uid").filter(status=status)
+
+        userinfo = []
+        for i in range(len(data)):
+            userinfo.append({
+                "email": data[i].uid.email,
+                "password": data[i].uid.password,
+                "rol": data[i].uid.rol.name,
+                "status": data[i].uid.status,
+                "first_name": data[i].first_name,
+                "last_name": data[i].last_name,
+                "group_id": data[i].groupId,
+            })
+
+        exists = False
+
+        if data:
+            exists = True
+        elif not data:
+            exists = False
+
+        return HttpResponse(json.dumps({
+            "exists": exists,
+            "data": userinfo
+        }))
+
+
+def getuserwithname(request):
+    if request.method == "POST":
+        name = request.POST['name']
+        status = request.POST['status']
+
+        if status == "all":
+            data = userInfo.objects.prefetch_related("uid").filter(
+                first_name__icontains=name)
+        else:
+            data = userInfo.objects.prefetch_related(
+                "uid").filter(
+                first_name__icontains=name,
+                status=status)
+
+        userinfo = []
+        for i in range(len(data)):
+            userinfo.append({
+                "email": data[i].uid.email,
+                "password": data[i].uid.password,
+                "rol": data[i].uid.rol.name,
+                "status": data[i].uid.status,
+                "first_name": data[i].first_name,
+                "last_name": data[i].last_name,
+                "group_id": data[i].groupId,
+            })
+
+        exists = False
+
+        if data:
+            exists = True
+        elif not data:
+            exists = False
+
+        return HttpResponse(json.dumps({
+            "exists": exists,
+            "data": userinfo
+        }))
+
+
 
 
 def saveuser(request):

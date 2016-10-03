@@ -1,9 +1,10 @@
-.menu_li_category, .menu_li, .menu-name, .contact-name{
+.menu_li_category, .menu_li, .menu-name, .contact-name, th, .nav-table{
 	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif";	
 }
 
 .section_menu_operations ul li{
 	display: inline-block;
+
 }
 
 #li_dishes_searcher{
@@ -53,4 +54,49 @@
 .ulcategory .menu_li:hover{
 	/*margin-left: 20px;*/
 	background-color: rgb(245,245,245);
+}
+.li-active{
+	background-color: rgb(245,245,245);
+}
+.div_calculator{
+	position : fixed; 
+	height: 50px; 
+	width: 300px;
+	top: -moz-calc(100% - 60px);
+	top: -webkit-calc(100% - 60px);
+    left: 50%;
+	background-color: rgb(240,240,240);
+	border: 1px solid rgb(210,210,210);
+}
+.div_calculator:hover{
+	background-color: rgb(230,230,230);
+	cursor: pointer;
+}
+.div_calculator p{
+	text-align: center;
+	font-size: 14px;
+}
+.items-selected-viewer{
+	width: 100%;
+}
+.nav-table{
+	width: 100%;
+	margin-bottom: 10px;
+}
+.nav-table th{
+
+}
+.nav-table td input{
+	height: 40px;
+	width: 70px;
+	font-size: 14px;
+}
+.items-selected-viewer .nav li{
+	display: block;
+
+}
+.items-selected-viewer .nav .total{
+	float: right;
+	margin-right: 50px;
+	margin-top: 10px;
 }

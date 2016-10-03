@@ -1,50 +1,56 @@
 
 /*Seccion - menu top*/
-.section_contacts_operations{
+.section_orders_operations{
 
 }
-.section_contacts_operations ul li{
+.section_orders_operations ul li{
 	display: inline-block;
 }
-.section_contacts_operations ul #li_contact_searcher{
+.section_orders_operations ul #li_orders_searcher{
 	float: right;
 	margin-right: 20px;
 }
- #li_contact_searcher .ui.search{
-	font-size: 15px;
-	margin-top: 4px;
+#li_orders_searcher ul li{
+	display: inline-block;
 }
-/*.ui.search input{
-	height: 48px;
-}*/
-.section_contacts_operations select{
-	font-size: 15px;
-	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif";
-}
-.button_contact_filter{
+.search_by{
+	width: 180px;
 	font-size: 13px;
 	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif";
 }
-.button_contact_filter:hover{
+ #li_orders_searcher .ui.search{
+	font-size: 15px;
+	margin-top: 4px;
+}
+.section_orders_operations select{
+	font-size: 15px;
+	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif";
+}
+.button_orders_filter{
+	font-size: 13px;
+	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif";
+}
+.button_orders_filter:hover{
 	text-decoration: underline;
 }
-.select_contact_filter, .select_contact_filter_order{
+.select_orders_filter, .select_orders_filter_order{
 	width: 160px;
 	border-top: 1px solid rgb(240,240,240);
 	border-bottom: 1px solid rgb(240,240,240);
 }
-.select_contact_filter_order{
+.select_orders_filter_order{
 	width: 180px;
 }
 
+
 /*Seccion - tabla*/
-.section_contacts_table{
+.section_orders_table{
 	margin-top: 30px;
 }
-.table_contacts_adm{
+.table_orders_adm{
 	margin-left: 20px;
 }
-.table_contacts_adm th{
+.table_orders_adm th{
 	font-size: 15px;
 	font-weight: bold;
 	color: rgb(100,100,100);
@@ -54,15 +60,15 @@
 	border-right: 1px solid rgb(235,235,235);
 	border-left: 1px solid rgb(235,235,235);
 }
-.table_contacts_adm #title{
+.table_corders_adm #title{
 	border-bottom: 1px solid rgb(220,220,220);
 }
-.table_contacts_adm #title th{
+.table_orders_adm #title th{
 	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif";
 	padding-right: 10px;
 	padding-left: 10px;
 }
-.table_contacts_adm #rows td{
+.table_orders_adm #rows td{
 	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif";
 	font-size: 15px;
 	height: 40px;
@@ -73,28 +79,51 @@
 	padding-right: 10px;
 	max-width: 220px;
 }
-.table_contacts_adm #rows a:hover{
+.table_orders_adm #rows a:hover{
 	text-decoration: underline;
 }
-#contact_pagination{
+#orders_pagination{
 	float: left;
 	margin-top: 15px;
 	margin-left: 20px;
 }
 
 /**/
-.section_contacts_options{
+.section_orders_options{
 	margin-top: 90px;
 }
-.section_contacts_options ul li{
+.section_orders_options ul li{
 	font-family: "Myriad Set Pro", "Lucida Grande", "Helvetica Neue", "Helvetica", "Arial", "Verdana", "sans-serif";
 	display: inline-block;
 	margin-left: 20px;
 	margin-right: 20px;
 	font-size: 15px;
-	padding: 10px;
-	background: rgb(230,230,230);
 }
-.section_contacts_options ul li:hover{
+.section_orders_options ul li:hover{
 	text-decoration: underline;
+}
+
+.no-items{
+	color: rgb(200,200,200);
+}
+.delivered{
+	color: rgb(100,170,100);
+}
+.canceled{
+	color: rgb(170,100,100);
+}
+.order_details_content{
+	width: 100%;
+}
+.nav-table{
+	width: 100%;
+	margin-bottom: 10px;
+}
+.nav-table th{
+
+}
+.nav-table td input{
+	height: 40px;
+	width: 70px;
+	font-size: 14px;
 }

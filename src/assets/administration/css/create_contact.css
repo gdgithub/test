@@ -13,5 +13,7 @@
 }
 .submit, .reset{
 	margin-left: 20px;
+	padding: 10px;
+	background: rgb(230,230,230);
 }
 

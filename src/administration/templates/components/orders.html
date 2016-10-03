@@ -1,0 +1,87 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<!--Meta-->
+<link rel="stylesheet" type="text/css" href="{% static '3rd_party/semantic/semantic.min.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'administration/css/orders.css' %}">
+
+<div class="orders_page_content">
+
+	<section class="section_orders_operations">
+		<ul>
+			<li>
+				<select class="select_orders_filter">
+					<option value="-1" disabled="true" selected="true">Parametros de ordenamiento</option>
+					<option value="id">Ordenar por No. Orden</option>
+					<option value="contact_id">Ordenar por Contacto</option>
+					<option value="status">Ordenar por estado</option>
+					<option value="date">Ordenar por fecha</option>
+					<option value="show_delivered">Mostrar ordenes entregadas</option>
+					<option value="show_canceled">Mostrar ordenes canceladas</option>
+					<option value="show_pending">Mostrar ordenes pendientes</option>
+				</select>
+
+				<select class="select_orders_filter_order">
+					<option value="desc">de mayor a menor</option>
+					<option value="asc">de menor a mayor</option>
+				</select>
+
+				<a class="button_orders_filter" value="Filtrar">FILTRAR</a>
+
+				
+			</li>
+			<li id="li_orders_searcher">
+
+				<ul>
+					<li>
+						<select class="search_by">
+							<option value="orden">Busqueda por No. orden</option>
+							<option value="user">Busqueda por usuario</option>
+							<option value="contact">Busqueda por contacto</option>
+						</select>
+					</li>
+					<li>
+						<div class="ui search">
+					        <div class="ui search">
+					              <div class="ui icon input">
+					                 <input class="prompt" id="tsearch" type="text" placeholder="Buscar orden">
+					                 <i class="search icon"></i>
+					              </div>
+					           <div class="results"></div>
+					        </div>
+					    </div>
+			    	</li>
+			   	</ul>
+			</li>
+		</ul>
+	</section>
+
+	<section class="menu-divider divider-top"></section>
+
+	<section class="section_orders_table"></section>
+	<section class="section_modal">
+		<div class="ui modal">
+		  <i class="close icon"></i>
+		  <div class="header">
+		    Detalles de la orden - No. <span class="modal_no_orden"></span>
+		  </div>
+		  <div class="image content">
+		    <div class="order_details_content">
+		      
+		    </div>
+		  </div>
+		  <div class="actions">
+		 
+		  </div>
+		</div>
+	</section>
+
+	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static '3rd_party/semantic/semantic.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'administration/js/orders/scripts.js' %}"></script>
+	
+</div>
+
+{% endblock %}

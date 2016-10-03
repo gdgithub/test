@@ -1,19 +1,19 @@
-.section_menu_operations{
+.section_groups_operations{
 	
 }
-.section_menu_operations li{
+.section_groups_operations li{
 	margin:8px;
 	margin-left: 20px;
 }
-.section_create_menu{
+.section_create_groups{
 
 }
-.section_create_menu .form_div{
+.section_create_groups .form_div{
 	width: 70%;
 	margin-left: 2%;
 	margin-top: 20px;
 }
-.section_create_menu .form_div form {
+.section_create_groups .form_div form {
 	border-color: white;
 }
 .mcontrol{
@@ -37,5 +37,3 @@
 .mcontrol a:hover{
 	text-decoration: underline;
 }
-
-

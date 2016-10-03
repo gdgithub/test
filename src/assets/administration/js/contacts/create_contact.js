@@ -1,5 +1,7 @@
 $(document).ready(function(){
 
+var hasFullPermission = getCookie("urol") == "admin" ? true : false;
+
 validate_contactForm();
 setCategories_contactForm();
 checkIfEditContact();
@@ -17,7 +19,7 @@ $(".save").click(function(e){
     var telefono = $("#telefono").val();
     var direccion = $("#direccion").val();
     var descripcion = $("#descripcion").val();
-    var estado = (getCookie("access-type") == 1) ? "active": "inactive";
+    var estado = hasFullPermission == true ? "active": "inactive";
 
     if(rnc.length > 0 && categoria.length > 0 && nombre.length > 0 && telefono.length > 0 && direccion.length > 0)
     {

@@ -1,62 +1,63 @@
 $(document).ready(function(){
 
 var hasFullPermission = getCookie("urol") == "admin" ? true : false;
-var contact_status = (hasFullPermission == true) ? "non-status" : "active";
 
 interface();
 
 // Top bar actions
 $("#tsearch").keyup(function(){
     console.log("data");
-    getContactWithName($(this).val(),function(data){
+    getGroupsWithName($(this).val(),function(data){
         data = $.parseJSON(data);
         if(data.data.length > 0)
         {
             console.log(data);
-            contacts_table(data.data,1,10,$(".section_contacts_table"),hasFullPermission);
+            groups_table(data.data,1,10,$(".section_groups_table"),hasFullPermission);
         }
-    },contact_status)
+    })
 });
 
-$(".button_contact_filter").click(function(){
-    var order_field = $(".select_contact_filter").val();
-    var order_px = $(".select_contact_filter_order").val();
+$(".button_groups_filter").click(function(){
+    var order_field = $(".select_groups_filter").val();
+    var order_px = $(".select_groups_filter_order").val();
 
-    getContactWithFilter(order_field,order_px,function(data){
+    getGroupsWithFilter(order_field,order_px,function(data){
         data = $.parseJSON(data);
         if(data.data.length > 0)
         {
             console.log(data);
-            contacts_table(data.data,1,10,$(".section_contacts_table"),hasFullPermission);
+            groups_table(data.data,1,10,$(".section_groups_table"),hasFullPermission);
         }
-    },contact_status);
+    });
 });
 
-getContacts(function(data){
 
-	data = $.parseJSON(data);
-	
-	if(data.data.length > 0)
-    {
-        console.log(data);
-        contacts_table(data.data,1,10,$(".section_contacts_table"),hasFullPermission);
-    }
-    else{
-        console.log("no contacts");
-    }
-},contact_status);
+load_groups();
 
-function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
+function load_groups(){
+
+    getGroups(function(data){
+        data = $.parseJSON(data);
+        if(data.data.length > 0)
+        {
+            console.log(data);
+            groups_table(data.data,1,10,$(".section_groups_table"),hasFullPermission);
+        }
+        else{
+            console.log("no groups");
+        }
+    });
+}
+
+function groups_table(data, page=1, rows=10, parent,admin=hasFullPermission){
 
     var html = `
-        <table class="table_contacts_adm">
+        <table class="table_groups_adm">
             <tr id="title">
-                <th>RNC</th>
-                <th>Nombre</th>
-                <th>Categoria</th>
-                <th>Puntuacion</th>
-                <th class="removable">Estado</th>
-                <th>Menu</th>
+                <th>#</th>
+                <th>Grupo</th>
+                <th>Encargado</th>
+                <th>Miembros</th>
                 <th class="removable">Operacion</th>
             </tr>
         </table>`;
@@ -76,31 +77,27 @@ function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
             break;
 
         var trows = `<tr id="rows">
-                <td><a class="contact_rnc">`+data[i].rnc+`</a></td>
+                <td>`+(i+1)+`</td>
                 <td>`+data[i].name+`</td>
-                <td>`+data[i].category+`</td>
-                <td class="pu">
-                <span class="right floated">
-                    <div class="ui star rating" data-rating="`+data[i].rate+`" data-max-rating="5"></div>
-                </span>
-                </td>
-                <td class="removable">`+data[i].status+`</td>
-                <td><a class="menu_viewer" id='`+data[i].id+`'>Ver</a></td>
+                <td>`+data[i].ffid+`</td>
+                <td><a class="members_viewer" gid='`+data[i].id+`'>Ver</a></td>
                 <td class="removable">
                     <div class="ui compact menu">
                       <div class="ui simple dropdown item">
                         -->
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                          <div class="item edit" cid="`+data[i].id+`">Editar</div>
-                          <div class="item delete" cid="`+data[i].id+`">Eliminar</div>
+                          <div class="item edit" gid="`+data[i].id+`">Editar</div>
+                          <div class="item delete" gid="`+data[i].id+`">Eliminar</div>
                         </div>
                       </div>
                     </div>
                 </td>
             </tr>`;
 
-        $(".table_contacts_adm").append(trows);
+        $(".table_groups_adm").append(trows);
+
+        console.log(data);
     }
 
     var pagination = "";
@@ -115,7 +112,7 @@ function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
     }
 
     parent.append(`
-        <div class="ui right floated menu pagination" id="contact_pagination">
+        <div class="ui right floated menu pagination" id="groups_pagination">
             <a class="icon item prevpagebutton">
                 <i class="left chevron icon"></i>
             </a>
@@ -125,53 +122,75 @@ function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
             </a>
         </div>`);
 
-    $(".contact_rnc").click(function(){
-        console.log($(this).html());
-    });
-
     $(".pagebutton").click(function(){
-        contacts_table(data,$(this).attr('pag'),rows,parent,admin);
+        groups_table(data,$(this).attr('pag'),rows,parent,admin);
     });
 
     $(".prevpagebutton").click(function(){
         if((page-1) >= 1)
-            contacts_table(data,page-1,rows,parent,admin);
+            groups_table(data,page-1,rows,parent,admin);
     });
 
     $(".nextpagebutton").click(function(){
         if((page+1) <= pag_count)
-            contacts_table(data,page+1,rows,parent,admin);
+            groups_table(data,page+1,rows,parent,admin);
     });
 
-    $(".menu_viewer").click(function(){
-        /*createCookie("view-menu",$(this).attr("id"),30000);
-        window.location.href="/administration/menu_viewer";*/
+    $(".members_viewer").click(function(){
+
+        getGroupMembers($(this).attr("gid"),function(data){
+            data = $.parseJSON(data);
+console.log(data);
+            if(data.data.length > 0){
+                $('.ui.modal').modal('show');
+
+                $(".members_content").html(`
+                    <ul class="nav">
+                        <li>
+                            <table class="nav-table no-select">
+                                <tr>
+                                    <th>Usuario</th>
+                                    <th>Nombre</th>
+                                </tr>
+                            </table>
+                        </li>
+                    </ul>
+                `);
+                for(var i=0; i<data.data.length; i++){
+                    $(".nav-table").append(`
+                        <tr>
+                            <td><span>`+(i+1)+") "+data.data[i].userId+`</span></td>
+                            <td><span>`+data.data[i].first_name+" "+data.data[i].last_name+`</span></td>
+                        </tr>
+                    `);
+                }
+            }
+            else{
+                swal({   
+                title: "<small>Miembros</small>",   
+                text: "No hay miembros.",   
+                html: true });
+            }
+        });
+
+
     });
 
     $(".edit").click(function(){
-        createCookie("edit-contact",$(this).attr("cid"),30000);
-        window.location.href="/administration/create_contact";
+        createCookie("edit-group",$(this).attr("gid"),30000);
+        window.location.href="/administration/create_group";
     });
 
     $(".delete").click(function(){
 
-        if (confirm("Desea eliminar este contacto?")) {
+        if (confirm("Desea eliminar este grupo?")) {
 
-            deleteContact($(this).attr("cid"),function(data){
+            deleteGroup($(this).attr("gid"),function(data){
                 data = $.parseJSON(data);
-
+                console.log(data);
                 if(data.success){
 
-                    getContacts(function(data){
-                        data = $.parseJSON(data);
-                        if(data.data.length > 0)
-                        {
-                            contacts_table(data.data,1,10,$(".section_contacts_table"),hasFullPermission);
-                        }
-                        else{
-                            console.log("no contacts");
-                        }
-                    });
+                    //load_groups();
                 }
                 else
                 {
@@ -183,35 +202,32 @@ function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
     });
 
     if(admin==false)
-        $(".table_contacts_adm").find(".removable").remove();
+        $(".table_groups_adm").find(".removable").remove();
 
     $('.ui.rating').rating('disable');
 }
 
 
-function getContacts(callback, cstatus="non-status"){
-	// Non status: retorna todos los contactos sin dif. de estados.
+function getGroups(callback){
+
 	var dic = {
-		status: cstatus,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getcontacts/",dic,callback);
+    postData("getgroups/",dic,callback);
 }
 
-function getContactWithName(cname,callback, cstatus="non-status")
+function getGroupsWithName(gname,callback)
 {
-    // Non status: retorna todos los contactos sin dif. de estados.
     var dic = {
-        name: cname,
-        status: cstatus,
+        name: gname,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getcontactwithname/",dic,callback);
+    postData("getgroupwithname/",dic,callback);
 }
 
-function getContactWithFilter(cfield, corderType ,callback, cstatus="non-status")
+function getGroupsWithFilter(cfield, corderType ,callback, cstatus="non-status")
 {
     // Non status: retorna todos los contactos sin dif. de estados.
     var dic = {
@@ -224,24 +240,29 @@ function getContactWithFilter(cfield, corderType ,callback, cstatus="non-status"
     postData("getcontactwithfilter/",dic,callback);
 }
 
-function deleteContact(cid,callback){
+function getGroupMembers(gid,callback){
 
     var dic = {
-        id: cid,
+        id: gid,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("deletecontact/",dic,callback);
+    postData("getgroupmembers/",dic,callback);
+}
+
+function deleteGroup(gid,callback){
+
+    var dic = {
+        id: gid,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+    }
+
+    postData("deletegroups/",dic,callback);
 }
 
 function interface(){
     if (hasFullPermission) {
-        $(".create_contact").html("Crear Nuevo Contacto");
-        $(".contact_categories").html("Adm. Categorias");
-    }
-    else{
-        $(".create_contact").html("Sugerir Contacto");
-        $(".contact_categories").html("Categorias");
+        $(".create_group").html("Crear Nuevo Grupo");
     }
 }
 

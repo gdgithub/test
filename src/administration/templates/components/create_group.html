@@ -1,0 +1,62 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<!--Meta-->
+<link rel="stylesheet" type="text/css" href="{% static 'administration/css/create_groups.css' %}">
+
+<div class="groups_page_content">
+
+	<section class="section_groups_operations">
+		<ul>
+			<li>
+				<a href="/administration/groups">Volver</a>
+			</li>
+		</ul>
+	</section>
+
+	<section class="menu-divider divider-top"></section>
+	<!--<section class="menu-divider divider-top"></section>-->
+
+	<section class="section_create_groups">
+		<div class="form_div">
+			<form class="ui form segment" id="menu_form">
+
+				<div class="groups_form_content">
+				  <p>Información del grupo</p>
+				  <div class="two fields">
+				    <div class="required field">
+				      <label>Grupo</label>
+				      <input placeholder="Nombre del grupo" name="nombre-grupo" id="nombre-grupo" type="text">
+				    </div>
+				    <div class="required field">
+				    	<label>Encargado</label>
+					  	<select class="ui search dropdown select_groups">
+							
+						</select>
+					</div>
+				  </div>
+				</div>
+
+				<section class="menu-divider divider-top control"></section>
+
+				  <div class="inline field mcontrol">
+				  	<div class="ui error message no-select"></div>
+				  	<a class="addRow no-select">Añadir miembro</a>
+				    <a class="save submit no-select">Guardar</a>
+				    <a class="reset no-select">Cancelar</a>
+				  </div>
+					
+				</form>
+			</div>
+
+	</section>
+
+
+	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'administration/js/groups/create_groups.js' %}"></script>
+	
+</div>
+
+{% endblock %}

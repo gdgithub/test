@@ -47,7 +47,7 @@ $(document).ready(function(){
 			    postData("usercredentials/",dic,function(data){
 
 			    	data = $.parseJSON(data);
-
+			    	
 			    	if(data.exists)
 			    	{
 			    		var user_rol = data.data[0].rol_id;

@@ -4,34 +4,35 @@
 
 {% load staticfiles %}
 <!--Meta-->
-<link rel="stylesheet" type="text/css" href="{% static 'administration/css/contacts.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'administration/css/groups.css' %}">
 
 <div class="contact_page_content">
 
-	<section class="section_contacts_operations">
+	<section class="section_groups_operations">
 		<ul>
 			<li>
-				<select class="select_contact_filter">
+
+				<select class="select_groups_filter">
 					<option value="-1" disabled="true">Ordenar por: </option>
 					<option value="cid">Categoria</option>
 					<option value="name">Nombre</option>
 					<option value="rate">Puntuacion</option>
 				</select>
 
-				<select class="select_contact_filter_order">
+				<select class="select_groups_filter_order">
 					<option value="desc">de mayor a menor</option>
 					<option value="asc">de menor a mayor</option>
 				</select>
 
-				<a class="button_contact_filter" value="Filtrar">FILTRAR</a>
+				<a class="button_groups_filter" value="Filtrar">FILTRAR</a>
 
 				
 			</li>
-			<li id="li_contact_searcher">
+			<li id="li_groups_searcher">
 				<div class="ui search">
 			        <div class="ui search">
 			              <div class="ui icon input">
-			                 <input class="prompt" id="tsearch" type="text" placeholder="Buscar contacto">
+			                 <input class="prompt" id="tsearch" type="text" placeholder="Buscar Grupo">
 			                 <i class="search icon"></i>
 			              </div>
 			           <div class="results"></div>
@@ -43,19 +44,35 @@
 
 	<section class="menu-divider divider-top"></section>
 
-	<section class="section_contacts_table">
+	<section class="section_groups_table">
 
 	</section>
 
-	<section class="section_contacts_options">
+	<section class="section_groups_options">
 		<ul>
-			<li><a class="contact_categories" href="/administration/contact_categories">Adm. categorias</a></li>
-			<li><a class="create_contact" href="/administration/create_contact">Crear contactos</a></li>
+			<li><a class="create_group" href="/administration/create_group">Crear Grupo</a></li>
 		</ul>
 	</section>
 
+	<section>
+		<div class="ui modal">
+		  <i class="close icon"></i>
+		  <div class="header">
+		    Miembros del grupo
+		  </div>
+		  <div class="image content">
+		    <div class="members_content">
+		      
+		    </div>
+		  </div>
+		  <div class="actions">
+		 
+		  </div>
+		</div>
+	</section>
+
 	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'administration/js/contacts/scripts.js' %}"></script>
+	<script type="text/javascript" src="{% static 'administration/js/groups/scripts.js' %}"></script>
 	
 </div>
 

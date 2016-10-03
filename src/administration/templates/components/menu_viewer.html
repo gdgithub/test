@@ -4,6 +4,7 @@
 
 {% load staticfiles %}
 <!--Meta-->
+<link rel="stylesheet" type="text/css" href="{% static '3rd_party/bootstrap/css/bootstrap.min.css' %}">
 <link rel="stylesheet" type="text/css" href="{% static 'administration/css/menu_viewer.css' %}">
 
 <div class="contact_page_content">
@@ -25,6 +26,8 @@
 		</ul>
 	</section>
 
+	<div class="div_calculator" data-toggle="modal" data-target="#calcmodal"></div>
+
 	<section class="menu-divider divider-top"></section>
 
 	<section class="section_menu_viewer">
@@ -32,10 +35,13 @@
 			<ul>
 				<li><p class="menu-name"></p></li>
 				<li><p class="contact-name"></p></li>
+				<li><p class="menu-id hidden"></p></li>
+				<li><p class="contact-id hidden"></p></li>
 			</ul>
 		</section>
 		<section>
 			<div class="menu-content"></div>
+
 		</section>
 	</section>
 
@@ -45,7 +51,29 @@
 		</ul>
 	</section>
 
+	<section>
+
+		<!-- Modal -->
+		<div class="modal fade" id="calcmodal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+		  <div class="modal-dialog" role="document">
+		    <div class="modal-content">
+		      <div class="modal-header">
+		        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+		        <h4 class="modal-title" id="myModalLabel">Calculadora</h4>
+		      </div>
+		      <div class="modal-body">
+		        <div class="items-selected-viewer"></div>
+		      </div>
+		      <div class="modal-footer">
+		        <a class="do-request">Realizar pedido</a>
+		      </div>
+		    </div>
+		  </div>
+		</div>
+	</section>
+
 	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static '3rd_party/bootstrap/js/bootstrap.min.js' %}"></script>
 	<script type="text/javascript" src="{% static 'administration/js/menu/menu_viewer.js' %}"></script>
 	
 </div>

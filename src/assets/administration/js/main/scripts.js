@@ -2,11 +2,17 @@ $(document).ready(function(){
 
 activeUserNavigationButtons();
 
+accessType(getCookie("access-type"));
+
+setBarUserInfo(getCookie("uname"),getCookie("userId"));
 getUserInfo(getCookie("userId"),function(data){
     data = $.parseJSON(data);
     if(data.exists)
     {
-        setBarUserInfo(data.data[0].status,getCookie("userId"));
+        var username = data.data[0].first_name+" "+data.data[0].last_name;
+        setBarUserInfo(username,getCookie("userId"));
+        createCookie("uname",username,3000);
+        createCookie("access-type",data.data[0].rol,3000);
     }
 });
 
@@ -16,7 +22,7 @@ function activeUserNavigationButtons()
 {
     if(window.location.pathname=="/administration/contacts/"){
         $(".adm_contactos").addClass("selected");
-        $(".title-page").html("Administracion de contactos");
+        $(".title-page").html("Administración de contactos");
     }
     else if(window.location.pathname=="/administration/create_contact/"){
         $(".adm_contactos").addClass("selected");
@@ -42,6 +48,23 @@ function activeUserNavigationButtons()
         $(".adm_menu").addClass("selected");
         $(".title-page").html("Detalles del menu");
     }
+    else if(window.location.pathname=="/administration/orders/"){
+        $(".adm_ordenes").addClass("selected");
+        $(".title-page").html("Ordenes realizadas");
+    }
+    else if(window.location.pathname=="/administration/groups/"){
+        $(".adm_groups").addClass("selected");
+        $(".title-page").html("Administración de grupos");
+    }
+    else if(window.location.pathname=="/administration/create_group/"){
+        $(".adm_groups").addClass("selected");
+        $(".title-page").html("Registro de grupos");
+    }
+}
+
+function accessType(idtype){
+    var access_type = {"1":"admin", "2":"firefighter", "3":"dev"};
+    createCookie("urol",access_type[idtype],3000);
 }
 
 function getUserInfo(uemail,callback){

@@ -4,30 +4,30 @@
 
 {% load staticfiles %}
 <!--Meta-->
-<link rel="stylesheet" type="text/css" href="{% static 'administration/css/contacts.css' %}">
+<link rel="stylesheet" type="text/css" href="{% static 'administration/css/users.css' %}">
 
 <div class="contact_page_content">
 
-	<section class="section_contacts_operations">
+	<section class="section_users_operations">
 		<ul>
 			<li>
-				<select class="select_contact_filter">
+				<select class="select_users_filter">
 					<option value="-1" disabled="true">Ordenar por: </option>
 					<option value="cid">Categoria</option>
 					<option value="name">Nombre</option>
 					<option value="rate">Puntuacion</option>
 				</select>
 
-				<select class="select_contact_filter_order">
+				<select class="select_users_filter_order">
 					<option value="desc">de mayor a menor</option>
 					<option value="asc">de menor a mayor</option>
 				</select>
 
-				<a class="button_contact_filter" value="Filtrar">FILTRAR</a>
+				<a class="button_users_filter" value="Filtrar">FILTRAR</a>
 
 				
 			</li>
-			<li id="li_contact_searcher">
+			<li id="li_users_searcher">
 				<div class="ui search">
 			        <div class="ui search">
 			              <div class="ui icon input">
@@ -43,19 +43,19 @@
 
 	<section class="menu-divider divider-top"></section>
 
-	<section class="section_contacts_table">
+	<section class="section_users_table">
 
 	</section>
 
-	<section class="section_contacts_options">
+	<section class="section_users_options">
 		<ul>
-			<li><a class="contact_categories" href="/administration/contact_categories">Adm. categorias</a></li>
+			<li><a class="users_categories" href="/administration/contact_categories">Adm. categorias</a></li>
 			<li><a class="create_contact" href="/administration/create_contact">Crear contactos</a></li>
 		</ul>
 	</section>
 
 	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
-	<script type="text/javascript" src="{% static 'administration/js/contacts/scripts.js' %}"></script>
+	<script type="text/javascript" src="{% static 'administration/js/users/scripts.js' %}"></script>
 	
 </div>
 

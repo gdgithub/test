@@ -31,6 +31,14 @@ urlpatterns = [
         name='menu_categories'),
     url(r'^menu_viewer/$', src.administration.views.menu_viewer,
         name='menu_viewer'),
+    url(r'^orders/$', src.administration.views.orders,
+        name='orders'),
+    url(r'^groups/$', src.administration.views.groups,
+        name='groups'),
+    url(r'^create_group/$', src.administration.views.create_group,
+        name='create_group'),
+    url(r'^users/$', src.administration.views.users_page,
+        name='users'),
 
     url(r'getcontacts/$', src.administration.views.getcontacts,
         name='getcontacts'),
@@ -46,6 +54,8 @@ urlpatterns = [
         createcontactcategory, name='createcontactcategory'),
     url(r'deletecontact_category/$', src.administration.views.
         deletecontact_category, name='deletecontact_category'),
+    url(r'updatecontact_category/$', src.administration.views.
+        updatecontact_category, name='updatecontact_category'),
 
     url(r'createcontact/$', src.administration.views.
         createcontact, name='createcontact'),
@@ -68,6 +78,8 @@ urlpatterns = [
         updatemenu, name='updatemenu'),
     url(r'createmenucategory/$', src.administration.views.
         createmenucategory, name='createmenucategory'),
+    url(r'updatemenucategory/$', src.administration.views.
+        updatemenucategory, name='updatemenucategory'),
     url(r'getmenucategories/$', src.administration.views.
         getmenucategories, name='getmenucategories'),
     url(r'deletemenu_category/$', src.administration.views.
@@ -75,9 +87,50 @@ urlpatterns = [
     url(r'deletemenu/$', src.administration.views.
         deletemenu, name='deletemenu'),
 
+    url(r'createorder/$', src.administration.views.
+        createorder, name='createorder'),
+    url(r'getorders/$', src.administration.views.
+        getorders, name='getorders'),
+    url(r'getorderwithid/$', src.administration.views.
+        getorderwithid, name='getorderwithid'),
+    url(r'getorderwithparamns/$', src.administration.views.
+        getorderwithparamns, name='getorderwithparamns'),
+    url(r'getorderwithfilter/$', src.administration.views.
+        getorderwithfilter, name='getorderwithfilter'),
+    url(r'cancelOrderWithId/$', src.administration.views.
+        cancelOrderWithId, name='cancelOrderWithId'),
+    url(r'setorderdelivered/$', src.administration.views.
+        setorderdelivered, name='setorderdelivered'),
+
     url(r'usercredentials/$', src.login.views.
         usercredentials, name='usercredentials'),
     url(r'userinfo/$', src.login.views.
         userinfo, name='userinfo'),
+    url(r'getUsers/$', src.login.views.
+        getUsers, name='getUsers'),
+    url(r'getuserwithname/$', src.login.views.
+        getuserwithname, name='getuserwithname'),
+
+
+    url(r'getgroups/$', src.administration.views.
+        getgroups, name='getgroups'),
+    url(r'getgroupwithid/$', src.administration.views.
+        getgroupwithid, name='getgroupwithid'),
+    url(r'getgroupwithname/$', src.administration.views.
+        getgroupwithname, name='getgroupwithname'),
+    url(r'getfirefighters/$', src.administration.views.
+        getfirefighters, name='getfirefighters'),
+    url(r'getdevusers/$', src.administration.views.
+        getdevusers, name='getdevusers'),
+    url(r'getgroupmembers/$', src.administration.views.
+        getgroupmembers, name='getgroupmembers'),
+    url(r'savegroup/$', src.administration.views.
+        savegroup, name='savegroup'),
+    url(r'updategroup/$', src.administration.views.
+        updategroup, name='updategroup'),
+    url(r'deletegroups/$', src.administration.views.
+        deletegroups, name='deletegroups'),
+
+
 
 ]

@@ -56,8 +56,10 @@ class orders_master(models.Model):
     id = models.AutoField(primary_key=True)
     user_id = models.TextField()
     contact_id = models.ForeignKey(contacts, on_delete=models.CASCADE)
+    menu_id = models.ForeignKey(menu, on_delete=models.CASCADE)
     status = models.TextField()
     date = models.DateField(auto_now=True)
+    total = models.FloatField()
 
 
 class orders_details(models.Model):
