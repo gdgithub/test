@@ -39,6 +39,10 @@ urlpatterns = [
         name='create_group'),
     url(r'^users/$', src.administration.views.users_page,
         name='users'),
+    url(r'^create_user/$', src.administration.views.create_user,
+        name='create_user'),
+    url(r'^notifications/$', src.administration.views.notifications,
+        name='notifications'),
 
     url(r'getcontacts/$', src.administration.views.getcontacts,
         name='getcontacts'),
@@ -110,6 +114,13 @@ urlpatterns = [
         getUsers, name='getUsers'),
     url(r'getuserwithname/$', src.login.views.
         getuserwithname, name='getuserwithname'),
+    url(r'saveuser/$', src.login.views.
+        saveuser, name='saveuser'),
+    url(r'updateuser/$', src.login.views.
+        updateuser, name='updateuser'),
+    url(r'deleteuser/$', src.login.views.
+        deleteuser, name='deleteuser'),
+
 
 
     url(r'getgroups/$', src.administration.views.

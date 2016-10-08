@@ -1,0 +1,88 @@
+{% extends "main.html" %}
+
+{% block content %}
+
+{% load staticfiles %}
+<!--Meta-->
+<link rel="stylesheet" type="text/css" href="{% static 'administration/css/create_user.css' %}">
+
+<div class="users_page_content">
+
+	<section class="section_users_operations">
+		<ul>
+			<li>
+				<a href="/administration/users"></a>
+			</li>
+		</ul>
+	</section>
+
+	<section class="menu-divider divider-top"></section>
+
+	<section class="section_create_users">
+		<div class="form_div">
+			<form class="ui form segment" id="users_form">
+				  <p>Información del usuario</p>
+
+				  <div class="two fields">
+					  <div class="required field">
+					      <label>Nombres</label>
+					      <input placeholder="Nombres del usuario" name="nombre" id="nombre" type="text">
+					  </div>
+					  <div class="required field">
+					      <label>Apellidos</label>
+					      <input placeholder="Apellidos del usuario" name="apellido" id="apellido" type="text">
+					   </div>
+				  </div>
+
+				  <div class="required two fields">
+					<div class="required field">
+				      <label>Rol</label>
+				      <select class="ui dropdown" name="rol" id="rol">
+				        <option value="1">Administrador</option>
+				        <option value="2">FireFighter</option>
+				        <option value="3">Developer</option>
+				        <option value="4">Invitado</option>
+				      </select>
+				    </div>
+					<div class="field">
+					   <label>Foto</label>
+					   <input placeholder="Foto" name="foto" id="foto" type="file">
+					 </div>
+				  </div>
+
+				  <p>Credenciales</p>
+
+				  <div class="required field">
+					 <label>Correo</label>
+					 <input placeholder="Direccion de correo" name="correo" id="correo" type="text">
+					</div>
+				  
+				  <div class="two fields">
+				    <div class="required field">
+				      <label>Contrasena</label>
+				      <input placeholder="Contrasena" name="contrasena" id="contrasena" type="text">
+				    </div>
+				    <div class="required field">
+				      <label>Confirmacion</label>
+				      <input placeholder="Confirmar contrasena" name="ccontrasena" id="ccontrasena" ype="text">
+				    </div>
+				  </div>
+		
+				  <div class="inline field">
+				  	<div class="ui error message"></div>
+				    <a class="save submit" editting="">Guardar</a>
+				    <a class="reset">Cancelar</a>
+				  </div>
+					
+				</form>
+			</div>
+
+	</section>
+
+
+	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+	<script type="text/javascript" src="{% static 'administration/js/users/create_user.js' %}"></script>
+	
+</div>
+
+{% endblock %}

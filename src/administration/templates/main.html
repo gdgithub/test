@@ -145,7 +145,7 @@
 					<ul class="menu-options links small margin-top-small ng-hide" ng-hide="userHasTeams()">
 
 						<!-- Welcome -->
-						<li class="menu-option" data-menu-option="welcome" ng-class="{ &#39;active&#39;: currentView === &#39;welcome&#39; }" style="">
+						<li class="menu-option" data-menu-option="welcome" style="">
 							<a href="/mainpage">Bienvenido</a>
 						</li>
 
@@ -192,22 +192,25 @@
 
 						<!-- Downloads -->
 						<li class="menu-option adm_users" data-menu-option="downloads">
-							<a ng-href="/download/" href="/administration/users">Adm. de Usuarios</a>
-						</li>
-
-						<!-- Downloads -->
-						<li class="menu-option" data-menu-option="downloads">
-							<a ng-href="/download/" href="https://developer.apple.com/download/">Cuenta</a>
+							<a href="">Adm. de Usuarios</a>
 						</li>
 
 						<section class="menu-divider divider-top">
-							<span>Recursos adicionales</span>
+							<span>Notificaciones</span>
 						</section>
 
 						<!-- Downloads -->
 						<li class="menu-option" data-menu-option="downloads">
-							<a ng-href="/download/">Notificaciones</a>
+							<a href="/administration/notifications">Notificaciones</a>
 						</li>
+
+						<li class="menu-option" data-menu-option="downloads">
+							<a class="notsettings">Configuracion</a>
+						</li>
+
+						<section class="menu-divider divider-top">
+							<span></span>
+						</section>
 
 						<!-- Downloads -->
 						<li class="menu-option" data-menu-option="downloads">
@@ -219,6 +222,60 @@
 				</nav>
 
 			</section>
+
+			<section>
+				<div class="ui modal">
+				  <i class="close icon"></i>
+				  <div class="header">
+				    Configuracion de notificaciones
+				  </div>
+				  <div class="image content">
+				    
+				    <div class="description">
+				      <div class="ui header"></div>
+
+				      <div class="ui form">
+						  <div class="inline fields">
+						    <label>Medio de notificacion</label>
+						    <div class="field">
+						      <div class="ui radio checkbox">
+						        <input type="radio" name="fruit" tabindex="0" class="hidden">
+						        <label>Correo electronico</label>
+						      </div>
+						    </div>
+						    <div class="field">
+						      <div class="ui radio checkbox">
+						        <input type="radio" name="fruit" tabindex="0" class="hidden">
+						        <label>Aplicacion</label>
+						      </div>
+						    </div>
+						    <div class="field">
+						      <div class="ui radio checkbox">
+						        <input type="radio" name="fruit" tabindex="0" class="hidden">
+						        <label>Ambos</label>
+						      </div>
+						    </div>
+						  </div>
+						</div>
+
+
+						
+			
+				    </div>
+				  </div>
+
+				  <div class="actions">
+				    <div class="ui black deny button">
+				      Nope
+				    </div>
+				    <div class="ui positive right labeled icon button">
+				      Yep, that's me
+				      <i class="checkmark icon"></i>
+				    </div>
+				  </div>
+				</div>
+			</section>
+
 		</li>
 		
 		<!-- Right app panel -->

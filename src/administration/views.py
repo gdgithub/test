@@ -55,6 +55,14 @@ def users_page(request):
     return render(request, 'components/users.html', {})
 
 
+def create_user(request):
+    return render(request, 'components/create_user.html', {})
+
+
+def notifications(request):
+    return render(request, 'components/notifications.html', {})
+
+
 def getcontacts(request):
     if request.method == "POST":
         status = request.POST["status"]

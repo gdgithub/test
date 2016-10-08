@@ -91,7 +91,9 @@ class groups_details(models.Model):
 
 class notifications(models.Model):
     id = models.AutoField(primary_key=True)
-    type = models.TextField()
     master_id = models.TextField()
-    user_id = models.TextField()
-    status = models.TextField()
+    type = models.TextField(null=True)
+    ufrom = models.TextField()
+    uto = models.TextField()
+    status = models.TextField(null=True)
+    checked = models.TextField(null=True)

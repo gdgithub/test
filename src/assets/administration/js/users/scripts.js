@@ -3,6 +3,13 @@ $(document).ready(function(){
 var hasFullPermission = getCookie("urol") == "admin" ? true : false;
 var users_status = (hasFullPermission == true) ? "all" : "active";
 
+// Redirect if isnt admin user
+if(!hasFullPermission){
+    createCookie("edit-users",getCookie("userId"),3000);
+    window.location.href = "/administration/create_user";
+    return false;
+}
+
 interface();
 
 // Top bar actions
@@ -101,8 +108,8 @@ function users_table(data, page=1, rows=10, parent,admin=hasFullPermission){
                         -->
                         <i class="dropdown icon"></i>
                         <div class="menu">
-                          <div class="item edit" uid="`+data[i].id+`">Editar</div>
-                          <div class="item delete" uid="`+data[i].id+`">Eliminar</div>
+                          <div class="item edit" uid="`+data[i].email+`">Editar</div>
+                          <div class="item delete" uid="`+data[i].email+`">Eliminar</div>
                         </div>
                       </div>
                     </div>
@@ -158,7 +165,7 @@ function users_table(data, page=1, rows=10, parent,admin=hasFullPermission){
     });
 
     $(".edit").click(function(){
-        createCookie("edit-contact",$(this).attr("cid"),30000);
+        createCookie("edit-users",$(this).attr("uid"),30000);
         window.location.href="/administration/create_user";
     });
 
@@ -166,7 +173,7 @@ function users_table(data, page=1, rows=10, parent,admin=hasFullPermission){
 
         if (confirm("Desea eliminar este usuario?")) {
 
-            deleteContact($(this).attr("cid"),function(data){
+            deleteUser($(this).attr("uid"),function(data){
                 data = $.parseJSON(data);
 
                 if(data.success){
@@ -209,37 +216,19 @@ function getUserWithName(uname,callback, ustatus="all")
     postData("getuserwithname/",dic,callback);
 }
 
-function getContactWithFilter(cfield, corderType ,callback, cstatus="non-status")
-{
-    // Non status: retorna todos los contactos sin dif. de estados.
+function deleteUser(uid,callback){
+
     var dic = {
-        field: cfield,
-        orderType: corderType,
-        status: cstatus,
+        email: uid,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
-    postData("getcontactwithfilter/",dic,callback);
-}
-
-function deleteContact(cid,callback){
-
-    var dic = {
-        id: cid,
-        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
-    }
-
-    postData("deletecontact/",dic,callback);
+    postData("deleteuser/",dic,callback);
 }
 
 function interface(){
     if (hasFullPermission) {
-        $(".create_contact").html("Crear Nuevo Contacto");
-        $(".contact_categories").html("Adm. Categorias");
-    }
-    else{
-        $(".create_contact").html("Sugerir Contacto");
-        $(".contact_categories").html("Categorias");
+        $(".create_user").html("Registrar Usuario");
     }
 }
 
@@ -253,7 +242,7 @@ function postData(url,vars,callback)
   });
 }
 
-var createCookie = function(name, value, days) {
+function createCookie(name, value, days) {
     var expires;
     if (days) {
         var date = new Date();

@@ -17,6 +17,21 @@ getUserInfo(getCookie("userId"),function(data){
 });
 
 /*************************************************************/
+var hasFullPermission = getCookie("urol") == "admin" ? true : false;
+
+// Redirect if isnt admin user
+if(!hasFullPermission){
+    createCookie("edit-users",getCookie("userId"),3000);
+    $(".adm_users a").attr("href","/administration/create_user");
+    $(".adm_users a").html("Mi Cuenta");
+    $(".title-page").html("Informacion personal");
+}
+else{
+     $(".adm_users a").attr("href","/administration/users");
+     $(".adm_users a").html("Adm. de usuarios");
+}
+
+/*************************************************************/
 
 function activeUserNavigationButtons()
 {
@@ -60,7 +75,20 @@ function activeUserNavigationButtons()
         $(".adm_groups").addClass("selected");
         $(".title-page").html("Registro de grupos");
     }
+    else if(window.location.pathname=="/administration/users/"){
+        $(".adm_users").addClass("selected");
+        $(".title-page").html("Administración de usuarios");
+    }
+    else if(window.location.pathname=="/administration/create_user/"){
+        $(".adm_users").addClass("selected");
+        $(".title-page").html("Registro de usuarios");
+    }
 }
+
+/************************************************************/
+$(".notsettings").click(function(){
+    $('.ui.modal').modal('show');
+});
 
 function accessType(idtype){
     var access_type = {"1":"admin", "2":"firefighter", "3":"dev"};

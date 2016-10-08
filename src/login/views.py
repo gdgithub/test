@@ -134,6 +134,50 @@ def getuserwithname(request):
         }))
 
 
+def deleteuser(request):
+    if request.method == "POST":
+        email = request.POST['email']
+
+        success = userInfo.objects.filter(uid=email).delete()
+        if success:
+            success = True
+        elif not success:
+            success = False
+
+    return HttpResponse(json.dumps({
+        "success": success
+    }))
+
+
+def updateuser(request):
+    if request.method == "POST":
+        email = request.POST['email']
+        pwd = request.POST['pwd']
+        name = request.POST['name']
+        nickname = request.POST['nickname']
+        rol = request.POST['rol']
+
+        success = users.objects.filter(email=email).update(
+            rol=rol,
+            password=pwd
+        )
+
+        if success:
+            success = userInfo.objects.filter(uid=email).update(
+                first_name=name,
+                last_name=nickname
+            )
+        elif not success:
+            success = False
+
+        if success:
+            success = True
+        elif not success:
+            success = False
+
+    return HttpResponse(json.dumps({
+        "success": success
+    }))
 
 
 def saveuser(request):
@@ -145,6 +189,7 @@ def saveuser(request):
         rol = request.POST['rol']
         status = request.POST['status']
         valcode = request.POST['valcode']
+        creator = request.POST['creator']
 
         uid_exists = users.objects.filter(email=email)
         success = False
@@ -182,8 +227,12 @@ def saveuser(request):
                 success = True
 
                 link = "https://g-052.herokuapp.com/activation?uc=" + valcode
-                body = "Para activar su cuenta en MyOrders haga click en el enlace siguiente:\n{0}.\n\nEn caso de ser un error, obvie este mensaje.".format(
-                    link)
+                if creator == "admin":
+                    body = "Para activar su cuenta en MyOrders haga click en el enlace siguiente:\n{0}.\n\nSu contrasena es: \n{1}\n\nEn caso de ser un error, obvie este mensaje.".format(
+                        link, pwd)
+                else:
+                    body = "Para activar su cuenta en MyOrders haga click en el enlace siguiente:\n{0}.\n\nEn caso de ser un error, obvie este mensaje.".format(
+                        link)
 
                 """
                 sent = sendMessage("starlin.gil.cruz@gmail.com",

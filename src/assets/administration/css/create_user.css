@@ -1,0 +1,19 @@
+.section_create_users{
+}
+.section_create_users .form_div{
+	width: 70%;
+	margin-left: 2%;
+	margin-top: 20px;
+}
+.section_create_users .form_div form {
+	border-color: white;
+}
+.submit:hover, .reset:hover{
+	text-decoration: underline;
+}
+.submit, .reset{
+	margin-left: 20px;
+	padding: 10px;
+	background: rgb(230,230,230);
+}
+
