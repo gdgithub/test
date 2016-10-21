@@ -6,6 +6,7 @@ from src.login.models import *
 import json
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
+
 # Create your views here.
 
 
@@ -37,15 +38,16 @@ def userinfo(request):
 
         data = userInfo.objects.prefetch_related("uid").filter(uid=email)
         userinfo = []
-        userinfo.append({
-            "email": data[0].uid.email,
-            "password": data[0].uid.password,
-            "rol": data[0].uid.rol.name,
-            "status": data[0].uid.status,
-            "first_name": data[0].first_name,
-            "last_name": data[0].last_name,
-            "group_id": data[0].groupId,
-        })
+        if data:
+            userinfo.append({
+                "email": data[0].uid.email,
+                "password": data[0].uid.password,
+                "rol": data[0].uid.rol.name,
+                "status": data[0].uid.status,
+                "first_name": data[0].first_name,
+                "last_name": data[0].last_name,
+                "group_id": data[0].groupId,
+            })
 
         exists = False
 
@@ -169,6 +171,25 @@ def updateuser(request):
             )
         elif not success:
             success = False
+
+        if success:
+            success = True
+        elif not success:
+            success = False
+
+    return HttpResponse(json.dumps({
+        "success": success
+    }))
+
+
+def changeuserstatus(request):
+    if request.method == "POST":
+        userId = request.POST['userId']
+        status = request.POST['status']
+
+        success = users.objects.filter(email=userId).update(
+            status=status
+        )
 
         if success:
             success = True

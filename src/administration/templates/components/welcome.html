@@ -1,0 +1,31 @@
+{% extends "main.html" %}
+
+{% block content %}
+{% load static %}
+{% load staticfiles %}
+<!--Meta-->
+
+<div class="contact_page_content">
+
+welcome
+
+<!--
+
+  <form method="post" action="/administration/simple_upload" enctype="multipart/form-data">
+    {% csrf_token %}
+    <input type="file" name="myfile">
+    <button type="submit">Upload</button>
+  </form>
+
+  {% if uploaded_file_url %}
+    <p>File uploaded at: <a href="{{ uploaded_file_url }}">{{ uploaded_file_url }}</a></p>
+  {% endif %}
+
+-->
+
+
+	
+	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
+</div>
+
+{% endblock %}

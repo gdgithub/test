@@ -40,6 +40,7 @@
 							<option value="orden">Busqueda por No. orden</option>
 							<option value="user">Busqueda por usuario</option>
 							<option value="contact">Busqueda por contacto</option>
+							<option value="group">Busqueda por grupo</option>
 						</select>
 					</li>
 					<li>
@@ -57,12 +58,18 @@
 			</li>
 		</ul>
 	</section>
-
 	<section class="menu-divider divider-top"></section>
 
 	<section class="section_orders_table"></section>
+
+	<section class="section_orders_options">
+		<ul>
+			<li><a class="new_order">Nuevo Pedido</a></li>
+		</ul>
+	</section>
+
 	<section class="section_modal">
-		<div class="ui modal">
+		<div class="ui modal orders">
 		  <i class="close icon"></i>
 		  <div class="header">
 		    Detalles de la orden - No. <span class="modal_no_orden"></span>
@@ -73,10 +80,60 @@
 		    </div>
 		  </div>
 		  <div class="actions">
-		 
+		 	
 		  </div>
 		</div>
 	</section>
+
+	<section class="section_modal">
+		<div class="ui modal neworders">
+		  <i class="close icon"></i>
+		  <div class="header">
+		    Nuevo pedido
+		  </div>
+		  <div class="image content">
+		    <div class="new_order_content">
+
+		    	<table class="tb_no">
+		    		<tr>
+			    		<td>
+			    			<div class="ui search contact">
+								 <input class="prompt contact_searcher" type="text" placeholder="Introduzca el contacto">
+								 <div class="results"></div>
+							</div>
+			    		</td>
+			    		<td>
+			    			<select class="select_menu">
+			    				<option value="">Seleccione el menu</option>
+			    			</select>
+			    		</td>
+		    		</tr>
+		    		<tr>
+		    			<section class="section_menu_viewer">
+							<section>
+								<ul>
+									<li><p class="menu-name"></p></li>
+									<li><p class="contact-name"></p></li>
+									<li><p class="menu-id hidden"></p></li>
+									<li><p class="contact-id hidden"></p></li>
+								</ul>
+							</section>
+							<section>
+								<div class="menu-content"></div>
+
+							</section>
+						</section>
+		    		</tr>
+		    	</table>
+				
+		    </div>
+		  </div>
+		  <div class="actions">
+		 	
+		  </div>
+		</div>
+	</section>
+
 
 	<script type="text/javascript" src="{% static '3rd_party/jquery/jquery-2.2.4.min.js' %}"></script>
 	<script type="text/javascript" src="{% static '3rd_party/semantic/semantic.min.js' %}"></script>

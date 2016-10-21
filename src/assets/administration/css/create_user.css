@@ -1,5 +1,18 @@
-.section_create_users{
+.section_operations li{
+	margin:8px;
+	margin-left: 20px;
 }
+.section_operations .goback{
+	font-size: 14px;
+	margin: auto;
+}
+.section_operations .goback img{
+	margin-right: 10px;
+}
+.section_operations .goback:hover{
+	opacity: 0.6;
+}
+
 .section_create_users .form_div{
 	width: 70%;
 	margin-left: 2%;
@@ -8,10 +21,10 @@
 .section_create_users .form_div form {
 	border-color: white;
 }
-.submit:hover, .reset:hover{
+.submit:hover, .reset:hover, .changePassword:hover{
 	text-decoration: underline;
 }
-.submit, .reset{
+.submit, .reset, .changePassword{
 	margin-left: 20px;
 	padding: 10px;
 	background: rgb(230,230,230);

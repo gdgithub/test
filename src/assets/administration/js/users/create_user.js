@@ -1,6 +1,7 @@
 $(document).ready(function(){
 
 var hasFullPermission = getCookie("urol") == "admin" ? true : false;
+var currentPassword = "";
 
 checkIfEditusers();
 validate_usersForm();
@@ -21,39 +22,89 @@ $(".save").click(function(e){
 
     if(nombre.length > 0 && apellido.length > 0 && rol.length > 0 && correo.length > 0 && contrasena.length > 0)
     {
-        var code = Math.floor((Math.random()*1000000)+1);
-
-        var dic = {
-            name: nombre,
-            nickname: apellido,
-            rol: rol,
-            email: correo,
-            pwd: contrasena,
-            status: "inactive",
-            valcode: code,
-            creator: "admin",
-            csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+        if($("#contrasena").val() != $("#ccontrasena").val()){
+            swal({   
+                title: "<small>Advertencia</small>",   
+                text: "Las contrasenas no coinciden. Vuelva a introducirlas e intentelo nuevamente.",   
+                html: true 
+            });
+            return false;
         }
 
-        // form loading animation
-        $("#users_form").addClass("ui loading form segment");
-
-        var action = $(".save").attr("editting") == "false" ? "saveuser/": "updateuser/";
-        
-        postData(action,dic,function(data){
-            data = $.parseJSON(data);
-
-            if(data.success){
-                $("#users_form").removeClass("ui loading form segment");
-                $("#users_form").addClass("ui form segment");
-                if($(".save").attr("editting") == "false")
-                    reset_userForm();
+        if(currentPassword.length > 0){
+            if(currentPassword != $("#contrasena").val()){
+                swal({   
+                    title: "Cambio de contraseña",   
+                    text: "Introduza la contrasena anterior para validar la solicitud.",   
+                    type: "input",   
+                    showCancelButton: true,   
+                    closeOnConfirm: false,   
+                    animation: "slide-from-top",   
+                    inputPlaceholder: "Contraseña" }, 
+                    function(inputValue){   
+                        if (inputValue === false) 
+                            return false;      
+                        if (inputValue === "") {     
+                            swal.showInputError("Debe introducir la contraseña anterior.");     
+                            return false   
+                        }
+                        else
+                        {
+                            if(inputValue == currentPassword){
+                                currentPassword = inputValue;
+                                swal.close();
+                                process(nombre,apellido,rol,correo,contrasena);
+                            }
+                            else{
+                                swal.showInputError("La contraseña es incorrecta.");
+                            }
+                        }
+                    });
             }
             else{
-                $("#users_form").removeClass("ui loading form segment");
-                $("#users_form").addClass("ui form segment");
+                process(nombre,apellido,rol,correo,contrasena);
             }
-        });
+        }else{
+            process(nombre,apellido,rol,correo,contrasena);
+        }
+
+
+        function process(nombre,apellido,rol,correo,contrasena){
+            var code = Math.floor((Math.random()*1000000)+1);
+
+            var dic = {
+                name: nombre,
+                nickname: apellido,
+                rol: rol,
+                email: correo,
+                pwd: contrasena,
+                status: "inactive",
+                valcode: code,
+                creator: "admin",
+                csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+            }
+
+            // form loading animation
+            $("#users_form").addClass("ui loading form segment");
+
+            var action = $(".save").attr("editting") == "false" ? "saveuser/": "updateuser/";
+            
+            postData(action,dic,function(data){
+                data = $.parseJSON(data);
+
+                if(data.success){
+                    $("#users_form").removeClass("ui loading form segment");
+                    $("#users_form").addClass("ui form segment");
+                    if($(".save").attr("editting") == "false")
+                        reset_userForm();
+                }
+                else{
+                    $("#users_form").removeClass("ui loading form segment");
+                    $("#users_form").addClass("ui form segment");
+                }
+            });
+        }
+
     }
     else
     {
@@ -141,6 +192,14 @@ function validate_usersForm()
           });
 }
 
+function autoPassword(){
+    var pwd = Math.floor((Math.random()*1000000)+1);
+    $("#contrasena").val(pwd);
+    $("#ccontrasena").val(pwd);
+    $("#contrasena").prop("readonly",true);
+    $("#ccontrasena").prop("readonly",true);
+}
+
 function checkIfEditusers()
 {
     if(getCookie("edit-users") != "-1" && getCookie("edit-users").length > 0)
@@ -169,6 +228,7 @@ function checkIfEditusers()
                 $("#apellido").val(data.data[0].last_name);
                 $("#contrasena").val(data.data[0].password);
                 $("#ccontrasena").val(data.data[0].password);
+                currentPassword = data.data[0].password;
             }
             else{
                 $("#users_form").removeClass("ui loading form segment");
@@ -177,12 +237,15 @@ function checkIfEditusers()
             }
         });
 
-        if (hasFullPermission)
+        if (hasFullPermission){
             deleteCookie("edit-users");
+           // deleteCookie("mi-account");
+        }
     }
     else
     {
         $(".save").attr("editting","false");
+        autoPassword();
     }
 }
 

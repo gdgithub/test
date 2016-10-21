@@ -22,7 +22,7 @@ class userInfo(models.Model):
     uid = models.ForeignKey(users, on_delete=models.CASCADE)
     first_name = models.TextField(null=True)
     last_name = models.TextField(null=True)
-    photo = models.TextField(null=True)
+    photo = models.FileField(null=True, blank=True)
     groupId = models.TextField(null=True)
 
 

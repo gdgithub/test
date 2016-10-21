@@ -97,3 +97,10 @@ class notifications(models.Model):
     uto = models.TextField()
     status = models.TextField(null=True)
     checked = models.TextField(null=True)
+
+
+class notification_settings(models.Model):
+    id = models.AutoField(primary_key=True)
+    userId = models.TextField()
+    not_way = models.TextField(null=True)
+    sound = models.TextField(null=True)

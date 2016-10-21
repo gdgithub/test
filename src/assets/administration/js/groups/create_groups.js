@@ -125,7 +125,7 @@ function clearFields()
 
 function checkIfEditGroup()
 {
-    if(getCookie("edit-group") != "-1")
+    if(getCookie("edit-group") != "-1" && getCookie("edit-group") != "null" && getCookie("edit-group") != "")
     {
         $(".save").attr("editting","true");
 

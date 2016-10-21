@@ -60,7 +60,7 @@ $(document).ready(function(){
 			    			if(user_pwd==$(".lcontrasena").val()){
 				    			createCookie('userId',user_email,3000);
 				    			createCookie('access-type',user_rol,3000);
-				    			window.location.replace("/administration");
+				    			window.location.replace("/administration/welcome");
 				    		}
 				    		else{
 				    			swal({   
@@ -166,7 +166,7 @@ function postData(url,vars,callback)
   });
 }
 
-var createCookie = function(name, value, days) {
+function createCookie(name, value, days) {
     var expires;
     if (days) {
         var date = new Date();

@@ -29,6 +29,7 @@ $(".button_contact_filter").click(function(){
     });
 });
 */
+
 $(".new-category").click(function(){
     swal({   
         title: "Nueva categoria",   

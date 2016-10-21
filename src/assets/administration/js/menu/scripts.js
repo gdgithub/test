@@ -1,6 +1,18 @@
 $(document).ready(function(){
 
+$(".admCategories").click(function(){
+    createCookie("bkpath",window.location.pathname,3000);
+    window.location.replace("/administration/menu_categories");
+});
+$(".createMenu").click(function(){
+    createCookie("bkpath",window.location.pathname,3000);
+    window.location.replace("/administration/create_menu");
+});
+
 var hasFullPermission = getCookie("urol") == "admin" ? true : false;
+
+
+checkAction();
 
 // Top bar actions
 $("#tsearch").keyup(function(){
@@ -16,8 +28,8 @@ $("#tsearch").keyup(function(){
 });
 
 $(".button_menu_filter").click(function(){
-    var order_field = $(".select_contact_filter").val();
-    var order_px = $(".select_contact_filter_order").val();
+    var order_field = $(".select_menu_filter").val();
+    var order_px = $(".select_menu_filter_order").val();
 
     getMenuWithFilter(order_field,order_px,function(data){
         data = $.parseJSON(data);
@@ -29,19 +41,23 @@ $(".button_menu_filter").click(function(){
     });
 });
 
-getMenu(function(data){
 
-	data = $.parseJSON(data);
-	
-	if(data.data.length > 0)
-    {
-        console.log(data);
-        menu_table(data.data,1,10,$(".section_menu_table"),hasFullPermission);
-    }
-    else{
-        console.log("no contacts");
-    }
-});
+function loadMenues(){
+
+    getMenu(function(data){
+
+        data = $.parseJSON(data);
+        
+        if(data.data.length > 0)
+        {
+            console.log(data);
+            menu_table(data.data,1,10,$(".section_menu_table"),hasFullPermission);
+        }
+        else{
+            console.log("no contacts");
+        }
+    });
+}
 
 function menu_table(data, page=1, rows=10, parent,admin=true){
 
@@ -69,8 +85,12 @@ function menu_table(data, page=1, rows=10, parent,admin=true){
         if((data.length-1) < i)
             break;
 
+        if(getCookie("getcontactmenu") != "-1" && getCookie("getcontactmenu") != "null"){
+            $("#tsearch").val(data[i].menu);
+        }
+
         var trows = `<tr id="rows">
-                <td><a>`+data[i].menu+`</a></td>
+                <td style="color:rgb(100,100,100);"><b>`+data[i].menu+`</b></td>
                 <td>`+data[i].contact+`</td>
                 <td><a class="menu_viewer" id=`+data[i].id+`>Ver</a></td>
                 <td class="removable">
@@ -128,11 +148,13 @@ function menu_table(data, page=1, rows=10, parent,admin=true){
     });
 
     $(".menu_viewer").click(function(){
+        createCookie("bkpath",window.location.pathname,3000);
         createCookie("view-menu",$(this).attr("id"),30000);
         window.location.href="/administration/menu_viewer";
     });
 
     $(".edit").click(function(){
+        createCookie("bkpath",window.location.pathname,3000);
         createCookie("edit-menu",$(this).attr("id"),30000);
         window.location.href="/administration/create_menu";
     });
@@ -170,6 +192,31 @@ function menu_table(data, page=1, rows=10, parent,admin=true){
         $(".table_menu_adm").find(".removable").remove();
 
     $('.ui.rating').rating('disable');
+
+    deleteCookie("getcontactmenu");
+}
+
+function checkAction(){
+
+    if(getCookie("getcontactmenu") != "-1" && getCookie("getcontactmenu") != "null"){
+
+        getContactMenu(getCookie("getcontactmenu"), function(data){
+
+            data = $.parseJSON(data);
+            
+            if(data.data.length > 0)
+            {
+                console.log(data);
+                menu_table(data.data,1,10,$(".section_menu_table"),hasFullPermission);
+            }
+            else{
+                console.log("no contacts");
+            }
+        });
+    }
+    else{
+        loadMenues();
+    }
 }
 
 function getMenu(callback){
@@ -179,6 +226,16 @@ function getMenu(callback){
 
     postData("getmenu/",dic,callback);
 }
+
+function getContactMenu(cid, callback){
+    var dic = {
+        contactId: cid,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+    }
+
+    postData("getcontactmenu/",dic,callback);
+}
+
 
 function getMenuWithName(mname,callback)
 {

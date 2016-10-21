@@ -64,20 +64,17 @@
 	<section class="right text-right">
 				
 		<!-- User menu toggle -->
-		<section class="user-menu-toggle" >
-		
+		<section class="user-menu-toggle useraccount" >
 			<section class="">
-			
 				<!-- User name -->
-				<p class="no-margin-bottom truncate no-select user-name"></p>
-				
+				<p class="no-margin-bottom truncate no-select user-name useraccount"></p>
 				<!-- uid - User Email -->
-				<p class="smaller lighter no-select user-email"></p>
-			
+				<p class="smaller lighter no-select user-email useraccount"></p>
 			</section>
-		
 		</section>
-				
+		<section class="user-menu-toggle logout" >
+				<a class="logout"><img src="{% static 'img/logout.png' %}" width="25" /></a>
+		</section>
 	</section>
 
 	</nav>
@@ -88,19 +85,19 @@
 <header class="mobile text-center" >
 	
 	<!-- User menu toggle -->
-	<section class="user-menu-toggle" >
+	<section class="user-menu-toggle useraccount" >
 		
 		<section class="">
-		
 			<!-- User name -->
-			<p class="no-margin-bottom truncate no-select user-name"></p>
-				
+			<p class="no-margin-bottom truncate no-select user-name useraccount"></p>
 			<!-- uid - User Email -->
-			<p class="smaller lighter no-select user-email"></p>
-		
+			<p class="smaller lighter no-select user-email useraccount"></p>
 		</section>
 		
 	</section>
+	<section class="user-menu-toggle logout" >
+				<a class="logout"><img src="{% static 'img/logout.png' %}" width="25" /></a>
+		</section>
 
 <!-- Sidebar toggle -->
 <button class="sidebar-toggle hamburger-button inactive" ui-component="ui.buttons.sidebarToggle" ui-trigger="" ui-trigger-for="ui.menus.sidebar" ui-follow="" ui-follow-for="ui.menus.sidebar">
@@ -127,8 +124,8 @@
 				<section class="mobile-controls">
 
 					<!-- Account brandmark -->
-					<a class="brandmark" href="https://developer.apple.com/">
-						<span class="text-replaceg">Apple e</span>
+					<a class="brandmark" >
+						<span class="text-replaceg"></span>
 					</a>
 
 					<!-- Close button -->
@@ -145,8 +142,8 @@
 					<ul class="menu-options links small margin-top-small ng-hide" ng-hide="userHasTeams()">
 
 						<!-- Welcome -->
-						<li class="menu-option" data-menu-option="welcome" style="">
-							<a href="/mainpage">Bienvenido</a>
+						<li class="menu-option welcome" data-menu-option="welcome" style="">
+							<a href="/administration/welcome">Bienvenido</a>
 						</li>
 
 					</ul>
@@ -200,8 +197,8 @@
 						</section>
 
 						<!-- Downloads -->
-						<li class="menu-option" data-menu-option="downloads">
-							<a href="/administration/notifications">Notificaciones</a>
+						<li class="menu-option adm_notifications" data-menu-option="downloads">
+							<a href="/administration/notifications">Notificaciones <span class="badget notification-number"></span></a>
 						</li>
 
 						<li class="menu-option" data-menu-option="downloads">
@@ -214,7 +211,7 @@
 
 						<!-- Downloads -->
 						<li class="menu-option" data-menu-option="downloads">
-							<a ng-href="/download/" href="https://developer.apple.com/download/">Reportes</a>
+							<a ng-href="/download/" >Reportes</a>
 						</li>
 
 					</ul>
@@ -224,7 +221,7 @@
 			</section>
 
 			<section>
-				<div class="ui modal">
+				<div class="ui modal notsetting">
 				  <i class="close icon"></i>
 				  <div class="header">
 				    Configuracion de notificaciones
@@ -232,46 +229,52 @@
 				  <div class="image content">
 				    
 				    <div class="description">
-				      <div class="ui header"></div>
 
-				      <div class="ui form">
-						  <div class="inline fields">
+				    <div class="ui header"></div>
+
+				    <section class="ntype">
+						<div class="ui form">
+						  <div class="grouped fields">
 						    <label>Medio de notificacion</label>
 						    <div class="field">
-						      <div class="ui radio checkbox">
-						        <input type="radio" name="fruit" tabindex="0" class="hidden">
+						      <div class="ui slider checkbox">
+						        <input type="radio" name="throughput" id="nemail" value="email" checked="checked">
 						        <label>Correo electronico</label>
 						      </div>
 						    </div>
 						    <div class="field">
-						      <div class="ui radio checkbox">
-						        <input type="radio" name="fruit" tabindex="0" class="hidden">
+						      <div class="ui slider checkbox">
+						        <input type="radio" name="throughput" id="napp" value="app">
 						        <label>Aplicacion</label>
 						      </div>
 						    </div>
 						    <div class="field">
-						      <div class="ui radio checkbox">
-						        <input type="radio" name="fruit" tabindex="0" class="hidden">
+						      <div class="ui slider checkbox">
+						        <input type="radio" name="throughput" id="nboth" value="both">
 						        <label>Ambos</label>
 						      </div>
 						    </div>
 						  </div>
 						</div>
+				    </section>
 
+				    <section class="nsound">
+				    	 <div class="ui segment">
+						    <div class="field">
+						      <div class="ui toggle checkbox">
+						        <input type="checkbox" name="gift" id="notification-sound" tabindex="0" class="hidden">
+						        <label>Reproducir sonido al notificar.</label>
+						      </div>
+						    </div>
+						  </div>
+				    </section>
 
-						
-			
 				    </div>
 				  </div>
 
-				  <div class="actions">
-				    <div class="ui black deny button">
-				      Nope
-				    </div>
-				    <div class="ui positive right labeled icon button">
-				      Yep, that's me
-				      <i class="checkmark icon"></i>
-				    </div>
+				  <div class="not-actions">
+				    <a class="cancelnotsetting">Cancelar</a>
+				    <a class="savenotsetting">Guardar</a>
 				  </div>
 				</div>
 			</section>

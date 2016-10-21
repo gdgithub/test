@@ -13,6 +13,7 @@ $("#contact_form").submit(function(e){
 $(".save").click(function(e){
     e.preventDefault();
 
+    var uid = getCookie("userId");
     var rnc = $("#rnc").val();
     var categoria = $("#categoria").val();
     var nombre = $("#nombre").val();
@@ -24,6 +25,7 @@ $(".save").click(function(e){
     if(rnc.length > 0 && categoria.length > 0 && nombre.length > 0 && telefono.length > 0 && direccion.length > 0)
     {
         var dic = {
+            userId: uid,
             rnc: rnc,
             category: categoria,
             name: nombre,
@@ -143,7 +145,7 @@ function validate_contactForm()
 
 function checkIfEditContact()
 {
-    if(getCookie("edit-contact") != "-1")
+    if(getCookie("edit-contact") != "-1" && getCookie("edit-contact") != "null")
     {
         $(".save").attr("editting","true");
 

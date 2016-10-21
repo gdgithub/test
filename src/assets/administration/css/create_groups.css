@@ -5,6 +5,17 @@
 	margin:8px;
 	margin-left: 20px;
 }
+.section_groups_operations .goback{
+	font-size: 14px;
+	margin: auto;
+}
+.section_groups_operations .goback img{
+	margin-right: 10px;
+}
+.section_groups_operations .goback:hover{
+	opacity: 0.6;
+}
+
 .section_create_groups{
 
 }

@@ -15,6 +15,9 @@ $("#tsearch").keyup(function(){
             console.log(data);
             contacts_table(data.data,1,10,$(".section_contacts_table"),hasFullPermission);
         }
+        else{
+            message("No se han encontrado resultados para su búsqueda.");
+        }
     },contact_status)
 });
 
@@ -29,6 +32,9 @@ $(".button_contact_filter").click(function(){
             console.log(data);
             contacts_table(data.data,1,10,$(".section_contacts_table"),hasFullPermission);
         }
+        else{
+            message("No se encontraron resultados.");
+        }
     },contact_status);
 });
 
@@ -42,9 +48,18 @@ getContacts(function(data){
         contacts_table(data.data,1,10,$(".section_contacts_table"),hasFullPermission);
     }
     else{
-        console.log("no contacts");
+        message("No hay establecimientos registrados.");
     }
 },contact_status);
+
+function message(msg){
+
+    $(".section_contacts_table").html(`
+            <div class="message">
+                <p>`+msg+`</p>
+            </div>
+    `);
+}
 
 function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
 
@@ -75,6 +90,34 @@ function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
         if((data.length-1) < i)
             break;
 
+        var menuViewerClass = "";
+        var MenuOption ="";
+        var MenuOptionOpt = "";
+        var utility = "";
+
+        if (data[i].status == "inactive"){
+            menuViewerClass = "no-menu";
+            MenuOption = "No disponible";
+
+            // Habilitar contacto
+            utility = `<div class="item changestatus" cid="`+data[i].id+`" status="active">Habilitar</div>`;
+        }
+        else
+        {
+            // Acciones de menu (de contacto)
+            if(data[i].menuList.length > 0){
+                MenuOption = "Ver";
+                MenuOptionOpt = "show";
+            }
+            else{
+                MenuOption = "Crear";
+                MenuOptionOpt = "create";
+            }
+
+            // inHabilitar contacto
+            utility = `<div class="item changestatus" cid="`+data[i].id+`" status="inactive">Inhabilitar</div>`;
+        }
+
         var trows = `<tr id="rows">
                 <td><a class="contact_rnc">`+data[i].rnc+`</a></td>
                 <td>`+data[i].name+`</td>
@@ -85,7 +128,7 @@ function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
                 </span>
                 </td>
                 <td class="removable">`+data[i].status+`</td>
-                <td><a class="menu_viewer" id='`+data[i].id+`'>Ver</a></td>
+                <td><a class="menu_viewer `+menuViewerClass+`" cid='`+data[i].id+`' action='`+MenuOptionOpt+`'>`+MenuOption+`</a></td>
                 <td class="removable">
                     <div class="ui compact menu">
                       <div class="ui simple dropdown item">
@@ -94,6 +137,8 @@ function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
                         <div class="menu">
                           <div class="item edit" cid="`+data[i].id+`">Editar</div>
                           <div class="item delete" cid="`+data[i].id+`">Eliminar</div>
+                          <section class="menu-divider divider-top"></section>
+                          `+utility+`
                         </div>
                       </div>
                     </div>
@@ -144,11 +189,31 @@ function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
     });
 
     $(".menu_viewer").click(function(){
-        /*createCookie("view-menu",$(this).attr("id"),30000);
-        window.location.href="/administration/menu_viewer";*/
+
+        if($(this).hasClass("no-menu"))
+        {
+            // Contacto inhabilitado.
+        }
+        else{
+
+            if ($(this).attr("action")=="show") {
+                // Ver lista de menu del contacto
+                createCookie("getcontactmenu",$(this).attr("cid"),30000);
+                createCookie("bkpath",window.location.pathname,3000);
+                window.location.href="/administration/menu"; 
+            }
+            else if ($(this).attr("action")=="create") {
+                // Crear menu para contacto
+                createCookie("create-menu",$(this).attr("cid"),30000);
+                createCookie("bkpath",window.location.pathname,3000);
+                window.location.href="/administration/create_menu"; 
+            }            
+        }
+        /**/
     });
 
     $(".edit").click(function(){
+        createCookie("bkpath",window.location.pathname,3000);
         createCookie("edit-contact",$(this).attr("cid"),30000);
         window.location.href="/administration/create_contact";
     });
@@ -182,12 +247,46 @@ function contacts_table(data, page=1, rows=10, parent,admin=hasFullPermission){
         
     });
 
+    $(".changestatus").click(function(){
+
+        changeContactStatus($(this).attr("cid"),$(this).attr("status"),function(data){
+            data = $.parseJSON(data);
+
+                if(data.success){
+
+                    getContacts(function(data){
+                        data = $.parseJSON(data);
+                        if(data.data.length > 0)
+                        {
+                            contacts_table(data.data,1,10,$(".section_contacts_table"),hasFullPermission);
+                        }
+                        else{
+                            console.log("no contacts");
+                        }
+                    });
+                }
+                else
+                {
+                    alert("error");
+                }
+            
+        });
+    });
+
     if(admin==false)
         $(".table_contacts_adm").find(".removable").remove();
 
     $('.ui.rating').rating('disable');
 }
 
+$(".contact_categories").click(function(){
+    createCookie("bkpath",window.location.pathname,3000);
+    window.location.replace("/administration/contact_categories");
+});
+$(".create_contact").click(function(){
+    createCookie("bkpath",window.location.pathname,3000);
+    window.location.replace("/administration/create_contact");
+});
 
 function getContacts(callback, cstatus="non-status"){
 	// Non status: retorna todos los contactos sin dif. de estados.
@@ -232,6 +331,17 @@ function deleteContact(cid,callback){
     }
 
     postData("deletecontact/",dic,callback);
+}
+
+function changeContactStatus(cid, cstatus, callback){
+
+    var dic = {
+        id: cid,
+        status: cstatus,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val()
+    }
+
+    postData("changecontactstatus/",dic,callback);
 }
 
 function interface(){

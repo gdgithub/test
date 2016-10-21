@@ -91,6 +91,7 @@ $(".save").click(function(){
             var menuId = (getCookie("tmpacmi").length>0) ? getCookie("tmpacmi") : "-1";
 
             var dic = {
+                userId: getCookie("userId"),
                 mid: menuId,
                 menu_title: titulo,
                 cid: contactId,
@@ -141,6 +142,8 @@ function checkIfEditMenu()
 {
     if(getCookie("edit-menu") != "-1")
     {
+       // alert("edit menu "+getCookie("edit-menu"));
+
         $(".save").attr("editting","true");
 
         var dic = {
@@ -202,6 +205,15 @@ function checkIfEditMenu()
 
         createCookie("tmpacmi",getCookie("edit-menu"),3000);
         deleteCookie("edit-menu");
+    }
+    else if (getCookie("create-menu") != "-1"){
+
+        $(".save").attr("editting","false");
+        var cid = parseInt(getCookie("create-menu"));
+       // alert("create menu "+getCookie("create-menu"));
+        setTimeout(function(){ $(".select_contact").dropdown("set selected",cid); }, 100);
+        
+        deleteCookie("create-menu");
     }
     else
     {

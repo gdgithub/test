@@ -11,6 +11,10 @@ def administration(request):
     return render(request, 'main.html', {})
 
 
+def welcome_page(request):
+    return render(request, 'components/welcome.html', {})
+
+
 def contacts_page(request):
     return render(request, 'components/contacts.html', {})
 
@@ -43,7 +47,7 @@ def orders(request):
     return render(request, 'components/orders.html', {})
 
 
-def groups(request):
+def groups_page(request):
     return render(request, 'components/groups.html', {})
 
 
@@ -59,7 +63,7 @@ def create_user(request):
     return render(request, 'components/create_user.html', {})
 
 
-def notifications(request):
+def notifications_page(request):
     return render(request, 'components/notifications.html', {})
 
 
@@ -75,6 +79,14 @@ def getcontacts(request):
 
         contact = []
         for i in range(len(data)):
+            cmenu = menu.objects.filter(contact_id=data[i].id)
+            menulist = []
+            for m in range(len(cmenu)):
+                menulist.append({
+                    "id": cmenu[m].id,
+                    "name": cmenu[m].name
+                })
+
             contact.append({
                 "id": data[i].id,
                 "rnc": data[i].rnc,
@@ -83,7 +95,8 @@ def getcontacts(request):
                 "phone": data[i].phone,
                 "address": data[i].address,
                 "rate": data[i].rate,
-                "status": data[i].status
+                "status": data[i].status,
+                "menuList": menulist
             })
 
     return HttpResponse(json.dumps({
@@ -105,6 +118,14 @@ def getcontactwithname(request):
 
         contact = []
         for i in range(len(data)):
+            cmenu = menu.objects.filter(contact_id=data[i].id)
+            menulist = []
+            for m in range(len(cmenu)):
+                menulist.append({
+                    "id": cmenu[m].id,
+                    "name": cmenu[m].name
+                })
+
             contact.append({
                 "id": data[i].id,
                 "rnc": data[i].rnc,
@@ -113,7 +134,8 @@ def getcontactwithname(request):
                 "phone": data[i].phone,
                 "address": data[i].address,
                 "rate": data[i].rate,
-                "status": data[i].status
+                "status": data[i].status,
+                "menuList": menulist
             })
 
     return HttpResponse(json.dumps({
@@ -143,6 +165,14 @@ def getcontactwithfilter(request):
 
         contact = []
         for i in range(len(data)):
+            cmenu = menu.objects.filter(contact_id=data[i].id)
+            menulist = []
+            for m in range(len(cmenu)):
+                menulist.append({
+                    "id": cmenu[m].id,
+                    "name": cmenu[m].name
+                })
+
             contact.append({
                 "id": data[i].id,
                 "rnc": data[i].rnc,
@@ -151,7 +181,8 @@ def getcontactwithfilter(request):
                 "phone": data[i].phone,
                 "address": data[i].address,
                 "rate": data[i].rate,
-                "status": data[i].status
+                "status": data[i].status,
+                "menuList": menulist
             })
 
     return HttpResponse(json.dumps({
@@ -171,6 +202,15 @@ def getcontactswithid(request):
 
         contact = []
         for i in range(len(data)):
+            cmenu = menu.objects.filter(contact_id=data[i][0].id)
+            menulist = []
+            if cmenu:
+                for m in range(len(cmenu)):
+                    menulist.append({
+                        "id": cmenu[m].id,
+                        "name": cmenu[m].name
+                    })
+
             contact.append({
                 "id": data[i][0].id,
                 "rnc": data[i][0].rnc,
@@ -179,7 +219,8 @@ def getcontactswithid(request):
                 "phone": data[i][0].phone,
                 "address": data[i][0].address,
                 "rate": data[i][0].rate,
-                "status": data[i][0].status
+                "status": data[i][0].status,
+                "menuList": menulist
             })
 
     return HttpResponse(json.dumps({
@@ -256,6 +297,7 @@ def updatecontact_category(request):
 
 def createcontact(request):
     if request.method == "POST":
+        userId = request.POST["userId"]
         rnc = request.POST["rnc"]
         categ = request.POST["category"]
         name = request.POST["name"]
@@ -263,6 +305,7 @@ def createcontact(request):
         address = request.POST["address"]
         description = request.POST["description"]
         status = request.POST["status"]
+        ntype = ""
 
         exists = contacts.objects.filter(rnc=rnc)
         success = True
@@ -281,12 +324,31 @@ def createcontact(request):
                 status=status)
 
             if status == "inactive":
-                master = contacts.objects.filter(rnc=rnc)
-                notifications.objects.create(
-                    type="contact-suggestion",
-                    master_id=master[0].id,
-                    status="no-checked"
-                )
+                ntype = "contact-suggestion"
+            elif status == "active":
+                ntype = "contact-creation"
+
+            master = contacts.objects.filter(rnc=rnc)
+
+            # Notificar al/los administradores
+            admin = users.objects.filter(rol=1, status="active")
+            admins = []
+            for i in range(len(admin)):
+                setting = userNotWay(admin[i].email)
+                if setting == "app" or setting == "both":
+                    admins.append(admin[i].email)
+
+            if admins:
+                for i in range(len(admins)):
+                    notifications.objects.create(
+                        master_id=master[0].id,
+                        type=ntype,
+                        ufrom=userId,
+                        uto=admins[i],
+                        status="active",
+                        checked="false"
+                    )
+
         elif exists:
             success = False
 
@@ -297,6 +359,7 @@ def createcontact(request):
 
 def updatecontact(request):
     if request.method == "POST":
+        userId = request.POST["userId"]
         rnc = request.POST["rnc"]
         categ = request.POST["category"]
         name = request.POST["name"]
@@ -304,6 +367,7 @@ def updatecontact(request):
         address = request.POST["address"]
         description = request.POST["description"]
         status = request.POST["status"]
+        ntype = ""
 
         exists = contacts.objects.get(rnc=rnc)
         success = True
@@ -321,12 +385,28 @@ def updatecontact(request):
                 status=status)
 
             if status == "inactive":
-                master = contacts.objects.filter(rnc=rnc)
-                notifications.objects.create(
-                    type="contact-suggestion",
-                    master_id=master[0].id,
-                    status="no-checked"
-                )
+                ntype = "contact-updated"
+            elif status == "active":
+                ntype = "contact-updated"
+
+            master = contacts.objects.filter(rnc=rnc)
+
+            # Notificar al/los administradores
+            admin = users.objects.filter(rol=1, status="active")
+            admins = []
+            for i in range(len(admin)):
+                admins.append(admin[i].email)
+
+            if admins:
+                for i in range(len(admins)):
+                    notifications.objects.create(
+                        master_id=master[0].id,
+                        type=ntype,
+                        ufrom=userId,
+                        uto=admins[i],
+                        status="active",
+                        checked="false"
+                    )
         elif not exists:
             success = False
 
@@ -350,6 +430,24 @@ def deletecontact(request):
     }))
 
 
+def changecontactstatus(request):
+    if request.method == "POST":
+        id = request.POST["id"]
+        status = request.POST["status"]
+
+        result = contacts.objects.filter(id=id).update(
+            status=status
+        )
+        if result:
+            result = True
+        elif not result:
+            result = False
+
+    return HttpResponse(json.dumps({
+        "success": result
+    }))
+
+
 def getmenu(request):
     if request.method == "POST":
 
@@ -357,12 +455,37 @@ def getmenu(request):
 
         menu_array = []
         for i in range(len(data)):
-            menu_array.append({
-                "id": data[i].id,
-                "menu": data[i].name,
-                "contact": data[i].contact_id.name,
-                "contactId": data[i].contact_id.id
-            })
+            ca = contacts.objects.filter(id=data[i].contact_id.id)
+            if ca[0].status == "active":
+                menu_array.append({
+                    "id": data[i].id,
+                    "menu": data[i].name,
+                    "contact": data[i].contact_id.name,
+                    "contactId": data[i].contact_id.id
+                })
+
+    return HttpResponse(json.dumps({
+        "data": menu_array
+    }))
+
+
+def getcontactmenu(request):
+    if request.method == "POST":
+        contactId = request.POST["contactId"]
+
+        data = menu.objects.prefetch_related("contact_id").filter(
+            contact_id=contactId)
+
+        menu_array = []
+        for i in range(len(data)):
+            ca = contacts.objects.filter(id=data[i].contact_id.id)
+            if ca[0].status == "active":
+                menu_array.append({
+                    "id": data[i].id,
+                    "menu": data[i].name,
+                    "contact": data[i].contact_id.name,
+                    "contactId": data[i].contact_id.id
+                })
 
     return HttpResponse(json.dumps({
         "data": menu_array
@@ -378,12 +501,14 @@ def getmenutwithname(request):
 
         menu_array = []
         for i in range(len(data)):
-            menu_array.append({
-                "id": data[i].id,
-                "menu": data[i].name,
-                "contact": data[i].contact_id.name,
-                "contactId": data[i].contact_id.id
-            })
+            ca = contacts.objects.filter(id=data[i].contact_id.id)
+            if ca[0].status == "active":
+                menu_array.append({
+                    "id": data[i].id,
+                    "menu": data[i].name,
+                    "contact": data[i].contact_id.name,
+                    "contactId": data[i].contact_id.id
+                })
 
     return HttpResponse(json.dumps({
         "data": menu_array
@@ -403,12 +528,14 @@ def getmenuwithfilter(request):
 
         menu_array = []
         for i in range(len(data)):
-            menu_array.append({
-                "id": data[i].id,
-                "menu": data[i].name,
-                "contact": data[i].contact_id.name,
-                "contactId": data[i].contact_id.id
-            })
+            ca = contacts.objects.filter(id=data[i].contact_id.id)
+            if ca[0].status == "active":
+                menu_array.append({
+                    "id": data[i].id,
+                    "menu": data[i].name,
+                    "contact": data[i].contact_id.name,
+                    "contactId": data[i].contact_id.id
+                })
 
     return HttpResponse(json.dumps({
         "data": menu_array
@@ -441,13 +568,15 @@ def getmenuwithid(request):
 
         menu_array = []
         for i in range(len(data)):
-            menu_array.append({
-                "id": data[i].id,
-                "menu": data[i].name,
-                "contact": data[i].contact_id.name,
-                "contactId": data[i].contact_id.id,
-                "dishes": dishes_array
-            })
+            ca = contacts.objects.filter(id=data[i].contact_id.id)
+            if ca[0].status == "active":
+                menu_array.append({
+                    "id": data[i].id,
+                    "menu": data[i].name,
+                    "contact": data[i].contact_id.name,
+                    "contactId": data[i].contact_id.id,
+                    "dishes": dishes_array
+                })
 
     return HttpResponse(json.dumps({
         "data": menu_array
@@ -456,6 +585,7 @@ def getmenuwithid(request):
 
 def savemenu(request):
     if request.method == "POST":
+        userId = request.POST["userId"]
         title = request.POST["menu_title"]
         cid = request.POST["cid"]
         dishe = request.POST["dishes"].split("|")
@@ -494,6 +624,30 @@ def savemenu(request):
                     success = True
                 elif not success:
                     success = False
+
+            master = menu.objects.filter(
+                contact_id=cid,
+                name=title
+            )
+
+            # Notificar al/los administradores
+            admin = users.objects.filter(rol=1, status="active")
+            admins = []
+            for i in range(len(admin)):
+                setting = userNotWay(admin[i].email)
+                if setting == "app" or setting == "both":
+                    admins.append(admin[i].email)
+
+            if admins:
+                for i in range(len(admins)):
+                    notifications.objects.create(
+                        master_id=master[0].id,
+                        type="menu-creation",
+                        ufrom=userId,
+                        uto=admins[i],
+                        status="active",
+                        checked="false"
+                    )
 
     return HttpResponse(json.dumps({
         "success": success
@@ -642,6 +796,7 @@ def createorder(request):
         items = request.POST["items"].split("|")
         price = request.POST["price"].split("|")
         total_item = request.POST["total_item"].split("|")
+        eUserNotification = []
         success = True
 
         contact = contacts.objects.get(id=cid)
@@ -665,46 +820,128 @@ def createorder(request):
                     price=price[i],
                     total=total_item[i]
                 )
+
+            # Notificar al/los administradores
+            admin = users.objects.filter(rol=1, status="active")
+            admins = []
+            for i in range(len(admin)):
+                setting = userNotWay(admin[i].email)
+                if setting == "app" or setting == "both":
+                    admins.append(admin[i].email)
+
+            if admins:
+                for i in range(len(admins)):
+                    eUserNotification.append(admins[i])
+                    notifications.objects.create(
+                        master_id=str(master.id),
+                        type="order-creation",
+                        ufrom=uid,
+                        uto=admins[i],
+                        status="active",
+                        checked="false"
+                    )
+
+            # Notificar al encargado de grupo
+            gid = groups_details.objects.filter(user_id=uid)
+            if gid:
+                group = groups_master.objects.filter(id=gid[0].group_master_id)
+                if group:
+                    ff = users.objects.filter(
+                        email=group[0].ffid, status="active")
+                    if ff:
+                        # Encargado; FF Activo
+                        eUserNotification.append(ff[0].email)
+                        notifications.objects.create(
+                            master_id=str(master.id),
+                            type="order-creation",
+                            ufrom=uid,
+                            uto=ff[0].email,
+                            status="active",
+                            checked="false"
+                        )
+
+            if len(eUserNotification) > 0:
+                # notificar a estos usuarios via correo
+                for i in range(len(eUserNotification)):
+                    if setting == "email" or setting == "both":
+                        # sendgrid method
+                        pass
+                pass
+
         elif not master:
             success = False
 
     return HttpResponse(json.dumps({
-        "success": success
+        "success": success,
+        "orderId": master.id
     }))
 
 
 def getorders(request):
     if request.method == "POST":
+        userId = request.POST["userId"]
 
-        data = orders_master.objects.prefetch_related("contact_id").\
-            prefetch_related("menu_id")
+        userRol = users.objects.prefetch_related("rol").filter(email=userId)
+
+        data = []
+        if userRol[0].rol.name == "1":
+            # admin
+            data.append(orders_master.objects.prefetch_related("contact_id").
+                        prefetch_related("menu_id"))
+        elif userRol[0].rol.name == "2":
+            # firefighter
+            data.append(orders_master.objects.prefetch_related("contact_id").
+                        prefetch_related("menu_id").filter(user_id=userId))
+
+            ffGroups = groups_master.objects.filter(ffid=userId)
+
+            members = []
+            for i in range(len(ffGroups)):
+                members.append(groups_details.objects.
+                               filter(group_master_id=ffGroups[i].id))
+
+            for k in range(len(members)):
+                for j in range(len(members[k])):
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id")
+                                .filter(user_id=members[k][j].user_id))
+
+        elif userRol[0].rol.name == "3":
+            # developer
+            data.append(orders_master.objects.prefetch_related("contact_id").
+                        prefetch_related("menu_id").filter(user_id=userId))
 
         orders = []
+        order_detail = []
         for i in range(len(data)):
-            order_detail = orders_details.objects.filter(
-                order_master_id=data[i].id)
+            for j in range(len(data[i])):
+                order_detail.append(orders_details.objects.filter(
+                    order_master_id=data[i][j].id))
 
             details = []
             for x in range(len(order_detail)):
-                details.append({
-                    "amount": order_detail[x].amount,
-                    "item": order_detail[x].description,
-                    "price": order_detail[x].price,
-                    "total": order_detail[x].total
-                })
+                for j in range(len(order_detail[x])):
+                    details.append({
+                        "amount": order_detail[x][j].amount,
+                        "item": order_detail[x][j].description,
+                        "price": order_detail[x][j].price,
+                        "total": order_detail[x][j].total
+                    })
 
-            orders.append({
-                "orderId": data[i].id,
-                "userId": data[i].user_id,
-                "contact_id": data[i].contact_id.id,
-                "contact_name": data[i].contact_id.name,
-                "menu_id": data[i].menu_id.id,
-                "menu_name": data[i].menu_id.name,
-                "status": data[i].status,
-                "date": str(data[i].date),
-                "total_order": data[i].total,
-                "details": details
-            })
+            for j in range(len(data[i])):
+                orders.append({
+                    "orderId": data[i][j].id,
+                    "userId": data[i][j].user_id,
+                    "contact_id": data[i][j].contact_id.id,
+                    "contact_name": data[i][j].contact_id.name,
+                    "menu_id": data[i][j].menu_id.id,
+                    "menu_name": data[i][j].menu_id.name,
+                    "status": data[i][j].status,
+                    "date": str(data[i][j].date),
+                    "total_order": data[i][j].total,
+                    "details": details
+                })
 
     return HttpResponse(json.dumps({
         "data": orders
@@ -754,43 +991,122 @@ def getorderwithparamns(request):
     if request.method == "POST":
         text = request.POST["text"]
         searchType = request.POST["searchType"]
+        userId = request.POST["userId"]
 
-        if searchType == "orden":
-            data = orders_master.objects.prefetch_related("contact_id").\
-                prefetch_related("menu_id").filter(id=text)
-        elif searchType == "user":
-            data = orders_master.objects.prefetch_related("contact_id").\
-                prefetch_related("menu_id").filter(user_id=text)
-        elif searchType == "contact":
-            data = orders_master.objects.prefetch_related("contact_id").\
-                prefetch_related("menu_id").filter(contact_id=text)
+        data = []
+        userRol = users.objects.prefetch_related("rol").filter(email=userId)
+
+        if userRol[0].rol.name == "1":
+            # Admin
+            if searchType == "orden":
+                data.append(orders_master.objects.
+                            prefetch_related("contact_id").
+                            prefetch_related("menu_id").filter(id=text))
+            elif searchType == "user":
+                data.append(orders_master.objects.
+                            prefetch_related("contact_id").
+                            prefetch_related("menu_id").filter(user_id__icontains=text))
+            elif searchType == "contact":
+                contact_id = contacts.objects.filter(name__icontains=text)
+                if contact_id:
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").
+                                filter(contact_id=contact_id[0].id))
+            elif searchType == "group":
+                group_id = groups_master.objects.filter(name__icontains=text)
+                if group_id:
+                    group_mem = groups_details.objects.filter(
+                        group_master_id=group_id[0].id)
+                    if group_mem:
+                        for u in range(len(group_mem)):
+                            if group_mem[u]:
+                                data.append(
+                                    orders_master.objects.
+                                    prefetch_related("contact_id").
+                                    prefetch_related("menu_id").
+                                    filter(user_id=group_mem[u].user_id)
+                                )
+
+        elif userRol[0].rol.name == "2":
+            # firefighter
+            data.append(orders_master.objects.prefetch_related("contact_id").
+                        prefetch_related("menu_id").filter(user_id=userId))
+
+            ffGroups = groups_master.objects.filter(ffid=userId)
+
+            members = []
+            for i in range(len(ffGroups)):
+                members.append(groups_details.objects.
+                               filter(group_master_id=ffGroups[i].id))
+
+            for k in range(len(members)):
+                for j in range(len(members[k])):
+                    if searchType == "orden":
+                        data.append(orders_master.objects.
+                                    prefetch_related("contact_id").
+                                    prefetch_related("menu_id").
+                                    filter(id=text,
+                                           user_id=members[k][j].user_id))
+                    elif searchType == "user":
+                        data.append(orders_master.objects.
+                                    prefetch_related("contact_id").
+                                    prefetch_related("menu_id").
+                                    filter(user_id=members[k][j].user_id))
+                    elif searchType == "contact":
+                        data.append(orders_master.objects.
+                                    prefetch_related("contact_id").
+                                    prefetch_related("menu_id").
+                                    filter(contact_id=text,
+                                           user_id=members[k][j].user_id))
+        elif userRol[0].rol.name == "3":
+            # Developer - invitado
+            if searchType == "orden":
+                data.append(orders_master.objects.
+                            prefetch_related("contact_id").
+                            prefetch_related("menu_id").
+                            filter(id=text, user_id=userId))
+            elif searchType == "user":
+                data.append(orders_master.objects.
+                            prefetch_related("contact_id").
+                            prefetch_related("menu_id").filter(
+                                user_id=text))
+            elif searchType == "contact":
+                data.append(orders_master.objects.
+                            prefetch_related("contact_id").
+                            prefetch_related("menu_id").filter(
+                                contact_id=text, user_id=userId))
 
         orders = []
-        for i in range(len(data)):
-            order_detail = orders_details.objects.filter(
-                order_master_id=data[i].id)
 
-            details = []
-            for x in range(len(order_detail)):
-                details.append({
-                    "amount": order_detail[x].amount,
-                    "item": order_detail[x].description,
-                    "price": order_detail[x].price,
-                    "total": order_detail[x].total
-                })
+        if data:
+            for j in range(len(data)):
+                for i in range(len(data[j])):
+                    if data[j][i]:
+                        order_detail = orders_details.objects.filter(
+                            order_master_id=data[j][i].id)
 
-            orders.append({
-                "orderId": data[i].id,
-                "userId": data[i].user_id,
-                "contact_id": data[i].contact_id.id,
-                "contact_name": data[i].contact_id.name,
-                "menu_id": data[i].menu_id.id,
-                "menu_name": data[i].menu_id.name,
-                "status": data[i].status,
-                "date": str(data[i].date),
-                "total_order": data[i].total,
-                "details": details
-            })
+                        details = []
+                        for x in range(len(order_detail)):
+                            details.append({
+                                "amount": order_detail[x].amount,
+                                "item": order_detail[x].description,
+                                "price": order_detail[x].price,
+                                "total": order_detail[x].total
+                            })
+
+                        orders.append({
+                            "orderId": data[j][i].id,
+                            "userId": data[j][i].user_id,
+                            "contact_id": data[j][i].contact_id.id,
+                            "contact_name": data[j][i].contact_id.name,
+                            "menu_id": data[j][i].menu_id.id,
+                            "menu_name": data[j][i].menu_id.name,
+                            "status": data[j][i].status,
+                            "date": str(data[j][i].date),
+                            "total_order": data[j][i].total,
+                            "details": details
+                        })
 
     return HttpResponse(json.dumps({
         "data": orders
@@ -801,67 +1117,217 @@ def getorderwithfilter(request):
     if request.method == "POST":
         field = request.POST["field"]
         orderType = request.POST["orderType"]
+        userId = request.POST["userId"]
 
-        if orderType == "asc":
-            if field == "show_delivered":
-                data = orders_master.objects.prefetch_related("contact_id").\
-                    prefetch_related("menu_id").filter(
-                        status="Entregado").order_by("id")
-            elif field == "show_canceled":
-                data = orders_master.objects.prefetch_related("contact_id").\
-                    prefetch_related("menu_id").filter(
-                        status="Cancelado").order_by("id")
-            elif field == "show_pending":
-                data = orders_master.objects.prefetch_related("contact_id").\
-                    prefetch_related("menu_id").filter(
-                        status="Pendiente").order_by("id")
-            else:
-                data = orders_master.objects.prefetch_related("contact_id").\
-                    prefetch_related("menu_id").order_by(field)
+        data = []
+        userRol = users.objects.prefetch_related("rol").filter(email=userId)
 
-        elif orderType == "desc":
-            if field == "show_delivered":
-                data = orders_master.objects.prefetch_related("contact_id").\
-                    prefetch_related("menu_id").filter(
-                        status="Entregado").order_by("id").reverse()
-            elif field == "show_canceled":
-                data = orders_master.objects.prefetch_related("contact_id").\
-                    prefetch_related("menu_id").filter(
-                        status="Cancelado").order_by("id").reverse()
-            elif field == "show_pending":
-                data = orders_master.objects.prefetch_related("contact_id").\
-                    prefetch_related("menu_id").filter(
-                        status="Pendiente").order_by("id").reverse()
-            else:
-                data = orders_master.objects.prefetch_related("contact_id").\
-                    prefetch_related("menu_id").order_by(field).reverse()
+        if userRol[0].rol.name == "1":
+            # Admin
+            if orderType == "asc":
+                if field == "show_delivered":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Entregado").order_by("id"))
+                elif field == "show_canceled":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Cancelado").order_by("id"))
+                elif field == "show_pending":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Pendiente").order_by("id"))
+                else:
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").order_by(field))
+
+            elif orderType == "desc":
+                if field == "show_delivered":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Entregado").
+                                order_by("id").reverse())
+                elif field == "show_canceled":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Cancelado").
+                                order_by("id").reverse())
+                elif field == "show_pending":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Pendiente").
+                                order_by("id").reverse())
+                else:
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").
+                                order_by(field).reverse())
+        elif userRol[0].rol.name == "2":
+            # FireFighter
+            data.append(orders_master.objects.prefetch_related("contact_id").
+                        prefetch_related("menu_id").filter(user_id=userId))
+
+            ffGroups = groups_master.objects.filter(ffid=userId)
+
+            members = []
+            for i in range(len(ffGroups)):
+                members.append(groups_details.objects.
+                               filter(group_master_id=ffGroups[i].id))
+
+            for k in range(len(members)):
+                for j in range(len(members[k])):
+                    if orderType == "asc":
+                        if field == "show_delivered":
+                            data.append(orders_master.objects.
+                                        prefetch_related("contact_id").
+                                        prefetch_related("menu_id").filter(
+                                            status="Entregado",
+                                            user_id=members[k][j].user_id).
+                                        order_by("id"))
+                        elif field == "show_canceled":
+                            data.append(orders_master.objects.
+                                        prefetch_related("contact_id").
+                                        prefetch_related("menu_id").filter(
+                                            status="Cancelado",
+                                            user_id=members[k][j].user_id).
+                                        order_by("id"))
+                        elif field == "show_pending":
+                            data.append(orders_master.objects.
+                                        prefetch_related("contact_id").
+                                        prefetch_related("menu_id").filter(
+                                            status="Pendiente",
+                                            user_id=members[k][j].user_id).
+                                        order_by("id"))
+                        else:
+                            data.append(orders_master.objects.
+                                        prefetch_related("contact_id").
+                                        prefetch_related("menu_id").filter(
+                                            user_id=members[k][j].user_id).
+                                        order_by(field))
+
+                    elif orderType == "desc":
+                        if field == "show_delivered":
+                            data.append(orders_master.objects.
+                                        prefetch_related("contact_id").
+                                        prefetch_related("menu_id").filter(
+                                            status="Entregado",
+                                            user_id=members[k][j].user_id).
+                                        order_by("id").reverse())
+                        elif field == "show_canceled":
+                            data.append(orders_master.objects.
+                                        prefetch_related("contact_id").
+                                        prefetch_related("menu_id").filter(
+                                            status="Cancelado",
+                                            user_id=members[k][j].user_id).
+                                        order_by("id").reverse())
+                        elif field == "show_pending":
+                            data.append(orders_master.objects.
+                                        prefetch_related("contact_id").
+                                        prefetch_related("menu_id").filter(
+                                            status="Pendiente",
+                                            user_id=members[k][j].user_id).
+                                        order_by("id").reverse())
+                        else:
+                            data.append(orders_master.objects.
+                                        prefetch_related("contact_id").
+                                        prefetch_related("menu_id").filter(
+                                            user_id=members[k][j].user_id).
+                                        order_by(field).reverse())
+        elif userRol[0].rol.name == "3":
+            # Developer
+            if orderType == "asc":
+                if field == "show_delivered":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Entregado",
+                                    user_id=userId).
+                                order_by("id"))
+                elif field == "show_canceled":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Cancelado",
+                                    user_id=userId).
+                                order_by("id"))
+                elif field == "show_pending":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Pendiente",
+                                    user_id=userId).
+                                order_by("id"))
+                else:
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").
+                                filter(user_id=userId).
+                                order_by(field))
+
+            elif orderType == "desc":
+                if field == "show_delivered":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Entregado",
+                                    user_id=userId).
+                                order_by("id").reverse())
+                elif field == "show_canceled":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Cancelado",
+                                    user_id=userId).
+                                order_by("id").reverse())
+                elif field == "show_pending":
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").filter(
+                                    status="Pendiente",
+                                    user_id=userId).
+                                order_by("id").reverse())
+                else:
+                    data.append(orders_master.objects.
+                                prefetch_related("contact_id").
+                                prefetch_related("menu_id").
+                                filter(user_id=userId).
+                                order_by(field).reverse())
 
         orders = []
-        for i in range(len(data)):
-            order_detail = orders_details.objects.filter(
-                order_master_id=data[i].id)
+        if data:
+            for j in range(len(data)):
+                for i in range(len(data[j])):
+                    order_detail = orders_details.objects.filter(
+                        order_master_id=data[j][i].id)
 
-            details = []
-            for x in range(len(order_detail)):
-                details.append({
-                    "amount": order_detail[x].amount,
-                    "item": order_detail[x].description,
-                    "price": order_detail[x].price,
-                    "total": order_detail[x].total
-                })
+                    details = []
+                    for x in range(len(order_detail)):
+                        details.append({
+                            "amount": order_detail[x].amount,
+                            "item": order_detail[x].description,
+                            "price": order_detail[x].price,
+                            "total": order_detail[x].total
+                        })
 
-            orders.append({
-                "orderId": data[i].id,
-                "userId": data[i].user_id,
-                "contact_id": data[i].contact_id.id,
-                "contact_name": data[i].contact_id.name,
-                "menu_id": data[i].menu_id.id,
-                "menu_name": data[i].menu_id.name,
-                "status": data[i].status,
-                "date": str(data[i].date),
-                "total_order": data[i].total,
-                "details": details
-            })
+                    orders.append({
+                        "orderId": data[j][i].id,
+                        "userId": data[j][i].user_id,
+                        "contact_id": data[j][i].contact_id.id,
+                        "contact_name": data[j][i].contact_id.name,
+                        "menu_id": data[j][i].menu_id.id,
+                        "menu_name": data[j][i].menu_id.name,
+                        "status": data[j][i].status,
+                        "date": str(data[j][i].date),
+                        "total_order": data[j][i].total,
+                        "details": details
+                    })
 
     return HttpResponse(json.dumps({
         "data": orders
@@ -896,6 +1362,90 @@ def setorderdelivered(request):
 
         if success:
             success = True
+        elif not success:
+            success = False
+
+    return HttpResponse(json.dumps({
+        "success": success
+    }))
+
+
+def setorderrecived(request):
+    if request.method == "POST":
+        id = request.POST["id"]
+        uid = request.POST["uid"]
+        success = False
+
+        success = orders_master.objects.filter(id=id).update(
+            status="Recibido"
+        )
+
+        if success:
+            success = True
+            eUserNotification = []
+
+            master = orders_master.objects.filter(
+                id=id
+            )
+
+            # Usuario que realizo el pedido
+            eUserNotification.append(master[0].user_id)
+            notifications.objects.create(
+                master_id=str(master[0].id),
+                type="order-received",
+                ufrom=uid,
+                uto=master[0].user_id,
+                status="active",
+                checked="false"
+            )
+
+            # Notificar al/los administradores
+            admin = users.objects.filter(rol=1, status="active")
+            admins = []
+            for i in range(len(admin)):
+                setting = userNotWay(admin[i].email)
+                if setting == "app" or setting == "both":
+                        admins.append(admin[i].email)
+
+            if admins:
+                for i in range(len(admins)):
+                    eUserNotification.append(admins[i])
+                    notifications.objects.create(
+                        master_id=str(master[0].id),
+                        type="order-received",
+                        ufrom=uid,
+                        uto=admins[i],
+                        status="active",
+                        checked="false"
+                    )
+
+            # Notificar al encargado de grupo
+            gid = groups_details.objects.filter(user_id=uid)
+            if gid:
+                group = groups_master.objects.filter(id=gid[0].group_master_id)
+                if group:
+                    ff = users.objects.filter(
+                        email=group[0].ffid, status="active")
+                    if ff:
+                        # Encargado; FF Activo
+                        eUserNotification.append(ff[0].email)
+                        notifications.objects.create(
+                            master_id=str(master[0].id),
+                            type="order-creation",
+                            ufrom=uid,
+                            uto=ff[0].email,
+                            status="active",
+                            checked="false"
+                        )
+
+            if len(eUserNotification) > 0:
+                # notificar a estos usuarios via correo
+                for i in range(len(eUserNotification)):
+                    if setting == "email" or setting == "both":
+                        # sendgrid method
+                        pass
+                pass
+
         elif not success:
             success = False
 
@@ -968,12 +1518,13 @@ def getfirefighters(request):
         usrs = []
         for i in range(len(data)):
             user_info = userInfo.objects.filter(uid=data[i].email)
-            usrs.append({
-                "uid": data[i].email,
-                "first_name": user_info[0].first_name,
-                "last_name": user_info[0].last_name,
-                "groupId": user_info[0].groupId
-            })
+            if user_info:
+                usrs.append({
+                    "uid": data[i].email,
+                    "first_name": user_info[0].first_name,
+                    "last_name": user_info[0].last_name,
+                    "groupId": user_info[0].groupId
+                })
 
     return HttpResponse(json.dumps({
         "data": usrs
@@ -988,12 +1539,13 @@ def getdevusers(request):
         usrs = []
         for i in range(len(data)):
             user_info = userInfo.objects.filter(uid=data[i].email)
-            usrs.append({
-                "uid": data[i].email,
-                "first_name": user_info[0].first_name,
-                "last_name": user_info[0].last_name,
-                "groupId": user_info[0].groupId
-            })
+            if user_info:
+                usrs.append({
+                    "uid": data[i].email,
+                    "first_name": user_info[0].first_name,
+                    "last_name": user_info[0].last_name,
+                    "groupId": user_info[0].groupId
+                })
 
     return HttpResponse(json.dumps({
         "data": usrs
@@ -1096,3 +1648,118 @@ def deletegroups(request):
     return HttpResponse(json.dumps({
         "success": success
     }))
+
+
+# NOTIFICATIONS
+
+def getnotsettings(request):
+    if request.method == "POST":
+        userId = request.POST["userId"]
+
+        data = notification_settings.objects.filter(userId=userId)
+        notification = []
+        if data:
+            notification.append({
+                "userId": data[0].userId,
+                "not_way": data[0].not_way,
+                "sound": data[0].sound
+            })
+
+    return HttpResponse(json.dumps({
+        "data": notification
+    }))
+
+
+def savenotsettings(request):
+    if request.method == "POST":
+        userId = request.POST["userId"]
+        not_way = request.POST["not_way"]
+        sound = request.POST["sound"]
+
+        exists = notification_settings.objects.filter(userId=userId)
+
+        if not exists:
+            success = notification_settings.objects.create(
+                userId=userId,
+                not_way=not_way,
+                sound=sound
+            )
+        elif exists:
+            success = notification_settings.objects.\
+                filter(userId=userId).update(
+                    not_way=not_way,
+                    sound=sound
+                )
+
+        if success:
+            success = True
+        elif not success:
+            success = False
+
+    return HttpResponse(json.dumps({
+        "success": success
+    }))
+
+
+def getnotifications(request):
+    if request.method == "POST":
+        userId = request.POST["userId"]
+        autoUpd = request.POST["autoUpd"]
+
+        new_not = notifications.objects.filter(uto=userId, status="active")
+
+        if new_not:
+            new_not = True
+        elif not new_not:
+            new_not = False
+
+        data = notifications.objects.filter(uto=userId).order_by("checked")
+        notification = []
+        if data:
+            for i in range(len(data)):
+                notification.append({
+                    "id": data[i].id,
+                    "type": data[i].type,
+                    "masterId": data[i].master_id,
+                    "ufrom": data[i].ufrom,
+                    "uto": data[i].uto,
+                    "status": data[i].status,
+                    "checked": data[i].checked
+                })
+
+        if autoUpd == "true":
+            notifications.objects.filter(uto=userId).update(
+                status="received"
+            )
+
+    return HttpResponse(json.dumps({
+        "data": notification,
+        "newNotifications": new_not
+    }))
+
+
+def setnotificationchecked(request):
+    if request.method == "POST":
+        nid = request.POST["nid"]
+
+        success = notifications.objects.filter(id=nid).update(
+            checked="true"
+            )
+        if success:
+            success = True
+        elif not success:
+            success = False
+
+    return HttpResponse(json.dumps({
+        "success": success
+    }))
+
+
+def userNotWay(user):
+
+    data = notification_settings.objects.filter(userId=user)
+    notway = ""
+    if data:
+        notway = data[0].not_way
+
+    return notway

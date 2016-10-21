@@ -2,12 +2,15 @@ $(document).ready(function(){
 
 var hasFullPermission = getCookie("urol") == "admin" ? true : false;
 
+loader();
+initializeSearch();
+
 // Top bar actions
 $("#tsearch").keyup(function(){
     if($(this).val().length == 0)
         return false;
 
-    getOrderWithParamns($(this).val(),$(".search_by").val(),function(data){
+    getOrderWithParamns(getCookie("userId"),$(this).val(),$(".search_by").val(),function(data){
         data = $.parseJSON(data);
         if(data.data.length > 0)
         {
@@ -21,7 +24,7 @@ $(".button_orders_filter").click(function(){
     var order_field = $(".select_orders_filter").val();
     var order_px = $(".select_orders_filter_order").val();
 
-    getOrderWithFilter(order_field,order_px,function(data){
+    getOrderWithFilter(getCookie("userId"),order_field,order_px,function(data){
         data = $.parseJSON(data);
         if(data.data.length > 0)
         {
@@ -31,11 +34,55 @@ $(".button_orders_filter").click(function(){
     });
 });
 
-load_orders();
+$(".new_order").click(function(){
+
+    $(".select_contact").html("");
+    $(".select_menu").html("");
+
+    getContacts(function(data){
+        data = $.parseJSON(data);
+
+        if(data.data.length > 0){
+
+            var content = `<option value="">Seleccionar contacto</option>`;
+            for(var i=0; i<data.data.length; i++){
+                content += `<option value="`+data.data[i].id+`">`+data.data[i].name+`</option>`;
+            }
+
+            $(".select_contact").html(content);
+            $('.select_contact').dropdown();
+            $('.ui.modal.neworders').modal('show');
+        }
+    },"active");
+});
+
+$(".select_contact").change(function(){
+
+    $(".select_menu").html("");
+
+    getContactMenu($(this).val(), function(data){
+        data = $.parseJSON(data);
+            
+        if(data.data.length > 0)
+        {
+            var content = `<option value="">Seleccionar menu</option>`;
+            for(var i=0; i<data.data.length; i++){
+                content += `<option value="`+data.data[i].id+`">`+data.data[i].menu+`</option>`;
+            }
+
+            $(".select_menu").html(content);
+            $('.select_menu').dropdown();
+        }
+        else{
+            console.log("no contacts");
+        }
+    });
+});
+
 
 function load_orders()
 {
-    getOrders(function(data){
+    getOrders(getCookie("userId"),function(data){
 
         data = $.parseJSON(data);
         
@@ -85,8 +132,16 @@ function orders_table(data, page=1, rows=10, parent,admin=true){
         if(data[i].details.length==0)
             details_visibility = "no-items";
 
+        var deliverOption = "";
+        if(data[i].status !="Entregado" && data[i].status !="Cancelado" && data[i].status !="Recibido")
+            deliverOption = `<div class="item setOrderRecived removable" orderId="`+data[i].orderId+`">Recibido en almacen</div>`;
+
+        var mountOption = "";
+        if(data[i].status && data[i].status =="Recibido")
+            mountOption = `<div class="item setOrderMount removable" orderId="`+data[i].orderId+`">Establecer monto</div>`;
+
         var trows = `<tr id="rows">
-                <td><a>`+data[i].orderId+`</a></td>
+                <td>`+data[i].orderId+`</td>
                 <td>`+data[i].userId+`</td>
                 <td>`+data[i].contact_name+`</td>
                 <td>`+data[i].menu_name+`</td>
@@ -103,6 +158,9 @@ function orders_table(data, page=1, rows=10, parent,admin=true){
                             <div class="item reorder" orderId="`+data[i].orderId+`">Volver a pedir</div>
                           <div class="item cancelOrder" orderId="`+data[i].orderId+`">Cancelar</div>
                           <div class="item setOrderDelivered removable" orderId="`+data[i].orderId+`">Entregado</div>
+                          <section class="menu-divider divider-top"></section>
+                          `+deliverOption+`
+                          `+mountOption+`
                         </div>
                       </div>
                     </div>
@@ -165,14 +223,13 @@ function orders_table(data, page=1, rows=10, parent,admin=true){
             return false;
         }
 
-        $('.ui.modal').modal('show');
-
         getOrderWithId($(this).attr("orderId"),function(data){
             data = $.parseJSON(data);
             $(".modal_no_orden").html(data.data[0].orderId);
 
             if(data.data){
-                console.log(data);
+                $('.ui.modal.orders').modal('show');
+                
                 $(".order_details_content").html(`
                     <ul class="nav">
                         <li>
@@ -317,6 +374,34 @@ function orders_table(data, page=1, rows=10, parent,admin=true){
         
     });
 
+    $(".setOrderRecived").click(function(){
+
+        if (confirm("Desea cambiar esta orden a estado recibido?")) {
+
+            setOrderRecived(getCookie("userId"), $(this).attr("orderId"),function(data){
+                data = $.parseJSON(data);
+
+                if(data.success)
+                {
+                    load_orders();
+
+                    swal({   
+                        title: "<small>ORDEN</small>",   
+                        text: "Solicitud procesada correctamente.",   
+                        html: true });
+                }
+                else
+                {
+                    swal({   
+                        title: "<small>ORDEN</small>",   
+                        text: "Ocurrio un error durante la solicitud.",   
+                        html: true });
+                }
+            });
+        }
+        
+    });
+
     if(admin==false)
         $(".table_orders_adm").find(".removable").remove();
 
@@ -324,8 +409,139 @@ function orders_table(data, page=1, rows=10, parent,admin=true){
 }
 
 
-function getOrders(callback){
+function initializeSearch(){
+
+    var content = [];
+
+    getContacts(function(data){
+        data = $.parseJSON(data);
+        if(data)
+        {
+            for(var i=0; i<data.data.length; i++){
+                content.push({
+                    "title":data.data[i].name, 
+                    "description":data.data[i].category,
+                    "id":data.data[i].id
+                });
+            }
+        }
+
+        $('.ui.search')
+          .search({
+            source : content,
+            searchFields   : [
+              'title'
+            ],
+            searchFullText: false
+          });
+
+    },"active");
+}
+
+$(".contact_searcher").keyup(function(e){
+    if (e.keyCode == 13) {
+        var cid = $('.ui.search').search('get result', $(this).val())[0].id;
+
+        if(cid)
+            loadContactMenues(cid);
+    }
+});
+
+function loadContactMenues(cid){
+
+    $(".select_menu").html("<option value=''>Seleccione el menu</option>");
+
+    var content = [];
+
+    getContactMenu(cid,function(data){
+        data = $.parseJSON(data);
+        if(data){
+            for(var i=0; i<data.data.length; i++){
+                $(".select_menu").append(`
+                    <option mid="`+data.data[i].id+`">`+data.data[i].menu+`</option>
+                `);
+            }
+        }
+    });
+}
+
+$(".select_menu").change(function(){
+    var mid = $(".select_menu option:selected").attr("mid");
+   // if(mid){
+        getMenuWithId(mid,function(data){
+            data = $.parseJSON(data);
+
+            if(data.data){
+                console.log(data);
+                create_menu(data,null);
+            }
+        });
+  //  }
+});
+
+
+
+function create_menu(data, li_handler){
+    if(data.data){
+        // muestra 1 menu 
+        var menu_name = data.data[0].menu;
+        var menu_id = data.data[0].id;
+        var contact = data.data[0].contact;
+        var contact_id = data.data[0].contactId;
+        var content = data.data[0].dishes;
+
+        $(".menu-name").html(menu_name);
+        $(".contact-name").html(contact);
+        $(".menu-id").html(menu_id);
+        $(".contact-id").html(contact_id);
+
+        $(".menu-content").html(`
+            <ul class="ulviewer">
+            </ul>
+            `);
+
+        var categoryId = "";
+        for(var i=0; i<content.length; i++)
+        {
+            categoryId = content[i].menu_category_id;
+
+            if($(".category"+categoryId).length == 0){
+                $(".ulviewer").append(`
+                    <li><ul class="`+"category"+categoryId+` ulcategory">
+                        <li class="menu_li_category">`+content[i].menu_category_name+`<li>
+                    </ul></li>
+                    `);
+            }
+
+            $(".category"+categoryId).append(`
+                <li class="menu_li" price="`+content[i].price+`">`+content[i].name+`<span class="itemPrice">$ `+content[i].price+`</span></li>
+            `);
+        }
+
+        $(".menu_li").click(li_handler);
+    }
+}
+
+function loader(){
+
+    if(getCookie("view-order") != "null"){
+        getOrderWithId(getCookie("view-order"),function(data){
+            data = $.parseJSON(data);
+            if(data.data.length > 0)
+            {
+                orders_table(data.data,1,10,$(".section_orders_table"),hasFullPermission);
+                deleteCookie("view-order");
+            }
+        });
+    }
+    else{
+        load_orders();
+    }
+}
+
+function getOrders(usr, callback){
 	var dic = {
+        userId: usr,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
     }
 
@@ -341,8 +557,9 @@ function getOrderWithId(oid,callback){
     postData("getorderwithid/",dic,callback);
 }
 
-function getOrderWithParamns(_text,_seachType,callback){
+function getOrderWithParamns(userid,_text,_seachType,callback){
     var dic = {
+        userId: userid,
         text: _text,
         searchType: _seachType,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
@@ -351,9 +568,10 @@ function getOrderWithParamns(_text,_seachType,callback){
     postData("getorderwithparamns/",dic,callback);
 }
 
-function getOrderWithFilter(cfield, corderType ,callback)
+function getOrderWithFilter(userid, cfield, corderType ,callback)
 {
     var dic = {
+        userId: userid,
         field: cfield,
         orderType: corderType,
         csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
@@ -380,6 +598,45 @@ function setOrderDelivered(oid, callback){
     }
 
     postData("setorderdelivered/",dic,callback);
+}
+
+function setOrderRecived(user, oid, callback){
+
+    var dic = {
+        uid: user,
+        id: oid,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+    }
+
+    postData("setorderrecived/",dic,callback);
+}
+
+function getContacts(callback, cstatus="non-status"){
+    // Non status: retorna todos los contactos sin dif. de estados.
+    var dic = {
+        status: cstatus,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+    }
+
+    postData("getcontacts/",dic,callback);
+}
+
+function getContactMenu(cid, callback){
+    var dic = {
+        contactId: cid,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+    }
+
+    postData("getcontactmenu/",dic,callback);
+}
+
+function getMenuWithId(mid, callback){
+    var dic = {
+        id: mid,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+    }
+
+        postData("getmenuwithid/",dic,callback);
 }
 
 function postData(url,vars,callback)

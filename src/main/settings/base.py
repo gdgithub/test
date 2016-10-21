@@ -15,8 +15,10 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+BASE_DIR = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+PROJECT_ROOT = os.path.dirname(os.path.dirname(
+    os.path.dirname(os.path.abspath(__file__))))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.8/howto/deployment/checklist/
@@ -30,8 +32,11 @@ DEBUG = True
 EMAIL_BACKEND = "sgbackend.SendGridBackend"
 SENDGRID_API_KEY = "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"
 
-ALLOWED_HOSTS = []
+#ALLOWED_HOSTS = []
 
+FIXTURE_DIRS = (
+    os.path.join(PROJECT_ROOT, 'fixtures'),
+)
 
 # Application definition
 

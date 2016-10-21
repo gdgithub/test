@@ -86,13 +86,23 @@ $(".do-request").click(function(){
 
                 swal({   
                     title: "<small>ORDEN</small>",   
-                    text: "La orden se realizo exitosamente. <a href='/administration/orders/' style='color:#F8BB86'>Ver Ordenes</a>",   
+                    text: "La orden se realizo exitosamente. <a class='goToOrderDesc' oid='"+data.orderId+"' style='color:#F8BB86'>Ver Ordenes</a>",   
                     html: true });
+
+                $(".goToOrderDesc").click(function(){
+                    var orderId = $(this).attr("oid");
+                    if(orderId){
+                        createCookie("view-order",orderId,30000);
+                        window.location.href="/administration/orders";
+                    }
+                });
 
             }
             console.log(data);
         });
 });
+
+
 
 getMenuWithId(getCookie("view-menu"),function(data){
     data = $.parseJSON(data);
@@ -135,7 +145,7 @@ function create_menu(data, li_handler){
             }
 
             $(".category"+categoryId).append(`
-                <li class="menu_li" price="`+content[i].price+`">`+content[i].name+`</li>
+                <li class="menu_li" price="`+content[i].price+`">`+content[i].name+`<span class="itemPrice">$ `+content[i].price+`</span></li>
             `);
         }
 

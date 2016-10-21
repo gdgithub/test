@@ -58,6 +58,11 @@
 .li-active{
 	background-color: rgb(245,245,245);
 }
+.itemPrice{
+	float: right;
+	margin-right: 20px;
+	opacity: 0.8;
+}
 .div_calculator{
 	position : fixed; 
 	height: 50px; 

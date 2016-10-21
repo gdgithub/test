@@ -1,5 +1,10 @@
 $(document).ready(function(){
 
+$(".create_user").click(function(){
+    createCookie("bkpath",window.location.pathname,3000);
+    window.location.replace("/administration/create_user");
+});
+
 var hasFullPermission = getCookie("urol") == "admin" ? true : false;
 var users_status = (hasFullPermission == true) ? "all" : "active";
 
@@ -95,6 +100,12 @@ function users_table(data, page=1, rows=10, parent,admin=hasFullPermission){
         else if (data[i].rol == 3)
             urol = "Developer";
 
+        var activityOptions = "";
+        if (data[i].status == "active")
+            activityOptions = `<div class="item changestatus" uid="`+data[i].email+`" status="inactive">Inhabilitar</div>`;
+        else if (data[i].status == "inactive")
+            activityOptions = `<div class="item changestatus" uid="`+data[i].email+`" status="active">Habilitar</div>`;
+
         var trows = `<tr id="rows">
                 <td>`+(i+1)+`</td>
                 <td>`+data[i].email+`</td>
@@ -110,6 +121,8 @@ function users_table(data, page=1, rows=10, parent,admin=hasFullPermission){
                         <div class="menu">
                           <div class="item edit" uid="`+data[i].email+`">Editar</div>
                           <div class="item delete" uid="`+data[i].email+`">Eliminar</div>
+                          <section class="menu-divider divider-top"></section>
+                          `+activityOptions+`
                         </div>
                       </div>
                     </div>
@@ -165,6 +178,7 @@ function users_table(data, page=1, rows=10, parent,admin=hasFullPermission){
     });
 
     $(".edit").click(function(){
+        createCookie("bkpath",window.location.pathname,3000);
         createCookie("edit-users",$(this).attr("uid"),30000);
         window.location.href="/administration/create_user";
     });
@@ -187,6 +201,15 @@ function users_table(data, page=1, rows=10, parent,admin=hasFullPermission){
             });
         }
         
+    });
+
+    $(".changestatus").click(function(){
+
+        changeUserStatus($(this).attr("uid"),$(this).attr("status"),function(data){
+            data = $.parseJSON(data);
+            if(data.success)
+                load_users();
+        });
     });
 
     if(admin==false)
@@ -214,6 +237,17 @@ function getUserWithName(uname,callback, ustatus="all")
     }
 
     postData("getuserwithname/",dic,callback);
+}
+
+function changeUserStatus(uid, ustatus, callback)
+{
+    var dic = {
+        userId: uid,
+        status: ustatus,
+        csrfmiddlewaretoken: $("input[name=csrfmiddlewaretoken]").val(),
+    }
+
+    postData("changeuserstatus/",dic,callback);
 }
 
 function deleteUser(uid,callback){

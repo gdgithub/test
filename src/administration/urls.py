@@ -19,7 +19,10 @@ import src.login.views
 
 urlpatterns = [
     url(r'^$', src.administration.views.administration, name='administration'),
-    url(r'^contacts/$', src.administration.views.contacts_page, name='contacts_page'),
+    url(r'^welcome/$', src.administration.views.welcome_page,
+        name='welcome_page'),
+    url(r'^contacts/$', src.administration.views.contacts_page,
+        name='contacts_page'),
     url(r'^create_contact/$', src.administration.views.create_contact_page,
         name='create_contact_page'),
     url(r'^contact_categories/$', src.administration.views.contact_categories,
@@ -33,16 +36,16 @@ urlpatterns = [
         name='menu_viewer'),
     url(r'^orders/$', src.administration.views.orders,
         name='orders'),
-    url(r'^groups/$', src.administration.views.groups,
-        name='groups'),
+    url(r'^groups/$', src.administration.views.groups_page,
+        name='groups_page'),
     url(r'^create_group/$', src.administration.views.create_group,
         name='create_group'),
     url(r'^users/$', src.administration.views.users_page,
         name='users'),
     url(r'^create_user/$', src.administration.views.create_user,
         name='create_user'),
-    url(r'^notifications/$', src.administration.views.notifications,
-        name='notifications'),
+    url(r'^notifications/$', src.administration.views.notifications_page,
+        name='notifications_page'),
 
     url(r'getcontacts/$', src.administration.views.getcontacts,
         name='getcontacts'),
@@ -67,9 +70,13 @@ urlpatterns = [
         updatecontact, name='updatecontact'),
     url(r'deletecontact/$', src.administration.views.
         deletecontact, name='deletecontact'),
+    url(r'changecontactstatus/$', src.administration.views.
+        changecontactstatus, name='changecontactstatus'),
 
     url(r'getmenu/$', src.administration.views.
         getmenu, name='getmenu'),
+    url(r'getcontactmenu/$', src.administration.views.
+        getcontactmenu, name='getcontactmenu'),
     url(r'getmenuwithid/$', src.administration.views.
         getmenuwithid, name='getmenuwithid'),
     url(r'getmenutwithname/$', src.administration.views.
@@ -105,6 +112,8 @@ urlpatterns = [
         cancelOrderWithId, name='cancelOrderWithId'),
     url(r'setorderdelivered/$', src.administration.views.
         setorderdelivered, name='setorderdelivered'),
+    url(r'setorderrecived/$', src.administration.views.
+        setorderrecived, name='setorderrecived'),
 
     url(r'usercredentials/$', src.login.views.
         usercredentials, name='usercredentials'),
@@ -120,7 +129,8 @@ urlpatterns = [
         updateuser, name='updateuser'),
     url(r'deleteuser/$', src.login.views.
         deleteuser, name='deleteuser'),
-
+    url(r'changeuserstatus/$', src.login.views.
+        changeuserstatus, name='changeuserstatus'),
 
 
     url(r'getgroups/$', src.administration.views.
@@ -142,6 +152,13 @@ urlpatterns = [
     url(r'deletegroups/$', src.administration.views.
         deletegroups, name='deletegroups'),
 
-
+    url(r'savenotsettings/$', src.administration.views.
+        savenotsettings, name='savenotsettings'),
+    url(r'setnotificationchecked/$', src.administration.views.
+        setnotificationchecked, name='setnotificationchecked'),
+    url(r'getnotsettings/$', src.administration.views.
+        getnotsettings, name='getnotsettings'),
+    url(r'getnotifications/$', src.administration.views.
+        getnotifications, name='getnotifications'),
 
 ]

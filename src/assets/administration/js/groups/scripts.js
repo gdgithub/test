@@ -1,5 +1,10 @@
 $(document).ready(function(){
 
+$(".create_group").click(function(){
+    createCookie("bkpath",window.location.pathname,3000);
+    window.location.replace("/administration/create_group");
+});
+
 var hasFullPermission = getCookie("urol") == "admin" ? true : false;
 
 interface();
@@ -142,7 +147,7 @@ function groups_table(data, page=1, rows=10, parent,admin=hasFullPermission){
             data = $.parseJSON(data);
 console.log(data);
             if(data.data.length > 0){
-                $('.ui.modal').modal('show');
+                $('.ui.modal.groups').modal('show');
 
                 $(".members_content").html(`
                     <ul class="nav">
@@ -177,6 +182,7 @@ console.log(data);
     });
 
     $(".edit").click(function(){
+        createCookie("bkpath",window.location.pathname,3000);
         createCookie("edit-group",$(this).attr("gid"),30000);
         window.location.href="/administration/create_group";
     });
